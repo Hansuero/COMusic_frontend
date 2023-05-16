@@ -2,6 +2,18 @@
 	登录页面
 -->
 
+<script>
+export default {
+	name: 'register',
+	methods: {
+        //在这里处理注册事件
+        register(){
+            console.log("I want to register!\n");
+        }
+    }
+}
+</script>
+
 <template>
 	<div style="margin-top: 50px; width: 100%; display: flex;">
 		<!--左侧的logo-->
@@ -16,39 +28,55 @@
 			</div>
 			<!--输入用户ID-->
 			<div style="display: flex;">
-				<div class="rectangle" style="width: 20%;">
+				<div class="rectangle" style="width: 20%; margin-top: 10px;">
   					<p class="English_font">用户名</p>
 				</div>
-				<div style="width: 70%; margin-left: 20px; margin-top: 23px;">
-					<el-input v-model="input" placeholder="请输入用户名" />
+				<div style="width: 70%; margin-left: 20px; margin-top: 13px;">
+					<el-form v-model="input_data" :rules="rules" ref="a_input_data">
+						<el-form-item prop="input_username">
+							<el-input v-model="input_data.input_username" placeholder="请输入用户名" />
+						</el-form-item>
+					</el-form>
 				</div>
 			</div>
 			<div style="display: flex;">
-				<div class="rectangle" style="width: 20%;">
+				<div class="rectangle" style="width: 20%; margin-top: 10px;">
   					<p class="Chinese_font">密码</p>
 				</div>
-				<div style="width: 70%; margin-left: 20px; margin-top: 23px;">
-					<el-input v-model="input" placeholder="请输入用户密码" />
+				<div style="width: 70%; margin-left: 20px; margin-top: 13px;">
+					<el-form v-model="input_data" :rules="rules" ref="a_input_data">
+						<el-form-item prop="input_password">
+							<el-input v-model="input_data.input_password" type="password" placeholder="请输入用户密码" />
+						</el-form-item>
+					</el-form>
 				</div>
 			</div>
             <div style="display: flex;">
-				<div class="rectangle" style="width: 20%;">
+				<div class="rectangle" style="width: 20%; margin-top: 10px;">
   					<p class="Chinese_font">确认密码</p>
 				</div>
-				<div style="width: 70%; margin-left: 20px; margin-top: 23px;">
-					<el-input v-model="input" placeholder="请确认密码" />
+				<div style="width: 70%; margin-left: 20px; margin-top: 13px;">
+					<el-form v-model="input_data" :rules="rules" ref="a_input_data">
+						<el-form-item prop="input_qualify_password">
+							<el-input type="password" v-model="input_data.input_qualify_password" placeholder="请确认密码" />
+						</el-form-item>
+					</el-form>
 				</div>
 			</div>
             <div style="display: flex;">
-				<div class="rectangle" style="width: 20%;">
+				<div class="rectangle" style="width: 20%; margin-top: 10px;">
   					<p class="Chinese_font">邮箱</p>
 				</div>
-				<div style="width: 70%; margin-left: 20px; margin-top: 23px;">
-					<el-input v-model="input" placeholder="请输入邮箱地址" />
+				<div style="width: 70%; margin-left: 20px; margin-top: 13px;">
+					<el-form v-model="input_data" :rules="rules" ref="a_input_data">
+						<el-form-item prop="input_email">
+							<el-input v-model="input_data.input_email" placeholder="请输入邮箱地址" />
+						</el-form-item>
+					</el-form>
 				</div>
 			</div>
 			<div style="display: flex; justify-content: center;">
-				<el-button style="width: 80%; margin-top: 30px;" @click="register()" color="#7eec52">
+				<el-button style="width: 80%; margin-top: 20px;" @click="register()" color="#7eec52">
 					<p class="Chinese_font">注册账号</p>
 				</el-button>
 			</div>
@@ -57,17 +85,20 @@
 	
 </template>
 
-<script>
-export default {
-	name: 'register',
-	methods: {
-        //在这里处理注册事件
-        register(){
-            console.log("I want to register!\n");
-        }
-    }
-}
+<script setup>
+import { reactive } from "vue";
+
+const input_data = reactive({
+	input_username: '',
+	input_password: '',
+	input_qualify_password: '',
+	input_email: ''
+})
 </script>
+
+
+
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>

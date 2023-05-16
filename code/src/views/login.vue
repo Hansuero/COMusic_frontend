@@ -1,55 +1,6 @@
 <!--
 	登录页面
 -->
-
-<template>
-	<div style="margin-top: 50px; width: 100%; display: flex;">
-		<!--左侧的logo-->
-		<img src="../assets/logo.png" class="logo_picture">
-		<!--右边输入信息的表单-->
-		<div class="bordered_container">
-			<!--平台名称COMusic-->
-			<div style="display: flex; justify-content: center;">
-				<div class="rectangle" style="width: 60%;">
-  					<p class="English_font">COMusic</p>
-				</div>
-			</div>
-			<!--输入用户ID-->
-			<div style="display: flex;">
-				<div class="rectangle" style="width: 20%;">
-  					<p class="English_font">ID</p>
-				</div>
-				<div style="width: 70%; margin-left: 20px; margin-top: 23px;">
-					<el-input v-model="input" placeholder="请输入用户ID" />
-				</div>
-			</div>
-			<!--输入用户密码-->
-			<div style="display: flex;">
-				<div class="rectangle" style="width: 20%;">
-  					<p class="Chinese_font">密码</p>
-				</div>
-				<div style="width: 70%; margin-left: 20px; margin-top: 23px;">
-					<el-input v-model="input" placeholder="请输入用户密码" />
-				</div>
-			</div>
-			<div style="display: flex; margin-left: 20px;">
-				<el-button style="width: 40%; margin-top: 30px;" @click="to_register()" color="#7eec52">
-					<p class="Chinese_font">去注册</p>
-				</el-button>
-				<el-button style="width: 40%; margin-top: 30px; margin-left: 50px;" @click="login()" color="#7eec52">
-					<p class="Chinese_font">登录</p>
-				</el-button>
-			</div>
-			<div style="display: flex; justify-content: center;">
-				<el-button style="width: 80%; margin-top: 30px;" @click="as_visitor()" color="#7eec52">
-					<p class="Chinese_font">游客模式访问</p>
-				</el-button>
-			</div>
-		</div>
-	</div>
-	
-</template>
-
 <script>
 export default {
 	name: 'login', 
@@ -69,6 +20,70 @@ export default {
 		}
 	}
 }
+</script>
+
+<template>
+	<div style="margin-top: 50px; width: 100%; display: flex;">
+		<!--左侧的logo-->
+		<img src="../assets/logo.png" class="logo_picture">
+		<!--右边输入信息的表单-->
+		<div class="bordered_container">
+			<!--平台名称COMusic-->
+			<div style="display: flex; justify-content: center;">
+				<div class="rectangle_container" style="width: 60%;">
+  					<p class="English_font">COMusic</p>
+				</div>
+			</div>
+			<!--输入用户ID-->
+			<div style="display: flex;">
+				<div class="rectangle_container" style="width: 20%;">
+  					<p class="English_font">ID</p>
+				</div>
+				<div style="width: 70%; margin-left: 20px; margin-top: 23px;">
+					<el-form v-model="input_data" :rules="rules" ref="a_input_data">
+						<el-form-item prop="input_id">
+							<el-input type="text" v-model="input_data.input_id" placeholder="请输入用户ID" />
+						</el-form-item>
+					</el-form>
+				</div>
+			</div>
+			<!--输入用户密码-->
+			<div style="display: flex;">
+				<div class="rectangle_container" style="width: 20%;">
+  					<p class="Chinese_font">密码</p>
+				</div>
+				<div style="width: 70%; margin-left: 20px; margin-top: 23px;">
+					<el-form :model="input_data" :rules="rules" ref="a_input_data">
+						<el-form-item prop="input_password">
+							<el-input v-model="input_data.input_password" type="password" placeholder="请输入用户密码" />
+						</el-form-item>
+					</el-form>
+				</div>
+			</div>
+			<div style="display: flex; margin-left: 20px;">
+				<el-button style="width: 40%; margin-top: 30px;" @click="to_register()" color="#7eec52">
+					<p class="Chinese_font">去注册</p>
+				</el-button>
+				<el-button style="width: 40%; margin-top: 30px; margin-left: 50px;" @click="login()" color="#7eec52">
+					<p class="Chinese_font">登录</p>
+				</el-button>
+			</div>
+			<div style="display: flex; justify-content: center;">
+				<el-button style="width: 80%; margin-top: 30px;" @click="as_visitor()" color="#7eec52">
+					<p class="Chinese_font">游客模式访问</p>
+				</el-button>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script setup>
+import { reactive } from "vue";
+
+const input_data = reactive({
+	input_id: '',
+	input_password: '',
+})
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -101,7 +116,7 @@ export default {
 .bordered_container > div {
   padding: 10px; /* 在子元素周围添加10像素的内边距 */
 }
-.rectangle {
+.rectangle_container {
 	margin-top: 20px;
   	border-radius: 30px;
   	height: 40px;
@@ -110,7 +125,7 @@ export default {
   	justify-content: center;
   	align-items: center;
 }
-.rectangle p {
+.rectangle_container p {
   margin: 0; /* 将内联元素的margin属性设置为0,以使它们紧贴在一起 */
 }
 </style>
