@@ -14,6 +14,17 @@ export default {
 }
 </script>
 
+<script setup>
+import { reactive } from "vue";
+
+const input_data = reactive({
+	input_username: '',
+	input_password: '',
+	input_qualify_password: '',
+	input_email: ''
+})
+</script>
+
 <template>
 	<div style="margin-top: 50px; width: 100%; display: flex;">
 		<!--左侧的logo-->
@@ -84,21 +95,6 @@ export default {
 	</div>
 	
 </template>
-
-<script setup>
-import { reactive } from "vue";
-
-const input_data = reactive({
-	input_username: '',
-	input_password: '',
-	input_qualify_password: '',
-	input_email: ''
-})
-</script>
-
-
-
-
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
