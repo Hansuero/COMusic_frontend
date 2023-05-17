@@ -31,7 +31,6 @@ const input_data = reactive({
 })
 </script>
 
-
 <template>
 	<div style="margin-top: 50px; width: 100%; display: flex;">
 		<!--左侧的logo-->
