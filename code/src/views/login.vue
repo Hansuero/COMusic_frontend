@@ -2,11 +2,24 @@
 	登录页面
 -->
 <script>
+import { reactive } from "vue";
 export default {
 	name: 'login', 
 	methods: {
+		//获取输入的数据，返回一个包含了id和password属性的对象
+		get_input_data(){
+			let id = document.getElementById('i_id').value
+			let password = document.getElementById('i_password').value
+			return{
+				id,
+				password
+			}
+		},
 		//在这里处理跳转到注册页面事件
 		to_register(){
+			var input = this.get_input_data()
+			console.log(input.id)
+			console.log(input.password)
 			console.log("I need to register first!\n");
 			this.$router.push('./register')
 		},
@@ -51,7 +64,7 @@ const input_data = reactive({
 				<div style="width: 70%; margin-left: 20px; margin-top: 23px;">
 					<el-form v-model="input_data" :rules="rules" ref="a_input_data">
 						<el-form-item prop="input_id">
-							<el-input type="text" v-model="input_data.input_id" placeholder="请输入用户ID" />
+							<el-input id="i_id" type="text" v-model="input_data.input_id" placeholder="请输入用户ID" />
 						</el-form-item>
 					</el-form>
 				</div>
@@ -64,7 +77,7 @@ const input_data = reactive({
 				<div style="width: 70%; margin-left: 20px; margin-top: 23px;">
 					<el-form :model="input_data" :rules="rules" ref="a_input_data">
 						<el-form-item prop="input_password">
-							<el-input v-model="input_data.input_password" type="password" placeholder="请输入用户密码" />
+							<el-input id="i_password" v-model="input_data.input_password" type="password" placeholder="请输入用户密码" />
 						</el-form-item>
 					</el-form>
 				</div>

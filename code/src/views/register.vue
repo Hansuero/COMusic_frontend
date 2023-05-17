@@ -6,8 +6,23 @@
 export default {
 	name: 'register',
 	methods: {
+		get_input_data(){
+			let username = document.getElementById('i_username').value
+			let password = document.getElementById('i_password').value
+			let qualify_password = document.getElementById('i_qualify_password').value
+			let email = document.getElementById('i_email').value
+			return{
+				username,
+				password,
+				qualify_password,
+				email
+			}
+		},
         //在这里处理注册事件
         register(){
+			var input = this.get_input_data()
+			console.log(input.username)
+			console.log(input.password)
             console.log("I want to register!\n");
         }
     }
@@ -45,7 +60,7 @@ const input_data = reactive({
 				<div style="width: 70%; margin-left: 20px; margin-top: 13px;">
 					<el-form v-model="input_data" :rules="rules" ref="a_input_data">
 						<el-form-item prop="input_username">
-							<el-input v-model="input_data.input_username" placeholder="请输入用户名" />
+							<el-input id="i_username" v-model="input_data.input_username" placeholder="请输入用户名" />
 						</el-form-item>
 					</el-form>
 				</div>
@@ -57,7 +72,7 @@ const input_data = reactive({
 				<div style="width: 70%; margin-left: 20px; margin-top: 13px;">
 					<el-form v-model="input_data" :rules="rules" ref="a_input_data">
 						<el-form-item prop="input_password">
-							<el-input v-model="input_data.input_password" type="password" placeholder="请输入用户密码" />
+							<el-input id="i_password" v-model="input_data.input_password" type="password" placeholder="请输入用户密码" />
 						</el-form-item>
 					</el-form>
 				</div>
@@ -69,7 +84,7 @@ const input_data = reactive({
 				<div style="width: 70%; margin-left: 20px; margin-top: 13px;">
 					<el-form v-model="input_data" :rules="rules" ref="a_input_data">
 						<el-form-item prop="input_qualify_password">
-							<el-input type="password" v-model="input_data.input_qualify_password" placeholder="请确认密码" />
+							<el-input id="i_qualify_password" type="password" v-model="input_data.input_qualify_password" placeholder="请确认密码" />
 						</el-form-item>
 					</el-form>
 				</div>
@@ -81,7 +96,7 @@ const input_data = reactive({
 				<div style="width: 70%; margin-left: 20px; margin-top: 13px;">
 					<el-form v-model="input_data" :rules="rules" ref="a_input_data">
 						<el-form-item prop="input_email">
-							<el-input v-model="input_data.input_email" placeholder="请输入邮箱地址" />
+							<el-input id="i_email" v-model="input_data.input_email" placeholder="请输入邮箱地址" />
 						</el-form-item>
 					</el-form>
 				</div>
