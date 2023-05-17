@@ -122,7 +122,7 @@ const input_data = reactive({
 	justify-content: center; /* 将内容居中 */
   	border: 2px solid #7eec52; /* 将边框设置为2像素宽、绿色的实线 */
   	width: 400px;
-  	height: 500px; /* 设置高度为200像素 */
+  	height: 500px; 
 	margin-left: 150px;
   	border-radius: 30px;
 }

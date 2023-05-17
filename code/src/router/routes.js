@@ -5,7 +5,7 @@ import user from '../views/user.vue'
 const routes = [
     {
         path: '/',
-        redirect: '/login'
+        redirect: '/user'
     },
     {
         name: 'login',

@@ -166,7 +166,7 @@ export default {
 }
 
 .left{
-	height: 83vh;
+	height: 82vh;
 	width: 150px;
 	border-right: 17px solid #7eec52;
 }
