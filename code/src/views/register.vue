@@ -102,7 +102,7 @@ const input_data = reactive({
 				</div>
 			</div>
 			<div style="display: flex; justify-content: center;">
-				<el-button style="width: 80%; margin-top: 20px;" @click="register()" color="#7eec52">
+				<el-button style="width: 80%; margin-top: 20px;" @click="register" color="#7eec52">
 					<p class="Chinese_font">注册账号</p>
 				</el-button>
 			</div>

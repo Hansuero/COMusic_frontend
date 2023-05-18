@@ -83,15 +83,15 @@ const input_data = reactive({
 				</div>
 			</div>
 			<div style="display: flex; margin-left: 20px;">
-				<el-button style="width: 40%; margin-top: 30px;" @click="to_register()" color="#7eec52">
+				<el-button style="width: 40%; margin-top: 30px;" @click="to_register" color="#7eec52">
 					<p class="Chinese_font">去注册</p>
 				</el-button>
-				<el-button style="width: 40%; margin-top: 30px; margin-left: 50px;" @click="login()" color="#7eec52">
+				<el-button style="width: 40%; margin-top: 30px; margin-left: 50px;" @click="login" color="#7eec52">
 					<p class="Chinese_font">登录</p>
 				</el-button>
 			</div>
 			<div style="display: flex; justify-content: center;">
-				<el-button style="width: 80%; margin-top: 30px;" @click="as_visitor()" color="#7eec52">
+				<el-button style="width: 80%; margin-top: 30px;" @click="as_visitor" color="#7eec52">
 					<p class="Chinese_font">游客模式访问</p>
 				</el-button>
 			</div>

@@ -1,18 +1,18 @@
 <template>
 	<div class="top"> <!--上方导航栏，里面的文字换成对应路由-->
 		<img id="logo" src="../assets/logo_small.png"/>
-		<el-button id="main" color="#7eec52" @click="to_index()">主页</el-button>
-		<el-button id="mine" color="#7eec52" @click="to_user()">我的</el-button>
-		<el-button id="submit" color="#7eec52" @click="to_upload()">上传音乐</el-button>
-		<el-button id="manage" color="#7eec52" @click="to_manage()">管理模式</el-button>
+		<el-button id="main" color="#7eec52" @click="to_index">主页</el-button>
+		<el-button id="mine" color="#7eec52" @click="to_user">我的</el-button>
+		<el-button id="submit" color="#7eec52" @click="to_upload">上传音乐</el-button>
+		<el-button id="manage" color="#7eec52" @click="to_manage">管理模式</el-button>
 		<img id="img" src="../assets/profile.png" />
 	</div>
 	<div class="left"> <!--左侧导航栏，里面的文字换成对应路由-->
-		<el-button id="idv" color="#7eec52" @click="to_user()">个人界面</el-button>
-		<el-button id="collect" color="#7eec52" @click="to_favourite()">收藏夹</el-button>
-		<el-button id="care" color="#7eec52" @click="to_interest()">我的关注</el-button>
-		<el-button id="message" color="#7eec52" @click="to_information()">我的消息</el-button>
-		<el-button id="record" color="#7eec52" @click="to_record()">播放记录</el-button>
+		<el-button id="idv" color="#7eec52" @click="to_user">个人界面</el-button>
+		<el-button id="collect" color="#7eec52" @click="to_favourite">收藏夹</el-button>
+		<el-button id="care" color="#7eec52" @click="to_interest">我的关注</el-button>
+		<el-button id="message" color="#7eec52" @click="to_information">我的消息</el-button>
+		<el-button id="record" color="#7eec52" @click="to_record">播放记录</el-button>
 	</div>
 </template>
 
