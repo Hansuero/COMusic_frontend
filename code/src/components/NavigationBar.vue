@@ -33,7 +33,7 @@ export default {
 		//跳转到个人页面
 		to_user(){
 			console.log("go to user page\n");
-			//this.$router.push('./user')
+			this.$router.push('./user')
 		},
 		//跳转到上传页面
 		to_upload(){
@@ -48,7 +48,7 @@ export default {
 		//跳转到收藏夹页面
 		to_favourite(){
 			console.log("go to favourite page\n");
-			//this.$router.push('./favourite')
+			this.$router.push('./favourite')
 		},
 		//跳转到个人关注页面
 		to_interest(){
