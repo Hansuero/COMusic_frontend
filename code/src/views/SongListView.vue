@@ -25,15 +25,12 @@
     <div id="body">
       <ul type="none" id="songs">
         <li @click="goTOSong"></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
+        <li @click="goTOSong"></li>
+        <li @click="goTOSong"></li>
+        <li @click="goTOSong"></li>
+        <li @click="goTOSong"></li>
+        <li @click="goTOSong"></li>
       </ul>
-    </div>
-    <div id="songList">
-
     </div>
   </div>
 </template>

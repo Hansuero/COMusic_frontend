@@ -37,27 +37,7 @@ export default {
     to_manage(){
       console.log("go to manage page\n");
       //this.$router.push('./manage')
-    },
-    //跳转到收藏夹页面
-    to_favourite(){
-      console.log("go to favourite page\n");
-      //this.$router.push('./favourite')
-    },
-    //跳转到个人关注页面
-    to_interest(){
-      console.log("go to interest page\n");
-      //this.$router.push('./interest')
-    },
-    //跳转到消息页面
-    to_information(){
-      console.log("go to information page\n");
-      //this.$router.push('./information')
-    },
-    //跳转到播放记录页面
-    to_record(){
-      console.log("go to record page\n");
-      //this.$router.push('./record')
-    },
+    }
   }
 }
 </script>
