@@ -2,7 +2,6 @@
   <NavNoleft />
   <!--上传页面的主要功能框-->
   <div id="main">
-    
     <div style="display: flex; margin-left: 1%; margin-top: 2%;">
       <div class="name" style="width: 15%; margin-left: 10px; margin-top: 2%;">
         <p class="Chinese_font">歌曲信息</p>
@@ -10,26 +9,26 @@
       <div style="width: 70%; margin-left: 2%; margin-top: 2%;">
         <el-form v-model="input_data" :rules="rules" ref="a_input_data">
           <el-form-item prop="input_song_name">
+            <!--歌曲名输入栏-->
             <el-input id="i_song" type="text" v-model="input_data.input_song_name" placeholder="请输入歌曲名" />
           </el-form-item>
           <el-form-item prop="input_singer_name">
+            <!--歌手名输入栏-->
             <el-input id="i_singer" type="text" v-model="input_data.input_singer_name" placeholder="请输入歌手名（非必需）" />
           </el-form-item>
-          <el-form-item prop="input_song_tags">
-            <el-select id="i_tags" v-model="input_data.input_song_tags" placeholder="请选择标签" multiple style="width: 100%;" filterable clearable="" multiple-limit="3">
-              <el-option v-for="item in tagList" :key="item.id" :label="item.name" :value="item.id"
-                :disabled="input_data.input_song_tags.filter(tag => tag === item.id).length >= input_data.max_tag_count" />
+          <el-form-item prop="selectedTags">
+            <!--标签选择-->
+            <el-select id="i_tag" v-model="selectedTag" placeholder="请选择标签"  style="width: 100%;" filterable clearable="" @change="selectTag" value-key="id">
+              <el-option v-for="item in tagList" :key="item.id" :label="item.name" :value="item"/>
             </el-select>
+          </el-form-item>
+          <el-form-item prop="input_lyrics">
+            <!--歌词输入栏-->
+            <el-input id="i_lyrics" type="textarea" :rows="3" v-model="input_data.input_lyrics" placeholder="请输入歌词（自行分行）"
+              resize="none" style=" width: 300px; height: 70px;" />
           </el-form-item>
         </el-form>
       </div>
-    </div>
-    <!--上传歌曲按钮-->
-    <div style="display: flex; margin-left: 1%; margin-top: 2%;">
-      <input v-show="false" ref="audio" type="file" @change="upAudio" accept="audio/*" />
-      <el-button @click="uploadAudioFile"
-        style="background-color: #7eec52; color:white ; font-size: large;">上传歌曲文件</el-button>
-      <span v-if="selectedAudio" style="margin-left:1% ;">{{ selectedAudio.name }}</span>
     </div>
     <!--上传歌曲封面-->
     <div style="display: flex; margin-left: 1%; margin-top: 2%;">
@@ -38,16 +37,17 @@
         style="background-color: #7eec52; color:white ; font-size: large;">上传封面（非必需）</el-button>
       <div id="preview" style="margin-left: 1%;"></div>
     </div>
-    <!--上传歌词按钮-->
+    <!--上传歌曲按钮-->
     <div style="display: flex; margin-left: 1%; margin-top: 2%;">
-      <input v-show="false" ref="lyrics" type="file" @change="upLyrics" accept=".lrc" />
-      <el-button @click="uploadLyricsFile"
-        style="background-color: #7eec52; color:white ; font-size: large;">上传歌词文件（非必需）</el-button>
-      <span v-if="selectedLyrics" style="margin-left:1% ;">{{ selectedLyrics.name }}</span>
+      <input v-show="false" ref="audio" type="file" @change="upAudio" accept="audio/*" />
+      <el-button @click="uploadAudioFile"
+        style="background-color: #7eec52; color:white ; font-size: large;">上传歌曲文件</el-button>
+      <span v-if="selectedAudio" style="margin-left:1% ;">{{ selectedAudio.name }}</span>
     </div>
     <!--上传歌曲确认按钮-->
     <div style="display: flex; margin-left: 1%; margin-top: 2%; justify-content: center;">
-      <el-button style="background-color: #7eec52; color:white ; font-size: larger;">上传歌曲</el-button>
+      <el-button @click="get_input_data"
+        style="background-color: #7eec52; color:white ; font-size: larger;">上传歌曲</el-button>
     </div>
   </div>
 </template>
@@ -75,9 +75,16 @@ export default {
   components: {
     NavNoleft
   },
+  data() {
+    return {
+      selectedAudio: null,
+      selectedImage: null,
+      selectedTag: "",
+    }
+  },
   methods: {
-    uploadLyricsFile() {
-      this.$refs.lyrics.dispatchEvent(new MouseEvent('click'))
+    selectTag(value) {
+      this.selectTag = value;
     },
     uploadImgFile() {
       this.$refs.img.dispatchEvent(new MouseEvent('click'))
@@ -90,21 +97,17 @@ export default {
       console.log('选中的音频文件:', file);
       this.selectedAudio = file;
     },
-    upLyrics(event) {
-      let file = event.target.files[0];
-      console.log('选中的歌词文件:', file);
-      this.selectedLyrics = file;
-    },
     upImg(event) {
       let file = event.target.files[0];
       console.log('选中的图片文件:', file);
       this.selectedImage = file;
+      console.log(this.selectedImage);
       const reader = new FileReader();
       reader.onload = () => {
         let img = document.createElement('img');
         img.onload = () => {
-          const maxWidth = 250;
-          const maxHeight = 250;
+          const maxWidth = 150;
+          const maxHeight = 150;
           if (img.width > maxWidth || img.height > maxHeight) {
             const scale = Math.min(maxWidth / img.width, maxHeight / img.height);
             img.width *= scale;
@@ -118,19 +121,20 @@ export default {
       reader.readAsDataURL(file);
     },
     get_input_data() {
-      let song = document.getElementById('i_song').value
-      let singer = document.getElementById('i_singer').value
+      let song = document.getElementById('i_song').value;
+      let singer = document.getElementById('i_singer').value;
+      let lyrics = document.getElementById('i_lyrics').value;
+      let tag = this.selectTag;
+      console.log(tag)
+      console.log(song);
+      console.log(singer);
+      console.log(lyrics);
       return {
         song,
-        singer
+        singer,
+        tag,
+        lyrics,
       }
-    }
-  },
-  data() {
-    return {
-      selectedAudio: null,
-      selectedLyrics: null,
-      selectedImage: null,
     }
   },
 }
@@ -140,8 +144,8 @@ export default {
 const input_data = reactive({
   input_song_name: '',
   input_singer_name: '',
-  input_song_tags: [],
   max_tag_count: 3,
+  input_lyrics: ''
 });
 </script>
 

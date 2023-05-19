@@ -6,12 +6,6 @@ const routes = [
     name: 'upload',
     component: () => import('../views/UploadView.vue')
   },
-
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import('../views/LoginView.vue')
-  }
 ]
 
 const router = createRouter({
