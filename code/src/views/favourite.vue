@@ -121,7 +121,6 @@ export default {
 import { reactive } from "vue";
 
 const input_data = reactive({
-	input_introduction: '',
 })
 </script>
 

@@ -53,7 +53,7 @@ export default {
 		//跳转到个人关注页面
 		to_interest(){
 			console.log("go to interest page\n");
-			//this.$router.push('./interest')
+			this.$router.push('./interest')
 		},
 		//跳转到消息页面
 		to_information(){
