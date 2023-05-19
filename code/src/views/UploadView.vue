@@ -133,7 +133,7 @@ export default {
         song,
         singer,
         tag,
-        lyrics,
+        lyrics
       }
     }
   },
