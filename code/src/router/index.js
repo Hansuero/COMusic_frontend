@@ -6,7 +6,14 @@ const routes = [
     name: 'upload',
     component: () => import('../views/UploadView.vue')
   },
+  {
+    path: '/record',
+    name: 'record',
+    component: () => import('../views/RecordView.vue')
+  },
 ]
+
+
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

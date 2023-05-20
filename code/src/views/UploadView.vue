@@ -18,8 +18,9 @@
           </el-form-item>
           <el-form-item prop="selectedTags">
             <!--标签选择-->
-            <el-select id="i_tag" v-model="selectedTag" placeholder="请选择标签"  style="width: 100%;" filterable clearable="" @change="selectTag" value-key="id">
-              <el-option v-for="item in tagList" :key="item.id" :label="item.name" :value="item"/>
+            <el-select id="i_tag" v-model="selectedTag" placeholder="请选择标签" style="width: 100%;" filterable clearable=""
+              @change="selectTag" value-key="id">
+              <el-option v-for="item in tagList" :key="item.id" :label="item.name" :value="item" />
             </el-select>
           </el-form-item>
           <el-form-item prop="input_lyrics">

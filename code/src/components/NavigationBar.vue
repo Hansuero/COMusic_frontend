@@ -1,6 +1,8 @@
 <template>
+	<DialogComponent ref="child_dialog" :can_visible="visible" :instruction="instruct" :left_choice="l_choice"
+		:right_choice="r_choice" :right_function="to_login" @close="close_child_dialog" />
 	<div class="top"> <!--上方导航栏，里面的文字换成对应路由-->
-		<img id="logo" src="../assets/logo_small.png"/>
+		<img id="logo" src="../assets/logo_small.png" />
 		<el-button id="main" color="#7eec52" @click="to_index">主页</el-button>
 		<el-button id="mine" color="#7eec52" @click="to_user">我的</el-button>
 		<el-button id="submit" color="#7eec52" @click="to_upload">上传音乐</el-button>
@@ -17,65 +19,115 @@
 </template>
 
 <script>
+import { inject } from 'vue';
+import DialogComponent from './DialogComponent.vue'
+
 export default {
 	name: 'NavigationBar',
+	setup() {
+		const is_login = inject('is_login')
+		function whether_login() {
+			return is_login
+		}
+		return { whether_login }
+	},
 	methods: {
+		close_child_dialog() {
+			this.$data.visible = false
+			this.$refs.child_dialog.update_delta()
+		},
+		to_login() {
+			console.log("here")
+			this.$router.push('./login')
+		},
 		/*
 			点击跳转到主页面的处理函数，等主页面写好后，把这个函数里的
 			this.$router.push('./index')
 			这句话取消注释，使其可以运行即可实现跳转功能
 			其他事件处理函数与之类似，不再赘述
 		*/
-		to_index(){
+		to_index() {
 			console.log("go to index page\n");
 			//this.$router.push('./index')
 		},
 		//跳转到个人页面
-		to_user(){
-			console.log("go to user page\n");
-			//this.$router.push('./user')
+		to_user() {
+			let res = this.whether_login()
+			console.log(res)
+			//当前使用者已经登录
+			if (res) {
+				console.log("go to user page\n");
+				this.$router.push('./user')
+			}
+			//当前使用者未登录
+			else {
+				this.$data.visible = true
+			}
 		},
 		//跳转到上传页面
-		to_upload(){
-			console.log("go to upload page\n");
-			//this.$router.push('./upload')
+		to_upload() {
+			let res = this.whether_login()
+			if (res) {
+				console.log("go to upload page\n");
+				//this.$router.push('./upload')
+			}
+			else {
+				this.$data.visible = true
+			}
 		},
 		//跳转到管理页面
-		to_manage(){
-			console.log("go to manage page\n");
-			//this.$router.push('./manage')
+		to_manage() {
+			let res = this.whether_login()
+			if (res) {
+				console.log("go to manage page\n");
+				//this.$router.push('./manage')
+			}
+			else {
+				this.$data.visible = true
+			}
 		},
 		//跳转到收藏夹页面
-		to_favourite(){
+		to_favourite() {
 			console.log("go to favourite page\n");
-			//this.$router.push('./favourite')
+			this.$router.push('./favourite')
 		},
 		//跳转到个人关注页面
-		to_interest(){
+		to_interest() {
 			console.log("go to interest page\n");
-			//this.$router.push('./interest')
+			this.$router.push('./interest')
 		},
 		//跳转到消息页面
-		to_information(){
+		to_information() {
 			console.log("go to information page\n");
 			//this.$router.push('./information')
 		},
 		//跳转到播放记录页面
-		to_record(){
+		to_record() {
 			console.log("go to record page\n");
 			//this.$router.push('./record')
 		},
+	},
+	components: {
+		DialogComponent
+	},
+	data() {
+		return {
+			visible: false,
+			instruct: '这不是你没登录就能看的内容',
+			l_choice: '我就不去登录哼',
+			r_choice: '马上就去登录啦',
+		}
 	}
 }
 </script>
 
 <style scoped>
-*{
+* {
 	margin: 0;
 	padding: 0;
 }
 
-.top{
+.top {
 	border-bottom: 17px solid #7eec52;
 	padding-bottom: 17px;
 	width: 100%;
@@ -83,7 +135,7 @@ export default {
 	background-attachment: fixed;
 }
 
-.top #logo{
+.top #logo {
 	width: 78px;
 	height: 78px;
 	position: absolute;
@@ -95,7 +147,7 @@ export default {
 	float: left;
 }
 
-.top #main{
+.top #main {
 	line-height: 48px;
 	font-size: 20px;
 	color: white;
@@ -109,7 +161,7 @@ export default {
 	float: left;
 }
 
-.top #mine{
+.top #mine {
 	line-height: 48px;
 	font-size: 20px;
 	color: white;
@@ -123,7 +175,7 @@ export default {
 	float: left;
 }
 
-.top #submit{
+.top #submit {
 	line-height: 48px;
 	font-size: 20px;
 	color: white;
@@ -137,7 +189,7 @@ export default {
 	float: left;
 }
 
-.top #manage{
+.top #manage {
 	line-height: 48px;
 	font-size: 20px;
 	color: white;
@@ -151,7 +203,7 @@ export default {
 	float: left;
 }
 
-.top #img{
+.top #img {
 	line-height: 48px;
 	font-size: 20px;
 	color: white;
@@ -165,13 +217,13 @@ export default {
 	float: left;
 }
 
-.left{
+.left {
 	height: 82vh;
 	width: 150px;
 	border-right: 17px solid #7eec52;
 }
 
-.left #idv{
+.left #idv {
 	line-height: 48px;
 	font-size: 20px;
 	color: white;
@@ -184,7 +236,7 @@ export default {
 	border-radius: 5px;
 }
 
-.left #collect{
+.left #collect {
 	line-height: 48px;
 	font-size: 20px;
 	color: white;
@@ -197,7 +249,7 @@ export default {
 	border-radius: 5px;
 }
 
-.left #care{
+.left #care {
 	width: 118px;
 	height: 48px;
 	line-height: 48px;
@@ -210,7 +262,7 @@ export default {
 	border-radius: 5px;
 }
 
-.left #message{
+.left #message {
 	line-height: 48px;
 	font-size: 20px;
 	color: white;
@@ -223,7 +275,7 @@ export default {
 	border-radius: 5px;
 }
 
-.left #record{
+.left #record {
 	line-height: 48px;
 	font-size: 20px;
 	color: white;
@@ -235,5 +287,4 @@ export default {
 	border: 1px solid #7eec52;
 	border-radius: 5px;
 }
-
 </style>
