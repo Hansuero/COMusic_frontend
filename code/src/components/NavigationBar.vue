@@ -1,4 +1,13 @@
 <template>
+	<Dialog 
+	ref="child_dialog"
+	:can_visible="visible"
+	:instruction="instruct" 
+	:left_choice="l_choice" 
+	:right_choice="r_choice"
+	:right_function="to_login"
+	@close="close_child_dialog"
+	/>
 	<div class="top"> <!--上方导航栏，里面的文字换成对应路由-->
 		<img id="logo" src="../assets/logo_small.png"/>
 		<el-button id="main" color="#7eec52" @click="to_index">主页</el-button>
@@ -17,9 +26,27 @@
 </template>
 
 <script>
+import { inject } from 'vue';
+import Dialog from './Dialog.vue'
+
 export default {
 	name: 'NavigationBar',
+	setup() {
+		const is_login = inject('is_login')
+		function whether_login() {
+			return is_login
+		}
+		return { whether_login }
+	},
 	methods: {
+		close_child_dialog(){
+			this.$data.visible = false
+			this.$refs.child_dialog.update_delta()
+		},
+		to_login(){
+			console.log("here")
+			this.$router.push('./login')
+		},
 		/*
 			点击跳转到主页面的处理函数，等主页面写好后，把这个函数里的
 			this.$router.push('./index')
@@ -32,18 +59,39 @@ export default {
 		},
 		//跳转到个人页面
 		to_user(){
-			console.log("go to user page\n");
-			this.$router.push('./user')
+			let res = this.whether_login()
+			console.log(res)
+			//当前使用者已经登录
+			if(res){
+				console.log("go to user page\n");
+				this.$router.push('./user')
+			}
+			//当前使用者未登录
+			else{
+				this.$data.visible = true
+			}
 		},
 		//跳转到上传页面
 		to_upload(){
-			console.log("go to upload page\n");
-			//this.$router.push('./upload')
+			let res = this.whether_login()
+			if(res){
+				console.log("go to upload page\n");
+				//this.$router.push('./upload')
+			}
+			else{
+				this.$data.visible = true
+			}
 		},
 		//跳转到管理页面
 		to_manage(){
-			console.log("go to manage page\n");
-			//this.$router.push('./manage')
+			let res = this.whether_login()
+			if(res){
+				console.log("go to manage page\n");
+				//this.$router.push('./manage')
+			}
+			else{
+				this.$data.visible = true
+			}
 		},
 		//跳转到收藏夹页面
 		to_favourite(){
@@ -65,6 +113,17 @@ export default {
 			console.log("go to record page\n");
 			//this.$router.push('./record')
 		},
+	},
+	components: {
+		Dialog
+	},
+	data() {
+		return{
+			visible: false,
+			instruct: '这不是你没登录就能看的内容',
+			l_choice: '我就不去登录哼',
+			r_choice: '马上就去登录啦',
+		}
 	}
 }
 </script>
