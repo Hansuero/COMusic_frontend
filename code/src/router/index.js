@@ -11,6 +11,11 @@ const routes = [
     name: 'record',
     component: () => import('../views/RecordView.vue')
   },
+  {
+    path: '/information',
+    name: 'information',
+    component: () => import('../views/InformationView.vue')
+  },
 ]
 
 
