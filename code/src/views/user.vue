@@ -25,9 +25,29 @@ export default {
 	},
 	methods: {
 		upload_profile(){
+			const form_data = new FormData()
+			form_data.append('username', 'Keine')
+			form_data.append('password1', 'ggs102426')
+			form_data.append('password2', 'ggs102426')
+			form_data.append('email', '578586993@qq.com')
+
+			
+			this.$axios
+			.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/register', form_data, {
+				headers: {
+    				'Content-Type': 'multipart/form-data'
+  				}
+			})
+			.then(function (response) {
+    			console.log(response);
+			})
+		},
+		/*
+		upload_profile(){
 			console.log("this is upload_profile");
 			this.$refs.profile_select.click()
 		},
+		*/
 		select_profile(event){
 			const file = event.target.files[0];
 			let type = file.type
@@ -59,7 +79,7 @@ export default {
 
 <script setup>
 import { reactive } from "vue";
-
+/*
 const form_data = new FormData()
 form_data.append('username', 'Keine')
 form_data.append('password1', 'ggs102426')
@@ -76,7 +96,7 @@ proxy.$axios
 .then(function (response) {
     console.log(response);
 })
-
+*/
 const input_data = reactive({
 	input_introduction: '',
 })
