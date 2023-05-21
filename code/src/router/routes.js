@@ -6,7 +6,7 @@ import interest from '../views/interest.vue'
 
 const routes = [{
         path: '/',
-        redirect: '/login'
+        redirect: '/user'
     },{
         name: 'login',
         path: '/login',

@@ -4,6 +4,8 @@
 
 <script>
 import NavigationBar from '../components/NavigationBar.vue';
+import { affixProps } from "element-plus";
+import { getCurrentInstance } from "vue";
 
 export default {
 	name: 'user',
@@ -52,10 +54,28 @@ export default {
 		}
 	}
 }
+
 </script>
 
 <script setup>
 import { reactive } from "vue";
+
+const form_data = new FormData()
+form_data.append('username', 'Keine')
+form_data.append('password1', 'ggs102426')
+form_data.append('password2', 'ggs102426')
+form_data.append('email', '578586993@qq.com')
+
+const { proxy } = getCurrentInstance()
+proxy.$axios
+.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/register', form_data, {
+	headers: {
+    	'Content-Type': 'multipart/form-data'
+  	}
+})
+.then(function (response) {
+    console.log(response);
+})
 
 const input_data = reactive({
 	input_introduction: '',
