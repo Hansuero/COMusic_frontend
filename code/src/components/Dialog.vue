@@ -33,15 +33,11 @@ export default {
     setup(props) {
         delta.value = 1
         watchEffect(() => {
-            console.log(delta.value)
             if(delta.value==0){
                 return
             }
             else{
                 is_visible.value = props.can_visible;
-                console.log('----------------');
-                console.log(is_visible.value);
-                console.log('----------------');
             }
         })
         const handle_close = () => {
@@ -58,7 +54,6 @@ export default {
     ],
     methods: {
         handle_left(){
-            console.log("wwwwwwwwww")
             delta.value = 0
             is_visible.value = false
         },

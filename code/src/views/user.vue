@@ -11,9 +11,13 @@ export default {
 		md，我要开始骂人了，那个sb把这个data设置成了一个函数的
 	*/
 	data() {
+		const here = this
+		console.log(here.$cur_user.photo_url)
 		return {
 			profile_type: '.png',
-			username: 'Keine',
+			photo_url: here.$cur_user.photo_url,
+			user_id: here.$cur_user.user_id,
+			username: here.$cur_user.username,
 			introduction: '快来编辑你的个人简介啊嘿嘿嘿！',
 			can_modify: false
 		}
@@ -27,27 +31,62 @@ export default {
 			this.$refs.profile_select.click()
 		},
 		select_profile(event){
-			const file = event.target.files[0];
-			let type = file.type
-			if(type=='image/png'){
-				console.log('select .png')
-				this.$data.profile_type = '.png'
+			const here = this
+			const profile = event.target.files[0];
+			//使用二进制流
+			const profile_read = new FileReader()
+			var delta = 0
+			profile_read.readAsBinaryString(profile)
+			profile_read.onload = () => {
+				const binary_profile = profile_read.result
+				const form_data = new FormData()
+				form_data.append('photo', binary_profile)
+				here.$axios.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/upload_photo', form_data, {
+					headers: {
+    					'Content-Type': 'multipart/form-data'
+  					}
+				})
+				.then(function(response){
+					if(response.status == 200){
+						console.log('upload_photo post success')
+						delta = 1
+					}
+				})
 			}
-			else{
-				console.log('select .jpg')
-				this.$data.profile_type = '.jpg'
+			if(!delta){
+				const profile_read_2 =  new FileReader()
+				profile_read_2.readAsDataURL(profile)
+				profile_read_2.onload = () => {
+					const url_profile = profile_read_2.result
+					here.$cur_user.photo_url = url_profile
+					here.photo_url = url_profile
+				}
 			}
 		},
-		
 		modify_introduction(){
 			let former = this.$data.can_modify
+			const here = this
 			if(former){
-				this.$data.can_modify = false
-				let new_introduction = document.getElementById('i_introduction').value
+				here.$data.can_modify = false
+				var new_introduction = document.getElementById('i_introduction').value
 				console.log(new_introduction)
+				here.$axios
+				const form_data = new FormData()
+				form_data.append('user_id', here.$data.user_id)
+				form_data.append('bio', new_introduction)
+				.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/upload_bio', form_data, {
+					headers: {
+    					'Content-Type': 'multipart/form-data'
+  					}
+				})
+				.then(function(response){
+					if(response.status == 200){
+						console.log("upload_bio post success")
+					}
+				})
 			}
 			else{
-				this.$data.can_modify = true
+				here.$data.can_modify = true
 			}
 		}
 	}
@@ -64,12 +103,15 @@ const input_data = reactive({
 
 <template>
 	<!--引入导航栏组件（包含左侧）-->
-	<NavigationBar></NavigationBar>
+	<NavigationBar 
+	ref="navigation_bar"
+	:profile_url="photo_url"
+	/>
 	<!--存放主体内容的div-->
 	<div class="outer_box">
 		<div style="width: 100%; height: 40%; display: flex; justify-content: center; align-items: center;">
 			<el-button class="profile">
-				<img src="../assets/profile.png" class="profile" @click="upload_profile"/>
+				<img :src="photo_url" class="profile" @click="upload_profile"/>
 				<input type="file" accept=".jpg, .png" ref="profile_select" @change="select_profile" style="display: none;" />
 			</el-button>
 		</div>

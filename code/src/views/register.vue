@@ -21,9 +21,41 @@ export default {
         //在这里处理注册事件
         register(){
 			var input = this.get_input_data()
-			console.log(input.username)
-			console.log(input.password)
-            console.log("I want to register!\n");
+            console.log("I want to register!\n")
+			const here = this
+			const form_data = new FormData()
+			form_data.append('username', input.username)
+			form_data.append('password1', input.password)
+			form_data.append('password2', input.qualify_password)
+			form_data.append('email', input.email)
+			here.$axios
+			.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/register', form_data, {
+				headers: {
+    				'Content-Type': 'multipart/form-data'
+  				}
+			})
+			.then(function(response_1){
+				if(response_1.status == 200){
+					console.log("register post success")
+					here.$axios
+					.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_user_info')
+					.then(function(response_2){
+						if(response_2.status == 200){
+							var user_id = response_2.data.id
+							var username = response_2.data.username
+							var photo_url = response_2.data.photo_url
+							console.log(user_id)
+							console.log(username)
+							console.log(photo_url)
+							here.$cur_user.user_id = user_id
+							here.$cur_user.username = username
+							here.$cur_user.photo_url = photo_url
+							console.log(here.$cur_user)
+							//this.$router.push('./index')
+						}
+					})
+				}
+			})
         }
     }
 }

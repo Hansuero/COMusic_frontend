@@ -17,7 +17,7 @@ const routes = [{
         component: register
     },{
         name: 'user',
-        path: '/user',
+        path: '/user/:id',
         component: user
     },{
         name: 'favourite',
@@ -27,6 +27,6 @@ const routes = [{
         name: 'interest',
         path: '/interest',
         component: interest
-    }
+    },
 ];
 export default routes

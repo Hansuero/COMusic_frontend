@@ -11,8 +11,11 @@ export default {
 		md，我要开始骂人了，那个sb把这个data设置成了一个函数的
 	*/
 	data() {
+		const here = this
 		return {
-			username: 'Keine',
+			username: this.$cur_user.username,
+			photo_url: this.$cur_user.photo_url,
+			user_id: this.$cur_user.user_id,
 			num_favourite: 10,
 			favourite_list: [
 				{
@@ -130,7 +133,7 @@ const input_data = reactive({
 	<!--存放主体内容的div-->
 	<div class="outer_box">
 		<div style="display: flex; align-items: center; width: 100%; height: 20%;">
-			<img src="../assets/profile.png" class="left_profile" style="margin-left: 60px;"/>
+			<img :src="photo_url" class="left_profile" style="margin-left: 60px;"/>
 			<div class="rectangle_container" style="width: 20%; margin-left: 30px;">
 				<p class="theme_font">{{ username }}</p>
 			</div>

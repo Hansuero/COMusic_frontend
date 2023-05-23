@@ -4,6 +4,7 @@
 
 <script>
 import NavigationBar from '../components/NavigationBar.vue';
+import { getCurrentInstance } from "vue";
 
 export default {
 	name: 'interest',
@@ -12,40 +13,33 @@ export default {
 	*/
 	data() {
 		return {
-            num_interest: 10,
-			interest_list: [{
-                    intere_user_id: '00',
-                    intere_user_name: 'AAAA',
-                },{
-                    intere_user_id: '01',
-                    intere_user_name: 'BBBB',
-                },{
-                    intere_user_id: '02',
-                    intere_user_name: 'CCCC',
-                },{
-                    intere_user_id: '03',
-                    intere_user_name: 'DDDD',
-                },{
-                    intere_user_id: '04',
-                    intere_user_name: 'EEEE',
-                },{
-                    intere_user_id: '05',
-                    intere_user_name: 'FFFF',
-                },{
-                    intere_user_id: '06',
-                    intere_user_name: 'GGGG',
-                },{
-                    intere_user_id: '07',
-                    intere_user_name: 'HHHH',
-                },{
-                    intere_user_id: '08',
-                    intere_user_name: 'IIII',
-                },{
-                    intere_user_id: '09',
-                    intere_user_name: 'JJJJ',
-                },
-            ]
+            num_interest: 0,
+			interest_list: []
 		}
+	},
+	created() {
+		const here = this
+		here.$axios
+		.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/show_following')
+		.then(function(response){
+			if(response.status == 200){
+				console.log("get following list success")
+				const re_data = response.data
+				console.log(re_data)
+				var following_list = re_data.following
+				here.$data.num_interest = following_list.length
+				following_list.forEach(function(element){
+					var intere_user_id = element.user_id
+					var intere_user_name = element.username
+					var intere_photo_url = element.photo_url
+					here.$data.interest_list.push({
+						intere_user_id: intere_user_id,
+						intere_user_name: intere_user_name,
+						intere_photo_url: intere_photo_url
+					})
+				})
+			}
+		})
 	},
 	components: {
 		NavigationBar,
@@ -57,17 +51,12 @@ export default {
 		},
 		//跳转到关注用户主页的方法
 		to_intere_user(intere_user_id){
+			const here = this
 			console.log(intere_user_id)
+			here.$router.push('/user/'+intere_user_id)
 		}
 	}
 }
-</script>
-
-<script setup>
-import { reactive } from "vue";
-
-const input_data = reactive({
-})
 </script>
 
 <template>
@@ -78,8 +67,8 @@ const input_data = reactive({
         <el-scrollbar style="display: flex; width: 100%;" max-height="100%">
             <div style="display: flex; align-items: center;">
                 <div v-for="intere in interest_list" class="box_interest_item">
-					<div style="width: 100%;">
-						<img src="../assets/profile.png" class="profile" @click="to_intere_user(intere.intere_user_id)"/>
+					<div style="width: 100%; display: flex; align-items: center; justify-content: center;">
+						<img :src="intere.intere_photo_url" class="profile" @click="to_intere_user(intere.intere_user_id)"/>
 					</div>
 					<div style="width: 100%; display: flex; justify-content: center; align-items: center;">
 						<p class="theme_font" style="color: black;">{{ intere.intere_user_name }}</p>
@@ -116,6 +105,7 @@ const input_data = reactive({
 	font-family:'Microsoft YaHei', sans-serif;;
 }
 .box_interest_item{
+	max-width: 300px;
 	height: 500px;
 	display: flex;
 	flex-wrap: wrap;
