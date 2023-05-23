@@ -2,7 +2,8 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    play: true
+    play: true,
+    isCollect: true
   },
   getters: {
   },

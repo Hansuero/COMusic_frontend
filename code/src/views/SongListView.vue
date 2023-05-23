@@ -20,16 +20,12 @@
     <div id="top">
       <span>歌曲</span>
       <el-button color="#7eec52" id="complain"><strong><el-icon size=20px id="icon2"><warning /></el-icon>{{ complain }}</strong></el-button>
-      <el-button color="#7eec52" id="collect"><strong><el-icon size=20px id="icon1"><star /></el-icon>{{ collect }}</strong></el-button>
+      <el-button color="#7eec52" id="collect" @click="collectSong" v-if="judge.isCollect"><strong><el-icon size=20px id="icon1"><star /></el-icon>{{ collect.name }}</strong></el-button>
+      <el-button color="#00bfff" id="ok" @click="collectSong" v-else><strong><el-icon size=20px id="icon1"><star /></el-icon>{{ collect.name }}</strong></el-button>
     </div>
     <div id="body">
       <ul type="none" id="songs">
-        <li @click="goTOSong"></li>
-        <li @click="goTOSong"></li>
-        <li @click="goTOSong"></li>
-        <li @click="goTOSong"></li>
-        <li @click="goTOSong"></li>
-        <li @click="goTOSong"></li>
+        <li v-for="(item, index) in songs.title" ref="songLi" :key="index" :value="item" @click="clickSong(index, nums.num[index])">{{ item }}</li>
       </ul>
     </div>
   </div>
@@ -37,8 +33,9 @@
 
 <script>
 import NavNoLeft from '@/components/NavNoLeft.vue'
-import { reactive } from 'vue'
+import { reactive, ref, onMounted, onUnmounted} from 'vue'
 import router from '@/router'
+import store from '@/store'
 import { Star } from '@element-plus/icons'
 import { Warning } from '@element-plus/icons'
 
@@ -52,20 +49,70 @@ export default {
       tag: '流行',
       introduction: '哥的幽默你不懂'
     })
-    let collect = reactive('收藏')
+    const nums = reactive({
+      num: [1, 1, 1, 1, 1, 1]
+    })
+    let collect = reactive({
+      name: '收藏'
+    })
     let complain = reactive('投诉')
+    const judge = reactive({
+      isCollect: store.state.isCollect
+    })
+    const songs = reactive({
+      title: ['AAA','BBB','CCC','DDD','EEE','FFF']
+    })
+    const songLi = ref([])
+    onMounted(()=>{
+      songLi.value.forEach(item=>{
+          item.style.background = "#7eec52"
+      })
+    })
     function goBack () {
       router.back()
     }
-    function goTOSong () {
-      router.push('./song')
+    function clickSong (index, num) {
+      if (judge.isCollect){
+        router.push('./song')
+      } else if (!judge.isCollect && num === 1){
+        songLi.value.forEach(item=>{
+          if (songLi.value.indexOf(item) == index){
+              item.style.background = "#00bfff"
+              nums.num[index] = 2
+            }
+        })
+      } else if (!judge.isCollect && num === 2){
+        songLi.value.forEach(item=>{
+          if (songLi.value.indexOf(item) == index){
+            item.style.background = "#7eec52"
+            nums.num[index] = 1
+          }
+        })
+      }
+    }
+    function collectSong () {
+      if (judge.isCollect) {
+        judge.isCollect = false
+        collect.name = '确定'
+      } else {
+        judge.isCollect = true
+        collect.name = '收藏'
+        songLi.value.forEach(item=>{
+          item.style.background = "#7eec52"
+        })
+      }
     }
     return {
       author,
       goBack,
       collect,
       complain,
-      goTOSong
+      clickSong,
+      collectSong,
+      judge,
+      songs,
+      songLi,
+      nums
     }
   }
 }
@@ -151,6 +198,16 @@ nav a {
   color: white;
   font-size: 16px;
 }
+.list #top #ok{
+  float: right;
+  position: relative;
+  right: 50px;
+  width: 5%;
+  height: 35px;
+  line-height: 35px;
+  color: white;
+  font-size: 16px;
+}
 .list #top #icon1{
   position: relative;
   top: 4px;
@@ -182,9 +239,10 @@ nav a {
   position: relative;
   left: 10.3%;
   width: 79.2%;
-  height: 40px;
-  line-height: 40px;
-  border: 1px solid #7eec52;
+  height: 42px;
+  line-height: 42px;
+  color: white;
+  background: #7eec52;
   border-radius: 10px;
   margin-bottom: 20px;
 }
