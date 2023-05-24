@@ -3,8 +3,13 @@
 -->
 <script>
 import { reactive } from "vue";
+import { ElMessageBox } from "element-plus";
+
 export default {
 	name: 'login', 
+	components: {
+		ElMessageBox
+	},
 	methods: {
 		//获取输入的数据，返回一个包含了id和password属性的对象
 		get_input_data(){
@@ -58,6 +63,18 @@ export default {
 							here.$router.push('./user/'+user_id)
 							//here.$router.push('./index')
 						}
+						else{
+							const dialog = new ElMessageBox({
+								title: "糟糕，出错啦",
+								message: response_2.message
+							})
+						}
+					})
+				}
+				else{
+					const dialog = new ElMessageBox({
+						title: "糟糕，出错啦",
+						message: response_1.message
 					})
 				}
 			})

@@ -4,6 +4,7 @@
 
 <script>
 import NavigationBar from '../components/NavigationBar.vue';
+import { ElMessageBox } from 'element-plus';
 import { getCurrentInstance } from "vue";
 
 export default {
@@ -39,10 +40,17 @@ export default {
 					})
 				})
 			}
+			else{
+				const dialog = new ElMessageBox({
+					title: "糟糕，出错啦",
+					message: response.message
+				})
+			}
 		})
 	},
 	components: {
 		NavigationBar,
+		ElMessageBox
 	},
 	methods: {
 		//取消关注相关方法
@@ -51,7 +59,7 @@ export default {
 			const form_data = new FormData()
 			form_data.append('following_username', intere_user_name)
 			here.$axios
-			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/unfollow_user', form_data, {
+			.delete('http://127.0.0.1:4523/m1/2749792-0-default/api/user/unfollow_user', form_data, {
 				headers: {
     				'Content-Type': 'multipart/form-data'
   				}
@@ -67,6 +75,12 @@ export default {
 						}
 					}
 					here.$data.interest_list.splice(cancel_index, 1)
+				}
+				else{
+					const dialog = new ElMessageBox({
+						title: "糟糕，出错啦",
+						message: response.message
+					})
 				}
 			})
 		},

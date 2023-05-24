@@ -5,6 +5,7 @@
 <script>
 import NavigationBar from '../components/NavigationBar.vue';
 import { useRoute } from "vue-router";
+import { ElMessageBox } from "element-plus";
 
 export default {
 	name: 'user',
@@ -32,6 +33,12 @@ export default {
 					cur_username = response.data.username
 					cur_photo_url = response.data.photo_url
 				}
+				else{
+					const dialog = new ElMessageBox({
+						title: "糟糕，出错啦",
+						message: response.message
+					})
+				}
 			})
 		}
 		else{
@@ -50,6 +57,7 @@ export default {
 	},
 	components: {
 		NavigationBar,
+		ElMessageBox
 	},
 	methods: {
 		upload_profile(){
@@ -76,6 +84,12 @@ export default {
 					if(response.status == 200){
 						console.log('upload_photo post success')
 						delta = 1
+					}
+					else{
+						const dialog = new ElMessageBox({
+							title: "糟糕，出错啦",
+							message: response.message
+						})
 					}
 				})
 			}
@@ -108,6 +122,12 @@ export default {
 				.then(function(response){
 					if(response.status == 200){
 						console.log("upload_bio post success")
+					}
+					else{
+						const dialog = new ElMessageBox({
+							title: "糟糕，出错啦",
+							message: response.message
+						})
 					}
 				})
 			}

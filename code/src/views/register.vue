@@ -3,8 +3,13 @@
 -->
 
 <script>
+import { ElMessageBox } from "element-plus";
+
 export default {
 	name: 'register',
+	components: {
+		ElMessageBox
+	},
 	methods: {
 		get_input_data(){
 			let username = document.getElementById('i_username').value
@@ -53,6 +58,18 @@ export default {
 							console.log(here.$cur_user)
 							//this.$router.push('./index')
 						}
+						else{
+							const dialog = new ElMessageBox({
+								title: "糟糕，出错啦",
+								message: response_2.message
+							})
+						}
+					})
+				}
+				else{
+					const dialog = new ElMessageBox({
+						title: "糟糕，出错啦",
+						message: response_1.message
 					})
 				}
 			})

@@ -27,12 +27,12 @@ export default {
 	created() {
 		const here = this
 		here.$axios
-		.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_favo_list')
-		.then(function(response){
-			if(response.status == 200){
+		.get('http://127.0.0.1:4523/m1/2749792-0-default/api/music/get_favo_list')
+		.then(function(response_1){
+			if(response_1.status == 200){
 				console.log('get favourite list success')
-				const re_data = response.data
-				var favo_list = re_data.favo_list
+				const re_data_1 = response_1.data
+				var favo_list = re_data_1.favo_list
 				here.$data.num_favourite = favo_list.length
 				favo_list.forEach(function(element){
 					var playlist_id = element.favo_id
@@ -44,18 +44,18 @@ export default {
 				})
 				console.log(here.$data.favourite_list[0])
 				here.$data.cur_favo_id = here.$data.favourite_list[0].playlist_id
-				const form_data = new FormData()
-				form_data.append('favo_id', here.$data.cur_favo_id)
+				const form_data_1 = new FormData()
+				form_data_1.append('favo_id', here.$data.cur_favo_id)
 				here.$axios
-				.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_songs_in_favo', form_data, {
+				.get('http://127.0.0.1:4523/m1/2749792-0-default/api/music/get_songs_in_favo', form_data_1, {
 					headers: {
     					'Content-Type': 'multipart/form-data'
 	  				}
 				})
-				.then(function(response){
-					if(response.status == 200){
-						const re_data = response.data
-						const song_list = re_data.song_list
+				.then(function(response_2){
+					if(response_2.status == 200){
+						const re_data_2 = response_2.data
+						const song_list = re_data_2.song_list
 						here.$data.num_song = song_list.length
 						song_list.forEach(function(element){
 							var song_id = element.song_id
@@ -68,6 +68,18 @@ export default {
 							})
 						})
 					}
+					else{
+						const dialog = new ElMessageBox({
+							title: "糟糕，出错啦",
+							message: response_2.message
+						})
+					}
+				})
+			}
+			else{
+				const dialog = new ElMessageBox({
+					title: "糟糕，出错啦",
+					message: response_1.message
 				})
 			}
 		})
@@ -89,7 +101,7 @@ export default {
 			const form_data = new FormData()
 			form_data.append('favo_id', playlist_id)
 			here.$axios
-			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_songs_in_favo', form_data, {
+			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/music/get_songs_in_favo', form_data, {
 				headers: {
     				'Content-Type': 'multipart/form-data'
   				}
@@ -109,6 +121,12 @@ export default {
 							title: title,
 							artist: artist
 						})
+					})
+				}
+				else{
+					const dialog = new ElMessageBox({
+						title: "糟糕，出错啦",
+						message: response.message
 					})
 				}
 			})
@@ -135,7 +153,7 @@ export default {
 				const form_data = new FormData()
 				form_data.append('favo_title', title_new_favo)
 				here.$axios
-				.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/create_new_favo', form_data, {
+				.post('http://127.0.0.1:4523/m1/2749792-0-default/api/music/create_new_favo', form_data, {
 					headers: {
     					'Content-Type': 'multipart/form-data'
   					}
@@ -149,6 +167,12 @@ export default {
 							title: favo_title
 						})
 						here.$data.num_favourite = here.$data.favourite_list.length
+					}
+					else{
+						const dialog = new ElMessageBox({
+							title: "糟糕，出错啦",
+							message: response.message
+						})
 					}
 				})
         	})
