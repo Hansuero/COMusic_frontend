@@ -4,6 +4,7 @@
 
 <script>
 import NavigationBar from '../components/NavigationBar.vue';
+import { useRoute } from "vue-router";
 
 export default {
 	name: 'user',
@@ -12,12 +13,37 @@ export default {
 	*/
 	data() {
 		const here = this
-		console.log(here.$cur_user.photo_url)
+		var cur_id = useRoute().params.id
+		var cur_user_id
+		var cur_username
+		var cur_photo_url
+		if(here.$cur_user.user_id != cur_id){
+			const form_data = new FormData()
+			form_data.append('id', cur_id)
+			here.$axios
+			.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_other_info', form_data, {
+				headers: {
+    				'Content-Type': 'multipart/form-data'
+  				}
+			})
+			.then(function(response){
+				if(response.status == 200){
+					cur_user_id = response.data.id
+					cur_username = response.data.username
+					cur_photo_url = response.data.photo_url
+				}
+			})
+		}
+		else{
+			cur_user_id = here.$cur_user.user_id
+			cur_photo_url = here.$cur_user.photo_url
+			cur_username = here.$cur_user.username
+		}
 		return {
 			profile_type: '.png',
-			photo_url: here.$cur_user.photo_url,
-			user_id: here.$cur_user.user_id,
-			username: here.$cur_user.username,
+			photo_url: cur_photo_url,
+			user_id: cur_user_id,
+			username: cur_username,
 			introduction: '快来编辑你的个人简介啊嘿嘿嘿！',
 			can_modify: false
 		}

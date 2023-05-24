@@ -53,7 +53,15 @@ export default {
 		to_intere_user(intere_user_id){
 			const here = this
 			console.log(intere_user_id)
-			here.$router.push('/user/'+intere_user_id)
+			/*
+				这个功能，你现在不要试
+				水太深，你把握不住
+				还有就是，这个要上云之后才能用
+				因为在本地MOCK的话，不能保证从user_id获取到的虚假的用户信息中
+				的user_id依旧是和作为参数的user_id一样的
+				所以你先别试
+			*/
+			//here.$router.push('/user/'+intere_user_id)
 		}
 	}
 }
