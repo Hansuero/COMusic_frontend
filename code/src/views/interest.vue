@@ -46,8 +46,29 @@ export default {
 	},
 	methods: {
 		//取消关注相关方法
-		cancel_interest(intere_user_id){
-			console.log(intere_user_id)
+		cancel_interest(intere_user_name){
+			const here = this
+			const form_data = new FormData()
+			form_data.append('following_username', intere_user_name)
+			here.$axios
+			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/unfollow_user', form_data, {
+				headers: {
+    				'Content-Type': 'multipart/form-data'
+  				}
+			})
+			.then(function(response){
+				if(response.status == 200){
+					console.log('cancel success')
+					var cancel_index
+					for(var i=0; i<here.$data.num_interest; i++){
+						if(here.$data.interest_list[i].intere_user_name == intere_user_name){
+							cancel_index = i
+							break
+						}
+					}
+					here.$data.interest_list.splice(cancel_index, 1)
+				}
+			})
 		},
 		//跳转到关注用户主页的方法
 		to_intere_user(intere_user_id){
@@ -81,7 +102,7 @@ export default {
 					<div style="width: 100%; display: flex; justify-content: center; align-items: center;">
 						<p class="theme_font" style="color: black;">{{ intere.intere_user_name }}</p>
 					</div>
-					<el-button color="#7eec52" @click="cancel_interest(intere.intere_user_id)">
+					<el-button color="#7eec52" @click="cancel_interest(intere.intere_user_name)">
 						<p class="theme_font">取消关注</p>
 					</el-button>
 				</div>

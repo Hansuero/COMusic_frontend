@@ -4,6 +4,7 @@
 
 <script>
 import NavigationBar from '../components/NavigationBar.vue';
+import { ElMessageBox } from "element-plus";
 
 export default {
 	name: 'favourite',
@@ -16,88 +17,65 @@ export default {
 			username: this.$cur_user.username,
 			photo_url: this.$cur_user.photo_url,
 			user_id: this.$cur_user.user_id,
-			num_favourite: 10,
-			favourite_list: [
-				{
-					playlist_id: '00',
-					title: '我喜欢'
-				},{
-					playlist_id: '01',
-					title: 'Playlist A'
-				},{
-					playlist_id: '02',
-					title: 'Playlist B'
-				},{
-					playlist_id: '03',
-					title: 'Playlist C'
-				},{
-					playlist_id: '04',
-					title: 'Playlist D'
-				},{
-					playlist_id: '05',
-					title: 'Playlist E'
-				},{
-					playlist_id: '06',
-					title: 'Playlist F'
-				},{
-					playlist_id: '07',
-					title: 'Playlist G'
-				},{
-					playlist_id: '08',
-					title: 'Playlist H'
-				},{
-					playlist_id: '09',
-					title: 'Playlist I'
-				},
-			],
-			num_song: 10,
-			song_list: [
-				{
-					song_id: '00',
-					title: 'Song A',
-					artist: 'AAA'
-				},{
-					song_id: '01',
-					title: 'Song B',
-					artist: 'BBB'
-				},{
-					song_id: '02',
-					title: 'Song C',
-					artist: 'CCC'
-				},{
-					song_id: '03',
-					title: 'Song D',
-					artist: 'DDD'
-				},{
-					song_id: '04',
-					title: 'Song E',
-					artist: 'EEE'
-				},{
-					song_id: '05',
-					title: 'Song F',
-					artist: 'FFF'
-				},{
-					song_id: '06',
-					title: 'Song G',
-					artist: 'GGG'
-				},{
-					song_id: '07',
-					title: 'Song H',
-					artist: 'HHH'
-				},{
-					song_id: '08',
-					title: 'Song I',
-					artist: 'III'
-				},{
-					song_id: '09',
-					title: 'Song J',
-					artist: 'JJJ'
-				},
-			]
+			num_favourite: 0,
+			favourite_list: [],
+			cur_favo_id: 0,
+			num_song: 0,
+			song_list: []
 		}
+	},
+	created() {
+		const here = this
+		here.$axios
+		.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_favo_list')
+		.then(function(response){
+			if(response.status == 200){
+				console.log('get favourite list success')
+				const re_data = response.data
+				var favo_list = re_data.favo_list
+				here.$data.num_favourite = favo_list.length
+				favo_list.forEach(function(element){
+					var playlist_id = element.favo_id
+					var title = element.favo_title
+					here.$data.favourite_list.push({
+						playlist_id: playlist_id,
+						title: title
+					})
+				})
+				console.log(here.$data.favourite_list[0])
+				here.$data.cur_favo_id = here.$data.favourite_list[0].playlist_id
+				const form_data = new FormData()
+				form_data.append('favo_id', here.$data.cur_favo_id)
+				here.$axios
+				.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_songs_in_favo', form_data, {
+					headers: {
+    					'Content-Type': 'multipart/form-data'
+	  				}
+				})
+				.then(function(response){
+					if(response.status == 200){
+						const re_data = response.data
+						const song_list = re_data.song_list
+						here.$data.num_song = song_list.length
+						song_list.forEach(function(element){
+							var song_id = element.song_id
+							var title = element.song_title
+							var artist = element.song_artist
+							here.$data.song_list.push({
+								song_id: song_id,
+								title: title,
+								artist: artist
+							})
+						})
+					}
+				})
+			}
+		})
+		
 	},
 	components: {
 		NavigationBar,
+		ElMessageBox
 	},
 	methods: {
 		//选择要查看的子收藏夹
@@ -106,15 +84,80 @@ export default {
 			/*
 				在这里提供选中的子收藏夹的id，并交给后端，后端给前端提供这个子收藏夹里面的歌曲列表
 			*/
+			const here = this
+			here.$data.cur_favo_id = playlist_id
+			const form_data = new FormData()
+			form_data.append('favo_id', playlist_id)
+			here.$axios
+			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_songs_in_favo', form_data, {
+				headers: {
+    				'Content-Type': 'multipart/form-data'
+  				}
+			})
+			.then(function(response){
+				if(response.status == 200){
+					const re_data = response.data
+					const song_list = re_data.song_list
+					here.$data.num_song = song_list.length
+					here.$data.song_list = []
+					song_list.forEach(function(element){
+						var song_id = element.song_id
+						var title = element.song_title
+						var artist = element.song_artist
+						here.$data.song_list.push({
+							song_id: song_id,
+							title: title,
+							artist: artist
+						})
+					})
+				}
+			})
 		},
 		//跳转到点击的歌曲的歌曲详情页面，对应页面写好之后取消下面的注释即可
-		to_favourite(favo_id){
-			console.log(favo_id)
-			//this.$router.push('./favourite')
-		},
 		to_song(song_id){
 			console.log(song_id)
-			//this.$router.push('./song')
+			//this.$router.push('./song/'+song_id)
+		},
+		create_new_favo(){
+			console.log("create new favourite list")
+			const here = this
+			var title_new_favo
+			this.$prompt('请输入新收藏夹名', '提示', {
+          		confirmButtonText: '确定',
+          		cancelButtonText: '取消',
+        	})
+			.then(({ value }) => {
+          		this.$message({
+            		type: 'success',
+            		message: '新收藏夹名是: ' + value
+          		});
+				title_new_favo = value
+				const form_data = new FormData()
+				form_data.append('favo_title', title_new_favo)
+				here.$axios
+				.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/create_new_favo', form_data, {
+					headers: {
+    					'Content-Type': 'multipart/form-data'
+  					}
+				})
+				.then(function(response){
+					if(response.status == 200){
+						var favo_id = response.data.favo_id
+						var favo_title =response.data.favo_title
+						here.$data.favourite_list.push({
+							playlist_id: favo_id,
+							title: favo_title
+						})
+						here.$data.num_favourite = here.$data.favourite_list.length
+					}
+				})
+        	})
+			.catch(() => {
+          		this.$message({
+            		type: 'info',
+            		message: '取消输入'
+          		});       
+        	});
 		}
 	}
 }
@@ -141,7 +184,7 @@ const input_data = reactive({
 		<div style="display: flex; width: 100%; height: 80%;">
 			<div style="display: flex; flex-wrap: wrap; width: 30%;">
 				<div style="display: flex; align-items: center; justify-content: center; width: 100%; height: 18%;">
-					<el-button style="width: 60%; border-radius: 20px; border-bottom: 2px solid grey;" color="#AFEEEE">
+					<el-button style="width: 60%; border-radius: 20px; border-bottom: 2px solid grey;" color="#AFEEEE" @click="create_new_favo">
 						<p class="theme_font" style="color: black;">创建新收藏夹</p>
 					</el-button>
 				</div>
