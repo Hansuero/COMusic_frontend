@@ -6,7 +6,7 @@ import router from './router/index'
 import axios from 'axios'
 
 const app = createApp(App)
-const is_login = false
+const is_login = true
 var default_url = "../assets/default_profile.png"
 var cur_user = {
     user_id: 0,
