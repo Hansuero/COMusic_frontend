@@ -226,12 +226,8 @@ const input_data = reactive({
 				<div style="display: flex; align-items: center; height: 100%; width: 100%;">
 					<el-scrollbar style="display: flex; width: 100%" max-height="100%">
 						<div v-for="(song,index) in song_list" class="box_song_list">
-							<div style="width: 80%; margin-left: 50px;">
-								<p class="theme_font" style="color: black;" @click="to_song(song.song_id)">{{ song.title }}</p>
-							</div>
-							<div style="margin-left: 400px;">
-								<p class="theme_font" style="color: black;">{{ song.artist }}</p>
-							</div>
+							<p class="theme_font" style="width: 200px; margin-left: 50px; color: black;" @click="to_song(song.song_id)">{{ song.title }}</p>
+							<p class="theme_font" style="color: black;">{{ song.artist }}</p>
 						</div>
 					</el-scrollbar>
 				</div>	
@@ -285,7 +281,6 @@ const input_data = reactive({
 .box_song_list{
 	border-bottom: 2px solid grey;
 	display: flex;
-	justify-content: center;
 	align-items: center;
 	background-color: #F0FFF0;
 	margin-top: 6px;
