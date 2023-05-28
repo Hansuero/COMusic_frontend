@@ -1,10 +1,9 @@
-<!--实际上歌曲和最大数量均需要从数据库中读取-->
 <template>
   <NavigationBar />
   <div class="outer_box">
     <!--头像,名字,最近歌曲最多数量-->
     <div style="display: flex; align-items: center; width: 100%; height: 20%;">
-      <img src="../assets/profile.png" class="left_profile" style="margin-left: 60px;" />
+      <img :src="this.photo_url" class="left_profile" style="margin-left: 60px;" />
       <div class="rectangle_container" style="width: 16%; margin-left: 30px;">
         <p class="theme_font">{{ username }}</p>
       </div>
@@ -18,7 +17,7 @@
       <div style="display: flex; width: 65%; margin-left: 50px;">
         <div style="display: flex; align-items: center; height: 100%; width: 100%;">
           <el-scrollbar style="display: flex; width: 100%" max-height="100%">
-            <div v-for="(song, index) in song_list.slice(0,max_num)" :key="index" class="box_song_list">
+            <div v-for="(song, index) in song_list?.slice(0, max_num)" :key="index" class="box_song_list">
               <div style="width: 80%; margin-left: 50px;">
                 <p class="theme_font" style="color: black;" @click="to_song(song.song_id)">{{ song.title }}</p>
               </div>
@@ -35,6 +34,7 @@
 
 <script>
 import NavigationBar from '@/components/NavigationBar.vue';
+import { ElMessageBox } from "element-plus";
 export default {
   name: 'RecordView',
   components: {
@@ -42,52 +42,37 @@ export default {
   },
   data() {
     return {
-      username: 'Tadaoni',
+      username: this.$cur_user.username,
+			photo_url: this.$cur_user.photo_url,
+			user_id: this.$cur_user.user_id,
       max_num: 10,
-      song_list: [
-        {
-          song_id: '00',
-          title: 'Song A',
-          artist: 'AAA'
-        }, {
-          song_id: '01',
-          title: 'Song B',
-          artist: 'BBB'
-        }, {
-          song_id: '02',
-          title: 'Song C',
-          artist: 'CCC'
-        }, {
-          song_id: '03',
-          title: 'Song D',
-          artist: 'DDD'
-        }, {
-          song_id: '04',
-          title: 'Song E',
-          artist: 'EEE'
-        }, {
-          song_id: '05',
-          title: 'Song F',
-          artist: 'FFF'
-        }, {
-          song_id: '06',
-          title: 'Song G',
-          artist: 'GGG'
-        }, {
-          song_id: '07',
-          title: 'Song H',
-          artist: 'HHH'
-        }, {
-          song_id: '08',
-          title: 'Song I',
-          artist: 'III'
-        }, {
-          song_id: '09',
-          title: 'Song J',
-          artist: 'JJJ'
-        },
-      ]
+      song_list: []
     }
+  },
+  created() {
+    const here = this
+    this.$axios.get('https://mock.apifox.cn/m1/2749792-0-default/api/music/get_record_list').then((response) => {
+      if (response.status == 200) {
+        const re_data = response.data
+						const song_list = re_data.song_list
+						song_list.forEach(function(element){
+							var song_id = element.song_id
+							var title = element.song_title
+							var artist = element.song_artist
+							here.$data.song_list.push({
+								song_id: song_id,
+								title: title,
+								artist: artist
+							})
+						})
+      }
+      else {
+        ElMessageBox.alert("获取失败了，尝试联系管理员吧", '提示', {
+          confirmButtonText: '确认',
+          confirmButtonClass: 'btnFalses'
+        })
+      }
+    })
   },
   methods: {
     to_song(song_id) {
@@ -95,13 +80,30 @@ export default {
       //this.$router.push('./song')
     },
     changeMax() {
-      console.log(this.max_num)
+      const form_data = new FormData()
+      form_data.append('max', this.max_num)
+      this.$axios.post('https://mock.apifox.cn/m1/2749792-0-default/api/music/post_max', form_data, {
+        headers: {
+          'Content-type': "multipart/form-data"
+        }
+      })
+      .then(function (response) {
+      if (response.status == 200) {
+        console.log(this.max_num)
+      }
+      else{
+        ElMessageBox.alert("更改失败了，尝试联系管理员吧", '提示', {
+          confirmButtonText: '确认',
+          confirmButtonClass: 'btnFalses'
+        })
+      }
+    }.bind(this))
     }
   },
 }
 </script>
 
-<style scoped>
+<style>
 .outer_box {
   justify-content: center;
   position: absolute;
@@ -144,5 +146,10 @@ export default {
   margin-top: 6px;
   border-radius: 20px;
   padding-right: 50px;
+}
+
+.btnFalses {
+  background: #7eec52 !important;
+  border-color: #7eec52 !important;
 }
 </style>

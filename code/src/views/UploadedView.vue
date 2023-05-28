@@ -1,27 +1,23 @@
 <template>
   <NavigationBar />
   <div class="outer_box">
-    <!--头像,名字,最近歌曲最多数量-->
+    <!--头像,名字-->
     <div style="display: flex; align-items: center; width: 100%; height: 20%;">
-      <img :src="this.photo_url" class="left_profile" style="margin-left: 60px;" />
+      <img :src= "this.photo_url" class="left_profile" style="margin-left: 60px;" />
       <div class="rectangle_container" style="width: 16%; margin-left: 30px;">
         <p class="theme_font">{{ username }}</p>
       </div>
     </div>
-    <!--消息栏-->
     <div style="display: flex; width: 100%; height: 80%;">
       <div style="display: flex; width: 65%; margin-left: 50px;">
         <div style="display: flex; align-items: center; height: 100%; width: 100%;">
           <el-scrollbar style="display: flex; width: 100%" max-height="100%">
-            <div v-for="(message, index) in message_list" :key="index" class="box_message_list" >
-              <div style="width: 80%; margin-left: 10px; margin-right: 400px;">
-                <p class="theme_font" style="color: black;">{{ message.sender }}</p>
+            <div v-for="(song, index) in song_list?.slice(0, max_num)" :key="index" class="box_song_list">
+              <div style="width: 80%; margin-left: 50px;">
+                <p class="theme_font" style="color: black;" @click="to_song(song.song_id)">{{ song.title }}</p>
               </div>
-              <div style="width: 80%; margin-left: 50px; ">
-                <p class="theme_font" style="color: black; word-wrap: break-word;" >{{ message.content }}</p>
-              </div>
-              <div style="width: 80%; margin-left: 10px; margin-right: 400px;">
-                <p class="theme_font" style="color: black;" >{{ message.time }}</p>
+              <div style="margin-left: 400px;">
+                <p class="theme_font" style="color: black;">{{ song.artist }}</p>
               </div>
             </div>
           </el-scrollbar>
@@ -33,6 +29,7 @@
 
 <script>
 import NavigationBar from '@/components/NavigationBar.vue';
+import { ElMessageBox } from "element-plus";
 export default {
   name: 'RecordView',
   components: {
@@ -43,25 +40,23 @@ export default {
       username: this.$cur_user.username,
 			photo_url: this.$cur_user.photo_url,
 			user_id: this.$cur_user.user_id,
-      message_list: []
+      song_list: []
     }
   },
   created() {
     const here = this
-    this.$axios.get('https://mock.apifox.cn/m1/2749792-0-default/api/user/get_message_list').then((response) => {
+    this.$axios.get('https://mock.apifox.cn/m1/2749792-0-default/api/music/get_uploaded_list').then((response) => {
       if (response.status == 200) {
         const re_data = response.data
-						const message_list = re_data.message_list
-						message_list.forEach(function(element){
-							var message_id = element.message_id
-							var sender = element.sender
-							var time = element.time
-              var content = element.content
-							here.$data.message_list.push({
-								message_id: message_id,
-								sender: sender,
-								time: time,
-                content: content
+						const song_list = re_data.song_list
+						song_list.forEach(function(element){
+							var song_id = element.song_id
+							var title = element.song_title
+							var artist = element.song_artist
+							here.$data.song_list.push({
+								song_id: song_id,
+								title: title,
+								artist: artist
 							})
 						})
       }
@@ -74,12 +69,15 @@ export default {
     })
   },
   methods: {
-
-  }
+    to_song(song_id) {
+      console.log(song_id)
+      //this.$router.push('./song')
+    }
+  },
 }
 </script>
 
-<style scoped>
+<style>
 .outer_box {
   justify-content: center;
   position: absolute;
@@ -113,15 +111,19 @@ export default {
   align-items: center;
 }
 
-.box_message_list {
+.box_song_list {
   border-bottom: 2px solid grey;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   background-color: #F0FFF0;
   margin-top: 6px;
-  border-radius: 10px;
+  border-radius: 20px;
   padding-right: 50px;
+}
+
+.btnFalses {
+  background: #7eec52 !important;
+  border-color: #7eec52 !important;
 }
 </style>

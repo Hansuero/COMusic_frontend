@@ -16,6 +16,16 @@ const routes = [
     name: 'information',
     component: () => import('../views/InformationView.vue')
   },
+  {
+    path: '/uploaded',
+    name: 'uploaded',
+    component: () => import('../views/UploadedView.vue')
+  },
+  {
+    path: '/manage',
+    name: 'manage',
+    component: () => import('../views/ManageView.vue')
+  },
 ]
 
 

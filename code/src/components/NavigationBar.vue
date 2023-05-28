@@ -69,7 +69,7 @@ export default {
 			let res = this.whether_login()
 			if (res) {
 				console.log("go to upload page\n");
-				//this.$router.push('./upload')
+				this.$router.push('./upload')
 			}
 			else {
 				this.$data.visible = true

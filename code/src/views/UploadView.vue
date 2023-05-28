@@ -18,7 +18,7 @@
           </el-form-item>
           <el-form-item prop="selectedTags">
             <!--标签选择-->
-            <el-select id="i_tag" v-model="selectedTag" placeholder="请选择标签" style="width: 100%;" filterable clearable=""
+            <el-select id="i_tag" v-model="selectedTag" placeholder="请选择标签" style="width: 100%;" filterable
               @change="selectTag" value-key="id">
               <el-option v-for="item in tagList" :key="item.id" :label="item.name" :value="item" />
             </el-select>
@@ -56,6 +56,8 @@
 <script>
 import { reactive } from "vue";
 import NavNoleft from '@/components/NavNoLeft.vue'
+import { ElMessageBox } from "element-plus";
+
 
 const tagList = [
   { id: 1, name: '流行' },
@@ -68,13 +70,13 @@ const tagList = [
   { id: 8, name: '乡村' },
   { id: 9, name: '古典' },
   { id: 10, name: '轻音乐' },
-  { id: 11, name: '原声' },
-  { id: 12, name: '影视原声' },
+  { id: 11, name: '金属' },
+  { id: 12, name: '古风' },
 ];
 export default {
   name: 'UploadView',
   components: {
-    NavNoleft
+    NavNoleft,
   },
   data() {
     return {
@@ -122,20 +124,58 @@ export default {
       reader.readAsDataURL(file);
     },
     get_input_data() {
-      let song = document.getElementById('i_song').value;
-      let singer = document.getElementById('i_singer').value;
+      let song_name = document.getElementById('i_song').value;
+      let singer_name = document.getElementById('i_singer').value;
       let lyrics = document.getElementById('i_lyrics').value;
       let tag = this.selectTag;
-      console.log(tag)
-      console.log(song);
-      console.log(singer);
-      console.log(lyrics);
-      return {
-        song,
-        singer,
-        tag,
-        lyrics
+      if (typeof song_name == "undefined" || song_name == null || song_name == "") {
+        ElMessageBox.alert("请输入歌曲名", '提示', {
+          confirmButtonText: '确认',
+          confirmButtonClass: 'btnFalses'
+        })
+        return;
       }
+      if (typeof tag.name == "undefined" || tag.name == null || tag.name == "" || tag.name == 'bound selectTag') {
+        ElMessageBox.alert("请选择一个标签", '提示', {
+          confirmButtonText: '确认',
+          confirmButtonClass: 'btnFalses'
+        })
+        return;
+      }
+      if (typeof this.selectedAudio == "undefined" || this.selectedAudio == null || this.selectedAudio == "") {
+        ElMessageBox.alert("请上传歌曲文件", '提示', {
+          confirmButtonText: '确认',
+          confirmButtonClass: 'btnFalses'
+        })
+        return;
+      }
+      let form_data = new FormData()
+      form_data.append('song_name', song_name)
+      form_data.append('song_tag', tag.name)
+      form_data.append('song_cover', this.selectedImage)
+      form_data.append('singer', singer_name)
+      form_data.append('lyric', lyrics)
+      form_data.append('song_file', this.selectedAudio)
+      this.$axios.post('https://mock.apifox.cn/m1/2749792-0-default/api/music/upload_song', form_data, {
+        headers: {
+          'Content-type': "multipart/form-data"
+        }
+      })
+      .then(function (response) {
+      if (response.status == 200) {
+        this.$router.push('/uploaded')
+        ElMessageBox.alert("上传成功", '提示', {
+          confirmButtonText: '确认',
+          confirmButtonClass: 'btnFalses'
+        })
+      }
+      else{
+        ElMessageBox.alert("上传失败了，尝试联系管理员吧", '提示', {
+          confirmButtonText: '确认',
+          confirmButtonClass: 'btnFalses'
+        })
+      }
+    }.bind(this))
     }
   },
 }
@@ -150,7 +190,7 @@ const input_data = reactive({
 });
 </script>
 
-<style scoped>
+<style>
 .Chinese_font {
   color: white;
   font-size: large;
@@ -178,5 +218,10 @@ const input_data = reactive({
   right: 0;
   margin: auto;
   border-radius: 30px
+}
+
+.btnFalses {
+  background: #7eec52 !important;
+  border-color: #7eec52 !important;
 }
 </style>
