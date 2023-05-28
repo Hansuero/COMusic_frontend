@@ -61,7 +61,7 @@ export default {
 		*/
 		to_index(){
 			console.log("go to index page\n");
-			//this.$router.push('/index')
+			this.$router.push('/index')
 		},
 		//跳转到个人页面
 		to_user(){

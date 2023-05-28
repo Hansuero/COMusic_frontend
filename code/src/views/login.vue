@@ -50,9 +50,9 @@ export default {
 					.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_user_info')
 					.then(function (response_2){
 						if(response_2.status == 200){
-							var user_id = response_2.data.id
-							var username = response_2.data.username
-							var photo_url = response_2.data.photo_url
+							var user_id = response_2.data.user_data.user_id
+							var username = response_2.data.user_data.username
+							var photo_url = response_2.data.user_data.photo_url
 							console.log(user_id)
 							console.log(username)
 							console.log(photo_url)
@@ -60,8 +60,8 @@ export default {
 							here.$cur_user.username = username
 							here.$cur_user.photo_url = photo_url
 							console.log(here.$cur_user)
-							here.$router.push('./user/'+user_id)
-							//here.$router.push('./index')
+							//here.$router.push('./result')
+							here.$router.push('./index')
 						}
 						else{
 							const dialog = new ElMessageBox({

@@ -3,6 +3,8 @@ import login from '../views/login.vue'
 import user from '../views/user.vue'
 import favourite from '../views/favourite.vue'
 import interest from '../views/interest.vue'
+import result from '../views/result.vue'
+import index from '../views/index.vue'
 
 const routes = [{
         path: '/',
@@ -27,6 +29,14 @@ const routes = [{
         name: 'interest',
         path: '/interest',
         component: interest
-    },
+    },{
+        name: 'result',
+        path: '/result',
+        component: result
+    },{
+        name: 'index',
+        path: '/index',
+        component: index
+    }
 ];
 export default routes

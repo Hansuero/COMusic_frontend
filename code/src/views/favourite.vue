@@ -126,7 +126,7 @@ export default {
 				else{
 					const dialog = new ElMessageBox({
 						title: "糟糕，出错啦",
-						message: response.message
+						message: response.data.message
 					})
 				}
 			})
@@ -171,7 +171,7 @@ export default {
 					else{
 						const dialog = new ElMessageBox({
 							title: "糟糕，出错啦",
-							message: response.message
+							message: response.data.message
 						})
 					}
 				})

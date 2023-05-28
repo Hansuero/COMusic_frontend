@@ -22,21 +22,21 @@ export default {
 			const form_data = new FormData()
 			form_data.append('id', cur_id)
 			here.$axios
-			.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_other_info', form_data, {
+			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_other_info', form_data, {
 				headers: {
     				'Content-Type': 'multipart/form-data'
   				}
 			})
 			.then(function(response){
 				if(response.status == 200){
-					cur_user_id = response.data.id
-					cur_username = response.data.username
-					cur_photo_url = response.data.photo_url
+					cur_user_id = response.data.user_data.user_id
+					cur_username = response.data.user_data.username
+					cur_photo_url = response.data.user_data.photo_url
 				}
 				else{
 					const dialog = new ElMessageBox({
 						title: "糟糕，出错啦",
-						message: response.message
+						message: response.data.message
 					})
 				}
 			})
@@ -88,7 +88,7 @@ export default {
 					else{
 						const dialog = new ElMessageBox({
 							title: "糟糕，出错啦",
-							message: response.message
+							message: response.data.message
 						})
 					}
 				})
@@ -126,7 +126,7 @@ export default {
 					else{
 						const dialog = new ElMessageBox({
 							title: "糟糕，出错啦",
-							message: response.message
+							message: response.data.message
 						})
 					}
 				})
