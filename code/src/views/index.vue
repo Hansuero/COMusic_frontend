@@ -7,7 +7,7 @@
       <el-input v-model="inputData.input" placeholder="搜素歌曲/歌单/用户"/>
     </div>
     <div id="button">
-      <el-button type="success" color="#7eec52" id="button1" @click="searchSong">搜索歌曲</el-button>
+      <el-button type="success" color="#7eec52" id="button1" @click="searchSong">搜索歌曲</el-button> 
       <el-button type="success" color="#7eec52" id="button2" @click="searchSongList">搜索歌单</el-button>
       <el-button type="success" color="#7eec52" id="button3" @click="searchUser">搜索用户</el-button>
     </div>
