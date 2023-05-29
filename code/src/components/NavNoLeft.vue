@@ -76,7 +76,7 @@ export default {
 			let res = this.whether_login()
 			if(res){
 				console.log("go to upload page\n");
-				//this.$router.push('/upload')
+				this.$router.push('/upload')
 			}
 			else{
 				this.$data.visible = true
@@ -87,7 +87,7 @@ export default {
 			let res = this.whether_login()
 			if(res){
 				console.log("go to manage page\n");
-				//this.$router.push('/manage')
+				this.$router.push('/manage')
 			}
 			else{
 				this.$data.visible = true

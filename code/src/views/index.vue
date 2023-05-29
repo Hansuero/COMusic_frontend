@@ -28,7 +28,6 @@
 import NavNoLeft from '@/components/NavNoLeft.vue'
 import { reactive } from 'vue'
 import router from '@/router'
-import axios from 'axios'
 import SearchBox from '@/components/SearchBox.vue'
 
 export default {

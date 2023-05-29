@@ -83,7 +83,7 @@ export default {
 			let res = this.whether_login()
 			if(res){
 				console.log("go to upload page\n");
-				//this.$router.push('/upload')
+				this.$router.push('/upload')
 			}
 			else{
 				this.$data.visible = true
@@ -94,7 +94,7 @@ export default {
 			let res = this.whether_login()
 			if(res){
 				console.log("go to manage page\n");
-				//this.$router.push('/manage')
+				this.$router.push('/manage')
 			}
 			else{
 				this.$data.visible = true
@@ -113,12 +113,12 @@ export default {
 		//跳转到消息页面
 		to_information(){
 			console.log("go to information page\n");
-			//this.$router.push('/information')
+			this.$router.push('/information')
 		},
 		//跳转到播放记录页面
 		to_record(){
 			console.log("go to record page\n");
-			//this.$router.push('/record')
+			this.$router.push('/record')
 		},
 	},
 	components: {

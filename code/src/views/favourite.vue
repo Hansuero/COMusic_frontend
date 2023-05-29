@@ -131,10 +131,16 @@ export default {
 				}
 			})
 		},
-		//跳转到点击的歌曲的歌曲详情页面，对应页面写好之后取消下面的注释即可
+		//跳转到点击的歌曲的歌曲详情页面
 		to_song(song_id){
 			console.log(song_id)
-			//this.$router.push('./song/'+song_id)
+			const params = {
+				song_id: song_id
+			}
+			this.$router.push({
+				path: './song',
+				query: params
+			})
 		},
 		create_new_favo(){
 			console.log("create new favourite list")
