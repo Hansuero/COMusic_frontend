@@ -4,7 +4,8 @@
 
 <script>
 import NavigationBar from '../components/NavigationBar.vue';
-import { ElMessageBox } from "element-plus";
+import { ElMessageBox, ElMessage } from "element-plus";
+
 
 export default {
 	name: 'favourite',
@@ -20,6 +21,7 @@ export default {
 			num_favourite: 0,
 			favourite_list: [],
 			cur_favo_id: 0,
+			cur_favo_title: '',
 			num_song: 0,
 			song_list: []
 		}
@@ -44,6 +46,7 @@ export default {
 				})
 				console.log(here.$data.favourite_list[0])
 				here.$data.cur_favo_id = here.$data.favourite_list[0].playlist_id
+				here.$data.cur_favo_title = here.$data.favourite_list[0].title
 				const form_data_1 = new FormData()
 				form_data_1.append('favo_id', here.$data.cur_favo_id)
 				here.$axios
@@ -91,13 +94,14 @@ export default {
 	},
 	methods: {
 		//选择要查看的子收藏夹
-		select_favo(playlist_id){
+		select_favo(playlist_id, title){
 			console.log(playlist_id)
 			/*
 				在这里提供选中的子收藏夹的id，并交给后端，后端给前端提供这个子收藏夹里面的歌曲列表
 			*/
 			const here = this
 			here.$data.cur_favo_id = playlist_id
+			here.$data.cur_favo_title = title
 			const form_data = new FormData()
 			form_data.append('favo_id', playlist_id)
 			here.$axios
@@ -188,6 +192,37 @@ export default {
             		message: '取消输入'
           		});       
         	});
+		},
+		share_favo(){
+			const here = this
+			const favo_id = here.$data.cur_favo_id
+			const form_data = new FormData()
+			form_data.append('playlist_id', favo_id)
+			here.$axios
+			.post('http://127.0.0.1:4523/m1/2749792-0-default/api/music/set_shared', form_data, {
+				headers: {
+    				'Content-Type': 'multipart/form-data'
+  				}
+			})
+			.then(function(response){
+				console.log(response)
+				if(response.status == 200){
+					var alert_message = '分享歌单《'
+					alert_message += here.$data.cur_favo_title
+					alert_message += '》成功'
+					ElMessageBox.alert(alert_message, '分享', {
+    				// if you want to disable its autofocus
+    				// autofocus: false,
+    					confirmButtonText: 'OK',
+    					callback: (action) => {
+      						ElMessage({
+        						type: 'info',
+        						message: `action: ${action}`,
+      						})
+    					},
+  					})
+				}
+			})
 		}
 	}
 }
@@ -205,10 +240,15 @@ const input_data = reactive({
 	<NavigationBar></NavigationBar>
 	<!--存放主体内容的div-->
 	<div class="outer_box">
-		<div style="display: flex; align-items: center; width: 100%; height: 20%;">
+		<div style="display: flex; align-items: center; width: 100%; height: 20%; padding-right: 0px;">
 			<img :src="photo_url" class="left_profile" style="margin-left: 60px;"/>
 			<div class="rectangle_container" style="width: 20%; margin-left: 30px;">
 				<p class="theme_font">{{ username }}</p>
+			</div>
+			<div style="margin-left: 520px;">
+				<el-button style="width: 120%; border-radius: 20px; border-bottom: 2px solid grey;" color="#40E0D0" @click="share_favo">
+					<p class="theme_font" style="color: black;">分享当前收藏夹</p>
+				</el-button>
 			</div>
 		</div>
 		<div style="display: flex; width: 100%; height: 80%;">
@@ -221,7 +261,7 @@ const input_data = reactive({
 				<div style="display: flex; align-items: center; height: 80%; width: 100%;">
 					<el-scrollbar style="display: flex; flex-wrap: wrap; justify-content: center; width: 100%" max-height="100%">
 						<div v-for="(favo,index) in favourite_list" style="width: 100%; display: flex; justify-content: center; align-items: center;">
-							<el-button :key="favo.playlist_id" color="#AFEEEE" class="favo_list_button" @click="select_favo(favo.playlist_id)">
+							<el-button :key="favo.playlist_id" color="#AFEEEE" class="favo_list_button" @click="select_favo(favo.playlist_id, favo.title)">
 								<p class="theme_font" style="color: black;">{{ favo.title }}</p>
 							</el-button>
 						</div>
@@ -229,8 +269,8 @@ const input_data = reactive({
 				</div>	
 			</div>
 			<div style="display: flex; width: 65%; margin-left: 50px;">
-				<div style="display: flex; align-items: center; height: 100%; width: 100%;">
-					<el-scrollbar style="display: flex; width: 100%" max-height="100%">
+				<div style="display: flex; align-items: center; height: 100%; width: 650px;">
+					<el-scrollbar style="display: flex; width: 650px" max-height="100%">
 						<div v-for="(song,index) in song_list" class="box_song_list">
 							<p class="theme_font" style="width: 200px; margin-left: 50px; color: black;" @click="to_song(song.song_id)">{{ song.title }}</p>
 							<p class="theme_font" style="color: black;">{{ song.artist }}</p>
@@ -283,11 +323,12 @@ const input_data = reactive({
 	margin-bottom: 10px;
 	border-radius: 15px;
 }
-
 .box_song_list{
 	border-bottom: 2px solid grey;
+	width: 600px;
 	display: flex;
 	align-items: center;
+	justify-content: flex-start;
 	background-color: #F0FFF0;
 	margin-top: 6px;
 	border-radius: 20px;
