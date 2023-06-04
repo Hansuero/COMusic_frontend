@@ -5,7 +5,8 @@
 <script>
 import NavigationBar from '../components/NavigationBar.vue';
 import { ElMessageBox, ElMessage } from "element-plus";
-
+import { reactive } from "vue";
+import { ref } from "vue";
 
 export default {
 	name: 'favourite',
@@ -23,7 +24,12 @@ export default {
 			cur_favo_id: 0,
 			cur_favo_title: '',
 			num_song: 0,
-			song_list: []
+			song_list: [],
+			is_share_visible: ref(false),
+			share_tips: '',
+			share_cover_file: '',
+			share_cover_url: '',
+			ready_share: false
 		}
 	},
 	created() {
@@ -93,6 +99,12 @@ export default {
 		ElMessageBox
 	},
 	methods: {
+		get_input_data(){
+			let t_playlist_tag = document.getElementById('i_playlist_tag').value
+			return{
+				playlist_tag: t_playlist_tag
+			}
+		},
 		//选择要查看的子收藏夹
 		select_favo(playlist_id, title){
 			console.log(playlist_id)
@@ -146,6 +158,7 @@ export default {
 				query: params
 			})
 		},
+		//创建新收藏夹
 		create_new_favo(){
 			console.log("create new favourite list")
 			const here = this
@@ -163,7 +176,7 @@ export default {
 				const form_data = new FormData()
 				form_data.append('favo_title', title_new_favo)
 				here.$axios
-				.post('http://127.0.0.1:4523/m1/2749792-0-default/api/music/create_new_favo', form_data, {
+				.post('http://127.0.0.1:4523/m2/2749792-0-default/83979171', form_data, {
 					headers: {
     					'Content-Type': 'multipart/form-data'
   					}
@@ -193,13 +206,69 @@ export default {
           		});       
         	});
 		},
+		//分享收藏夹，使之成为歌单
 		share_favo(){
 			const here = this
+			here.$data.is_share_visible = ref(true)
+			var tips = '分享收藏夹《'
+			tips += here.$data.cur_favo_title
+			tips += '》，并使之成为歌单'
+			here.$data.share_tips = tips
+		},
+		upload_cover(){
+			const here = this
+			console.log("AAAAAAAAAAAAAAAAAAAAA")
+			here.$refs.cover_select.click()
+		},
+		select_cover(event){
+			console.log("start select cover")
+			const here = this
+			const cover = event.target.files[0];
+			//使用二进制流
+			const cover_read = new FileReader()
+			cover_read.readAsBinaryString(cover)
+			
+			cover_read.onload = () => {
+				const binary_cover = cover_read.result
+				here.$data.share_cover_file = binary_cover
+			}
+			const cover_read_2 =  new FileReader()
+			cover_read_2.readAsDataURL(cover)
+			cover_read_2.onload = () => {
+				const url_cover = cover_read_2.result
+				here.$data.share_cover_url = url_cover
+			}
+			here.$data.ready_share = true
+			console.log("finish select cover")
+		},
+		confirm_share(){
+			const here = this
+			const playlist_tag = here.get_input_data().playlist_tag
+			if((here.$data.ready_share == false) || (playlist_tag == '')){
+				ElMessageBox.alert('未完成相关设置，不得分享', '提示', {
+    				// if you want to disable its autofocus
+    				// autofocus: false,
+    				confirmButtonText: 'OK',
+    				callback: (action) => {
+      					ElMessage({
+        					type: 'info',
+        					message: `action: ${action}`,
+      					})
+    				},
+  				})
+				return
+			}
+			here.$data.is_share_visible = ref(false)
 			const favo_id = here.$data.cur_favo_id
+			const playlist_cover = here.$data.share_cover_file
 			const form_data = new FormData()
 			form_data.append('playlist_id', favo_id)
+			form_data.append('playlist_tag', playlist_tag)
+			form_data.append('playlist_cover', playlist_cover)
+			here.$data.share_cover_file = ''
+			here.$data.ready_share = false
 			here.$axios
-			.post('http://127.0.0.1:4523/m1/2749792-0-default/api/music/set_shared', form_data, {
+			.post('http://127.0.0.1:4523/m2/2749792-0-default/86424429', form_data, {
 				headers: {
     				'Content-Type': 'multipart/form-data'
   				}
@@ -207,22 +276,15 @@ export default {
 			.then(function(response){
 				console.log(response)
 				if(response.status == 200){
-					var alert_message = '分享歌单《'
-					alert_message += here.$data.cur_favo_title
-					alert_message += '》成功'
-					ElMessageBox.alert(alert_message, '分享', {
-    				// if you want to disable its autofocus
-    				// autofocus: false,
-    					confirmButtonText: 'OK',
-    					callback: (action) => {
-      						ElMessage({
-        						type: 'info',
-        						message: `action: ${action}`,
-      						})
-    					},
-  					})
+					console.log("share success")
 				}
 			})
+		},
+		cancel_share(){
+			const here = this
+			here.$data.is_share_visible = ref(false)
+			here.$data.share_cover_file = ''
+			here.$data.ready_share = false
 		}
 	}
 }
@@ -232,6 +294,7 @@ export default {
 import { reactive } from "vue";
 
 const input_data = reactive({
+	input_playlist_tag: '',
 })
 </script>
 
@@ -241,7 +304,7 @@ const input_data = reactive({
 	<!--存放主体内容的div-->
 	<div class="outer_box">
 		<div style="display: flex; align-items: center; width: 100%; height: 20%; padding-right: 0px;">
-			<img :src="photo_url" class="left_profile" style="margin-left: 60px;"/>
+			<img :src="photo_url" class="left_profile" style="margin-left: 20px;"/>
 			<div class="rectangle_container" style="width: 20%; margin-left: 30px;">
 				<p class="theme_font">{{ username }}</p>
 			</div>
@@ -249,6 +312,38 @@ const input_data = reactive({
 				<el-button style="width: 120%; border-radius: 20px; border-bottom: 2px solid grey;" color="#40E0D0" @click="share_favo">
 					<p class="theme_font" style="color: black;">分享当前收藏夹</p>
 				</el-button>
+				<el-dialog v-model="is_share_visible" title="分享" id="share_dialog">
+					<p class="theme_font" style="color: black;">{{ share_tips }}</p>
+					<div style="display: flex; margin-top: 30px;">
+						<div class="tag_container" style="margin-left: 20px;">
+  							<p class="theme_font" style="color: black;">歌单标签</p>
+						</div>
+						<div class="upload_cover_container" style="margin-left: 20px;">
+							<el-form v-model="input_data" :rules="rules" ref="a_input_data">
+								<el-form-item props="input_playlist_tag">
+									<el-input id="i_playlist_tag" type="text" v-model="input_data.input_playlist_tag" placeholder="请输入歌单标签" />
+								</el-form-item>
+							</el-form>
+						</div>
+					</div>
+					<div style="display: flex; justify-content: left; align-items: center;">
+						<el-button style="margin-top: 10px;">
+							<p class="theme_font" style="color: black;" @click="upload_cover">选择上传歌单封面</p>
+							<input type="file" accept=".jpg, .png" ref="cover_select" @change="select_cover" style="display: none;" />
+						</el-button>
+						<img v-if="ready_share" :src="share_cover_url" class="select_cover" style="margin-left: 40px;"/>
+					</div>		
+					<template #footer>
+      					<span class="dialog-footer">
+				        	<el-button @click="cancel_share">
+								取消分享
+							</el-button>
+        					<el-button type="primary" @click="confirm_share">
+          						确认分享
+        					</el-button>
+      					</span>
+    				</template>
+				</el-dialog>
 			</div>
 		</div>
 		<div style="display: flex; width: 100%; height: 80%;">
@@ -333,5 +428,27 @@ const input_data = reactive({
 	margin-top: 6px;
 	border-radius: 20px;
 	padding-right: 50px;
+}
+.tag_container{
+	width: 20%; 
+	background-color: white; 
+	height: 50px; 
+	display: flex; 
+	align-items: center; 
+	justify-content: left; 
+	border-radius: 30px; 
+	height: 40px;
+}
+.upload_cover_container{
+	display: flex; 
+	align-items: center; 
+	justify-content: left; 
+	height: 50px; 
+	margin-top: 10px;
+}
+.select_cover{
+	height: 50px;
+	width: 50px;
+	border-radius: 50%;
 }
 </style>

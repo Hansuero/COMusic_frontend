@@ -110,11 +110,10 @@ export default {
 				here.$data.can_modify = false
 				var new_introduction = document.getElementById('i_introduction').value
 				console.log(new_introduction)
-				here.$axios
 				const form_data = new FormData()
-				form_data.append('user_id', here.$data.user_id)
-				form_data.append('bio', new_introduction)
-				.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/upload_bio', form_data, {
+				form_data.append('intro', new_introduction)
+				here.$axios
+				.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/upload_intro', form_data, {
 					headers: {
     					'Content-Type': 'multipart/form-data'
   					}
