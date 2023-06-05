@@ -21,7 +21,7 @@ export default {
 	created() {
 		const here = this
 		here.$axios
-		.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/show_following')
+		.get('/user/show_following')
 		.then(function(response){
 			if(response.status == 200){
 				console.log("get following list success")
@@ -59,7 +59,7 @@ export default {
 			const form_data = new FormData()
 			form_data.append('following_username', intere_user_name)
 			here.$axios
-			.delete('http://127.0.0.1:4523/m1/2749792-0-default/api/user/unfollow_user', form_data, {
+			.delete('/user/unfollow_user', form_data, {
 				headers: {
     				'Content-Type': 'multipart/form-data'
   				}

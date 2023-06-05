@@ -24,20 +24,6 @@ export default {
         to_search_result(search_type){
             const here = this
             var search_input = this.get_input_data()
-            /*
-            const api_url = ''
-            if(search_type == here.$data.SEARCH_SONG){
-                api_url = 'http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_song'
-            }
-            else if(search_type == here.$data.SEARCH_SONGLIST){
-                api_url = 'http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_playlist'
-            }
-            else if(search_type == here.$data.SEARCH_USER){
-                api_url = 'http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_user'
-            }
-            here.$axios
-            .get(api_url, )
-            */
             const params = {
                 search_type: search_type,
                 search_input: search_input

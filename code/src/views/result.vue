@@ -36,7 +36,7 @@ export default {
         //搜索的是歌曲
         if(type == here.$data.SEARCH_SONG){
             here.$axios
-            .get('http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_song', {
+            .get('/index/search_song', {
                 params: {
     				song_name: here.$props.search_input
   				}
@@ -69,7 +69,7 @@ export default {
         //搜索的是歌单
         else if(type == here.$data.SEARCH_SONGLIST){
             here.$axios
-            .get('http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_playlist', {
+            .get('/index/search_playlist', {
                 params: {
     				songlist_name: here.$props.search_input
   				}
@@ -102,7 +102,7 @@ export default {
         //搜索的是用户
         else if(type == here.$data.SEARCH_USER){
             here.$axios
-            .get('http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_user', {
+            .get('/index/search_user', {
                 params: {
     				username: here.$props.search_input
   				}

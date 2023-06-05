@@ -34,7 +34,7 @@ export default {
 			form_data.append('password2', input.qualify_password)
 			form_data.append('email', input.email)
 			here.$axios
-			.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/register', form_data, {
+			.post('/user/register', form_data, {
 				headers: {
     				'Content-Type': 'multipart/form-data'
   				}
@@ -43,7 +43,7 @@ export default {
 				if(response_1.status == 200){
 					console.log("register post success")
 					here.$axios
-					.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_user_info')
+					.get('/user/get_user_info')
 					.then(function(response_2){
 						if(response_2.status == 200){
 							var user_id = response_2.data.user_data.user_id

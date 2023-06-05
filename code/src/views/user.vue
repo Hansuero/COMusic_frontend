@@ -22,7 +22,7 @@ export default {
 			const form_data = new FormData()
 			form_data.append('id', cur_id)
 			here.$axios
-			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_other_info', {
+			.get('/user/get_other_info', {
 				params: {
     				id: cur_id
   				}
@@ -75,7 +75,8 @@ export default {
 				const binary_profile = profile_read.result
 				const form_data = new FormData()
 				form_data.append('photo', binary_profile)
-				here.$axios.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/upload_photo', form_data, {
+				here.$axios
+				.post('/user/upload_photo', form_data, {
 					headers: {
     					'Content-Type': 'multipart/form-data'
   					}
@@ -113,7 +114,7 @@ export default {
 				const form_data = new FormData()
 				form_data.append('intro', new_introduction)
 				here.$axios
-				.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/upload_intro', form_data, {
+				.post('/user/upload_intro', form_data, {
 					headers: {
     					'Content-Type': 'multipart/form-data'
   					}

@@ -35,7 +35,7 @@ export default {
 	created() {
 		const here = this
 		here.$axios
-		.get('http://127.0.0.1:4523/m1/2749792-0-default/api/music/get_favo_list')
+		.get('/music/get_favo_list')
 		.then(function(response_1){
 			if(response_1.status == 200){
 				console.log('get favourite list success')
@@ -54,7 +54,7 @@ export default {
 				here.$data.cur_favo_id = here.$data.favourite_list[0].playlist_id
 				here.$data.cur_favo_title = here.$data.favourite_list[0].title
 				here.$axios
-				.get('http://127.0.0.1:4523/m1/2749792-0-default/api/music/get_songs_in_favo', {
+				.get('/music/get_songs_in_favo', {
 					params: {
 						favo_id: here.$data.cur_favo_id
 					}
@@ -113,7 +113,7 @@ export default {
 			here.$data.cur_favo_id = playlist_id
 			here.$data.cur_favo_title = title
 			here.$axios
-			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/music/get_songs_in_favo', {
+			.get('/music/get_songs_in_favo', {
 				params: {
 					favo_id: playlist_id
 				}
@@ -172,7 +172,7 @@ export default {
 				const form_data = new FormData()
 				form_data.append('favo_title', title_new_favo)
 				here.$axios
-				.post('http://127.0.0.1:4523/m2/2749792-0-default/83979171', form_data, {
+				.post('/music/create_new_favo', form_data, {
 					headers: {
     					'Content-Type': 'multipart/form-data'
   					}
@@ -264,7 +264,7 @@ export default {
 			here.$data.share_cover_file = ''
 			here.$data.ready_share = false
 			here.$axios
-			.post('http://127.0.0.1:4523/m2/2749792-0-default/86424429', form_data, {
+			.post('/music/set_shared', form_data, {
 				headers: {
     				'Content-Type': 'multipart/form-data'
   				}
