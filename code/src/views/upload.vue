@@ -156,7 +156,7 @@ export default {
 			form_data.append('singer', singer_name)
 			form_data.append('lyric', lyrics)
 			form_data.append('song_file', this.selectedAudio)
-			this.$axios.post('https://mock.apifox.cn/m1/2749792-0-default/api/music/upload_song', form_data, {
+			this.$axios.post('/music/upload_song', form_data, {
 				headers: {
 					'Content-type': "multipart/form-data"
 				}

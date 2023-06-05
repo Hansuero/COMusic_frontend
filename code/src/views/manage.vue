@@ -39,7 +39,7 @@ export default {
 			}
 			let form_data = new FormData()
 			form_data.append('song_id', this.$data.song_id)
-			this.$axios.delete('https://mock.apifox.cn/m2/2749792-0-default/83971989', form_data, {
+			this.$axios.delete('/music/delete_song', form_data, {
 				headers: {
 					'Content-type': "multipart/form-data"
 				}
@@ -64,7 +64,7 @@ export default {
 			}
 			let form_data = new FormData()
 			form_data.append('songlist_id', this.$data.songlist_id)
-			this.$axios.post('https://mock.apifox.cn/m2/2749792-0-default/84700887', form_data, {
+			this.$axios.post('/music/unshare_songlist', form_data, {
 				headers: {
 					'Content-type': "multipart/form-data"
 				}
