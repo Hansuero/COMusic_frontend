@@ -38,7 +38,7 @@ export default {
 			form_data.append('username', input.username)
 			form_data.append('password', input.password)
 			here.$axios
-			.post('http://127.0.0.1:4523/m1/2749792-0-default/api/user/login', form_data, {
+			.post('/user/login', form_data, {
 				headers: {
     				'Content-Type': 'multipart/form-data'
   				}
@@ -47,7 +47,7 @@ export default {
 				if(response_1.status == 200){
 					console.log("login post success")
 					here.$axios
-					.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_user_info')
+					.get('/user/get_user_info')
 					.then(function (response_2){
 						if(response_2.status == 200){
 							var user_id = response_2.data.user_data.user_id
