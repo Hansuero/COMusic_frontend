@@ -10,10 +10,10 @@
 			<img alt="img" src="../assets/logo.png">
 		</div>
 		<div id="ListInf">
-			<p>歌单名称: {{author.listName}}</p><br>
-			<p>歌单作者：{{author.authorName}}</p><br>
-			<p>歌单标签：{{author.tag}}</p><br>
-			<p>歌单简介：{{author.introduction}}</p>
+			<p>歌单名称: {{intro.listName}}</p><br>
+			<p>歌单作者：{{intro.authorName}}</p><br>
+			<p>歌单标签：{{intro.tag}}</p><br>
+			<p>歌单简介：{{intro.introduction}}</p>
 		</div>
 	</div>
 	<div class="list">
@@ -33,10 +33,10 @@
 
 <script>
 import NavNoLeft from '@/components/NavNoLeft.vue'
-import { reactive, ref, onMounted, onUnmounted} from 'vue'
+import { reactive, ref, onMounted} from 'vue'
 import router from '@/router'
 import store from '@/store'
-
+import axios from 'axios'
 import { Star } from '@element-plus/icons'
 import { Warning } from '@element-plus/icons'
 
@@ -44,8 +44,11 @@ import { Warning } from '@element-plus/icons'
 export default {
 	name: 'songlist',
 	components: { NavNoLeft, Star, Warning },
-	setup () {
-		const author = reactive({
+  props: {
+    'songlist_id': Number
+  },
+	setup (props) {
+		const intro = reactive({
 			listName: '十二月的肖邦',
 			authorName: 'Jay',
 			tag: '流行',
@@ -62,10 +65,32 @@ export default {
 			isCollect: store.state.isCollect
 		})
 		const songs = reactive({
-			title: ['AAA','BBB','CCC','DDD','EEE','FFF']
+      id: [],
+			title: []
 		})
+    const isCollected = reactive({
+      song_id: []
+    })
 		const songLi = ref([])
 		onMounted(()=>{
+      axios.get('https://mock.apifox.cn/m1/2749792-0-default/api/music/get_playlist', {
+        params: {playlist_id: props.songlist_id}
+      }).then(
+        function (response) {
+          if (response.status === 200){
+            intro.listName = response.data.playlist_name
+            intro.authorName = response.data.playlist_creator
+            intro.tag = response.data.playlist_tag
+            intro.introduction = response.data.playlist_intro
+            songs.id = []
+            songs.title = []
+            for (var i = 0; i < response.data.playlist_songs.length; i++) {
+              songs.id.push(response.data.playlist_songs[i].song_id)
+              songs.title.push(response.data.playlist_songs[i].song_name)
+            }
+          }
+        }
+      )
 			songLi.value.forEach(item=>{
 					item.style.background = "#7eec52"
 			})
@@ -81,6 +106,7 @@ export default {
 					if (songLi.value.indexOf(item) == index){
 							item.style.background = "#00bfff"
 							nums.num[index] = 2
+              isCollected.song_id.push(songs.id[index])
 						}
 				})
 			} else if (!judge.isCollect && num === 2){
@@ -88,6 +114,7 @@ export default {
 					if (songLi.value.indexOf(item) == index){
 						item.style.background = "#7eec52"
 						nums.num[index] = 1
+            isCollected.song_id.splice(isCollected.song_id.indexOf(songs.id[index]), 1)
 					}
 				})
 			}
@@ -102,10 +129,24 @@ export default {
 				songLi.value.forEach(item=>{
 					item.style.background = "#7eec52"
 				})
+        const form_data = new FormData()
+        form_data.append('songs_id', isCollected.song_id)
+        form_data.append('playlist_id', 0)
+        axios.post('https://mock.apifox.cn/m1/2749792-0-default/api/music/add_songs_to_favo', form_data,{
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then(
+          function (response) {
+            if (response.status === 200) {
+              isCollected.song_id = []
+            }
+          }
+        )
 			}
 		}
 		return {
-			author,
+			intro,
 			goBack,
 			collect,
 			complain,
@@ -144,7 +185,7 @@ nav a {
 	text-decoration: underline;
 	color: black;
 	position: relative;
-	left: -48%;
+	left: 2%;
 }
 .info{
 	width: 100%;
