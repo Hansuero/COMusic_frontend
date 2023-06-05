@@ -51,7 +51,7 @@ export default {
 	},
 	created() {
 		const here = this
-		this.$axios.get('https://mock.apifox.cn/m1/2749792-0-default/api/music/get_record_list').then((response) => {
+		this.$axios.get('/music/get_record_list').then((response) => {
 			if (response.status == 200) {
 				const re_data = response.data
 						const song_list = re_data.song_list
