@@ -10,7 +10,7 @@
 		<p id="singer">{{songInfo.singer}}</p>
 	</div>
 	<div class="body">
-		<img id="img" alt="img" src="../assets/logo.png">
+		<img id="img" alt="img" src="{{ songInfo.song_cover }}">
 		<div id="lyric">
 			<textarea id="content" v-model="lyric.content" style="resize: none" cols="53" rows="80"></textarea>
 		</div>
@@ -21,9 +21,9 @@
 		</div>
 		<div id="control">
 			<el-icon :size="35" id="minus"><minus /></el-icon>
-			<el-icon :size="45" id="pause" v-if="isPlay.judge" @click="button_pause"><video-pause /></el-icon>
-			<el-icon :size="45" id="continue" v-else @click="button_continue"><video-play /></el-icon>
-			<el-icon :size="35" id="plus"><plus /></el-icon>
+      <el-icon :size="45" id="pause" v-if="isPlay.judge" @click="button_pause"><audio loop="loop" src="../assets"></audio><video-pause /></el-icon>
+      <el-icon :size="45" id="continue" v-else @click="button_continue"><audio loop="loop" src="../assets"></audio><video-play /></el-icon>
+      <el-icon :size="35" id="plus"><plus /></el-icon>
 		</div>
 		<div id="buttons">
 			<el-button color="#7eec52" id="complain"><strong><el-icon size=23px id="icon4"><warning /></el-icon>{{ buttons.complain }}</strong></el-button>
@@ -38,7 +38,8 @@
 import NavNoLeft from '@/components/NavNoLeft.vue'
 import router from '@/router'
 import store from '@/store'
-import { reactive } from 'vue'
+import { reactive, onMounted} from 'vue'
+import axios from 'axios'
 import { Minus } from '@element-plus/icons'
 import { Plus } from '@element-plus/icons'
 import { VideoPause } from '@element-plus/icons'
@@ -62,11 +63,35 @@ export default {
 		ChatLineSquare,
 		Lollipop
 	},
-	setup () {
+  props: {
+    'song_id': Number
+  },
+	setup (props) {
 		const songInfo = reactive({
-			songName: '说好的幸福呢',
-			singer: 'Jay'
+			songName: '',
+			singer: '',
+      song_cover: ''
 		})
+    const lyric = reactive({
+      content: '你的回话凌乱着\n在这个时刻\n我想起喷泉旁的白鸽\n甜蜜散落了\n情绪莫名的拉扯\n' +
+        '我还爱你呢\n而你断断续续唱着歌\n假装没事了\n时间过了走了\n爱情面临选择\n你冷了倦了我哭了\n' +
+        '离开时的不快乐\n你用卡片手写着\n有些爱只给到这\n真的痛了\n怎么了你累了说好的\n幸福呢\n' +
+        '我懂了不说了\n爱淡了梦远了\n'
+    })
+    onMounted(()=>{
+      axios.get('/music/get_song', {
+        params: {song_id: props.song_id}
+      }).then(
+        function (response) {
+          if (response.status === 200) {
+            songInfo.songName = response.data.song_name
+            songInfo.singer = response.data.singer
+            lyric.content = response.data.lyric
+            songInfo.song_cover = response.data.song_cover_url
+          }
+        }
+      )
+    })
 		const time = reactive({
 			timeValue: 0
 		})
@@ -78,14 +103,6 @@ export default {
 			comment: '评论',
 			collect: '收藏',
 			complain: '投诉'
-		})
-		const lyric = reactive({
-			songName: '说好的幸福呢',
-			singer: 'Jay',
-			content: '你的回话凌乱着\n在这个时刻\n我想起喷泉旁的白鸽\n甜蜜散落了\n情绪莫名的拉扯\n' +
-				'我还爱你呢\n而你断断续续唱着歌\n假装没事了\n时间过了走了\n爱情面临选择\n你冷了倦了我哭了\n' +
-				'离开时的不快乐\n你用卡片手写着\n有些爱只给到这\n真的痛了\n怎么了你累了说好的\n幸福呢\n' +
-				'我懂了不说了\n爱淡了梦远了\n'
 		})
 		function goBack () {
 			router.back()
@@ -100,7 +117,19 @@ export default {
 			isPlay.judge = false
 		}
 		function button_continue () {
-			isPlay.judge = true
+      var form_data = FormData()
+      form_data.append('song_id', props.song_id)
+      axios.post('/music/add_to_recent', form_data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(
+        function (response) {
+          if (response.status === 200) {
+            isPlay.judge = true
+          }
+        }
+      )
 		}
 		return {
 			goBack,
@@ -142,7 +171,7 @@ nav a {
 	text-decoration: underline;
 	color: black;
 	position: relative;
-	left: -48%;
+	left: 2%;
 }
 .info{
 	height: 60px;
@@ -204,6 +233,10 @@ nav a {
 	left: 10%;
 	text-align: left;
 	float: left;
+}
+.play #control audio{
+  width: 100%;
+  height: 100%;
 }
 .play #control #minus{
 	position: relative;
