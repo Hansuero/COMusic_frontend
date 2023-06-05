@@ -75,7 +75,7 @@ export default {
       alert('找到了' + inputData.input)
     }
     function getRecList(index) {
-      axios.get('https://mock.apifox.cn/m1/2749792-0-default/api/index/get_recommend_playlist', {
+      axios.get('/index/get_recommend_playlist', {
         params: {playlist_tag: div.tag_name[index]}
       }).then(
         function (response) {
@@ -91,7 +91,7 @@ export default {
       )
     }
     function getRecSong(index) {
-      axios.get('https://mock.apifox.cn/m1/2749792-0-default/api/index/get_recommend_song', {
+      axios.get('/index/get_recommend_song', {
         params: {song_tag: div.tag_name[index]}
       }).then(
         function (response) {

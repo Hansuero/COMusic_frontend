@@ -10,7 +10,7 @@
 		<p id="singer">{{songInfo.singer}}</p>
 	</div>
 	<div class="body">
-		<img id="img" alt="img" src="../assets/logo.png">
+		<img id="img" alt="img" src="{{ songInfo.song_cover }}">
 		<div id="lyric">
 			<textarea id="content" v-model="lyric.content" style="resize: none" cols="53" rows="80"></textarea>
 		</div>
@@ -79,7 +79,7 @@ export default {
         '我懂了不说了\n爱淡了梦远了\n'
     })
     onMounted(()=>{
-      axios.get('https://mock.apifox.cn/m1/2749792-0-default/api/music/get_song', {
+      axios.get('/music/get_song', {
         params: {song_id: props.song_id}
       }).then(
         function (response) {
@@ -117,7 +117,19 @@ export default {
 			isPlay.judge = false
 		}
 		function button_continue () {
-			isPlay.judge = true
+      var form_data = FormData()
+      form_data.append('song_id', props.song_id)
+      axios.post('/music/add_to_recent', form_data, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(
+        function (response) {
+          if (response.status === 200) {
+            isPlay.judge = true
+          }
+        }
+      )
 		}
 		return {
 			goBack,

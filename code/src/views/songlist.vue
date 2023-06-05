@@ -73,7 +73,7 @@ export default {
     })
 		const songLi = ref([])
 		onMounted(()=>{
-      axios.get('https://mock.apifox.cn/m1/2749792-0-default/api/music/get_playlist', {
+      axios.get('/music/get_playlist', {
         params: {playlist_id: props.songlist_id}
       }).then(
         function (response) {
@@ -132,7 +132,7 @@ export default {
         const form_data = new FormData()
         form_data.append('songs_id', isCollected.song_id)
         form_data.append('playlist_id', 0)
-        axios.post('https://mock.apifox.cn/m1/2749792-0-default/api/music/add_songs_to_favo', form_data,{
+        axios.post('/music/add_songs_to_favo', form_data,{
           headers: {
             'Content-Type': 'multipart/form-data'
           }

@@ -80,7 +80,7 @@ export default {
         const form_data = new FormData()
         form_data.append('song_id', props.song_id)
         form_data.append('content', text.content)
-        axios.post('https://mock.apifox.cn/m1/2749792-0-default/api/comment/create_comment', form_data, {
+        axios.post('/comment/create_comment', form_data, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -100,14 +100,14 @@ export default {
       var form_data = new FormData()
       form_data.append('comment_id', cids.cid[index])
       form_data.append('content', cons.con[index])
-      axios.post('https://mock.apifox.cn/m1/2749792-0-default/api/comment/change_comment', form_data, {
+      axios.post('/comment/change_comment', form_data, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
 		}
 		function cDelete (index) {
-      axios.delete('https://mock.apifox.cn/m1/2749792-0-default/api/comment/delete_comment', {
+      axios.delete('/comment/delete_comment', {
         params: {comment_id: cids.cid[index]}
       }).then(
         function (response) {
@@ -120,7 +120,7 @@ export default {
       )
 		}
     onMounted(()=>{
-      axios.get('https://mock.apifox.cn/m1/2749792-0-default/api/comment/get_comment', {
+      axios.get('/comment/get_comment', {
         params: {song_id: props.song_id}
       }).then(
         function (response) {
