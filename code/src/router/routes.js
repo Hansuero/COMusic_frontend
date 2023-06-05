@@ -63,11 +63,11 @@ const routes = [{
         component: record
     },{
         name: 'song',
-        path: '/song',
+        path: '/song/:id',
         component: song
     },{
         name: 'songlist',
-        path: '/songlist',
+        path: '/songlist/:id',
         component: songlist
     },{
         name: 'upload',
