@@ -4,15 +4,8 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import router from './router/index'
 import axios from 'axios'
-<<<<<<< HEAD
-
-//云服务器 url
-axios.defaults.baseURL = 'http://82.157.165.72/api'
-//本地MOCK url
-//axios.defaults.baseURL = 'http://127.8.0.1/m1/2749792-0-default/api'
-=======
 import default_url from './assets/default_profile.png'
->>>>>>> origin/combine1-tq
+
 const app = createApp(App)
 const is_login = true
 var cur_user = {
