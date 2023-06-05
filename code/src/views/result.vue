@@ -199,12 +199,13 @@ const inputData = reactive({
 <style scoped>
 .outer_box {
 	justify-content: center;
-	position: absolute; 
+	position: absolute;
 	display: flex; 
 	flex-wrap: wrap; 
 	top: 20vh;
-    width: 99%;
+    width: 100%;
 	height: 80vh;
+    left: 0px;
 }
 .small_photo{
 	height: 80px;

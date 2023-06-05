@@ -7,7 +7,7 @@ import axios from 'axios'
 import default_url from './assets/default_profile.png'
 
 const app = createApp(App)
-const is_login = true
+var is_login = false
 var cur_user = {
     user_id: 0,
     username: 'visitor',
@@ -17,9 +17,9 @@ var cur_user = {
 axios.defaults.baseURL = 'http://82.157.165.72/api'
 //本地MOCK ur1
 //axios.defaults.baseURL ='http://127.0.0.1:4523/m1/2749792-0-default/api'
-app.provide('is_login', is_login)
 app.config.globalProperties.$axios = axios
 app.config.globalProperties.$cur_user = cur_user
+app.config.globalProperties.$is_login = is_login
 app.use(router)
 app.use(ElementPlus)
 app.mount("#app")

@@ -4,6 +4,9 @@
 <script>
 import { reactive } from "vue";
 import { ElMessageBox } from "element-plus";
+import { getCurrentInstance } from 'vue';
+
+var app = null
 
 export default {
 	name: 'login', 
@@ -61,6 +64,7 @@ export default {
 							here.$cur_user.photo_url = photo_url
 							console.log(here.$cur_user)
 							//here.$router.push('./result')
+							app.config.globalProperties.$is_login = true
 							here.$router.push('./index')
 						}
 						else{
@@ -91,6 +95,8 @@ export default {
 
 <script setup>
 import { reactive } from "vue";
+
+app = getCurrentInstance().appContext.app
 
 const input_data = reactive({
 	input_username: '',

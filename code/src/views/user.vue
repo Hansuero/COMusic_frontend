@@ -74,7 +74,7 @@ export default {
 			profile_read.onload = () => {
 				const binary_profile = profile_read.result
 				const form_data = new FormData()
-				form_data.append('photo', binary_profile)
+				form_data.append('photo', profile)
 				here.$axios
 				.post('/user/upload_photo', form_data, {
 					headers: {

@@ -38,7 +38,8 @@ export default {
 		'profile_url'
 	],
 	setup() {
-		const is_login = inject('is_login')
+		const app = getCurrentInstance().appContext.app;
+		const is_login = app.config.globalProperties.$is_login
 		function whether_login() {
 			return is_login
 		}

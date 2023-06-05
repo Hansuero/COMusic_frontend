@@ -29,10 +29,13 @@ import NavNoLeft from '@/components/NavNoLeft.vue'
 import { reactive } from 'vue'
 import router from '@/router'
 import axios from 'axios'
+import SearchBox from '@/components/SearchBox.vue'
+
 export default {
 	name: 'MainView',
 	components: {
-		NavNoLeft
+		NavNoLeft,
+		SearchBox
 	},
 	setup () {
 		const inputData = reactive({

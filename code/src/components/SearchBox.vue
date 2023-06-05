@@ -75,15 +75,16 @@ const inputData = reactive({
 
 <style scoped>
 .search{
-	width: 100%;
+	width: 100vh;
 	height: 80px;
+	display: flex;
+	justify-content: center;
 }
 .search #input{
 	width: 300px;
 	height: 30px;
 	position: relative;
 	top: 20px;
-	left: 450px;
 	float: left;
 }
 .search #button{
@@ -91,7 +92,7 @@ const inputData = reactive({
 	height: 30px;
 	position: relative;
 	top: 20px;
-	left: 450px;
+	left: 20px;
 	float: left;
 }
 .search #button #button1{
