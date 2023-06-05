@@ -14,9 +14,9 @@ var cur_user = {
     photo_url: default_url
 }
 //云服务器ur1
-axios.defaults.baseURL = 'http://82.157.165.72:8000/api'
+axios.defaults.baseURL = 'http://82.157.165.72/api'
 //本地MOCK ur1
-//axios.defaults.baseURL ='http://127.0.0.1:4523/m1/2749792-0-default/api'
+//axios.defaults.baseURL ='http://127.0.0.1/m1/2749792-0-default/api'
 app.provide('is_login', is_login)
 app.config.globalProperties.$axios = axios
 app.config.globalProperties.$cur_user = cur_user
