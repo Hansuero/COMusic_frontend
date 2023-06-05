@@ -56,7 +56,7 @@ export default {
 							here.$cur_user.username = username
 							here.$cur_user.photo_url = photo_url
 							console.log(here.$cur_user)
-							this.$router.push('./index')
+							here.$router.push('./index')
 						}
 						else{
 							const dialog = new ElMessageBox({

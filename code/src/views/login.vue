@@ -81,7 +81,9 @@ export default {
 		},
 		//在这里处理游客访问
 		as_visitor(){
-			console.log("I am a visitor!\n");
+			const here = this
+			console.log("I am a visitor!\n")
+			here.$router.push('./index')
 		}
 	}
 }
