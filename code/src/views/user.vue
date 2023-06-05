@@ -22,9 +22,9 @@ export default {
 			const form_data = new FormData()
 			form_data.append('id', cur_id)
 			here.$axios
-			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_other_info', form_data, {
-				headers: {
-    				'Content-Type': 'multipart/form-data'
+			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/user/get_other_info', {
+				params: {
+    				id: cur_id
   				}
 			})
 			.then(function(response){

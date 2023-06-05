@@ -35,12 +35,10 @@ export default {
         here.$data.result_type = type
         //搜索的是歌曲
         if(type == here.$data.SEARCH_SONG){
-            const form_data = new FormData()
-            form_data.append('song_name', here.$props.search_input)
             here.$axios
-            .get('http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_song', form_data, {
-                headers: {
-    				'Content-Type': 'multipart/form-data'
+            .get('http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_song', {
+                params: {
+    				song_name: here.$props.search_input
   				}
             })
             .then(function(response){
@@ -70,12 +68,10 @@ export default {
         }
         //搜索的是歌单
         else if(type == here.$data.SEARCH_SONGLIST){
-            const form_data = new FormData()
-            form_data.append('songlist_name', here.$props.search_input)
             here.$axios
-            .get('http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_playlist', form_data, {
-                headers: {
-    				'Content-Type': 'multipart/form-data'
+            .get('http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_playlist', {
+                params: {
+    				songlist_name: here.$props.search_input
   				}
             })
             .then(function(response){
@@ -105,12 +101,10 @@ export default {
         }
         //搜索的是用户
         else if(type == here.$data.SEARCH_USER){
-            const form_data = new FormData()
-            form_data.append('username', here.$props.search_input)
             here.$axios
-            .get('http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_user', form_data, {
-                headers: {
-    				'Content-Type': 'multipart/form-data'
+            .get('http://127.0.0.1:4523/m1/2749792-0-default/api/index/search_user', {
+                params: {
+    				username: here.$props.search_input
   				}
             })
             .then(function(response){

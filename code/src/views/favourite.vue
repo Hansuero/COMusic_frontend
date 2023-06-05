@@ -53,13 +53,11 @@ export default {
 				console.log(here.$data.favourite_list[0])
 				here.$data.cur_favo_id = here.$data.favourite_list[0].playlist_id
 				here.$data.cur_favo_title = here.$data.favourite_list[0].title
-				const form_data_1 = new FormData()
-				form_data_1.append('favo_id', here.$data.cur_favo_id)
 				here.$axios
-				.get('http://127.0.0.1:4523/m1/2749792-0-default/api/music/get_songs_in_favo', form_data_1, {
-					headers: {
-    					'Content-Type': 'multipart/form-data'
-	  				}
+				.get('http://127.0.0.1:4523/m1/2749792-0-default/api/music/get_songs_in_favo', {
+					params: {
+						favo_id: here.$data.cur_favo_id
+					}
 				})
 				.then(function(response_2){
 					if(response_2.status == 200){
@@ -114,13 +112,11 @@ export default {
 			const here = this
 			here.$data.cur_favo_id = playlist_id
 			here.$data.cur_favo_title = title
-			const form_data = new FormData()
-			form_data.append('favo_id', playlist_id)
 			here.$axios
-			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/music/get_songs_in_favo', form_data, {
-				headers: {
-    				'Content-Type': 'multipart/form-data'
-  				}
+			.get('http://127.0.0.1:4523/m1/2749792-0-default/api/music/get_songs_in_favo', {
+				params: {
+					favo_id: playlist_id
+				}
 			})
 			.then(function(response){
 				if(response.status == 200){
