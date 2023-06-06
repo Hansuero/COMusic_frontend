@@ -132,7 +132,7 @@ export default {
     }
     function clickSong (index, num) {
       if (judge.isCollect === 1){
-        router.push('./song/'+songs.id[index])
+        router.push('../song/'+songs.id[index])
       } else if (judge.isCollect === 3 && num === 1){
         songLi.value.forEach(item=>{
           if (songLi.value.indexOf(item) === index){
