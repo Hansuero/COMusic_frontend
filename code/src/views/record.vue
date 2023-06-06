@@ -57,8 +57,8 @@ export default {
 						const song_list = re_data.song_list
 						song_list.forEach(function(element){
 							var song_id = element.song_id
-							var title = element.song_title
-							var artist = element.song_artist
+							var title = element.song_name
+							var artist = element.singer
 							here.$data.song_list.push({
 								song_id: song_id,
 								title: title,

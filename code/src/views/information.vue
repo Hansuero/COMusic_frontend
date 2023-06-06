@@ -48,12 +48,12 @@ export default {
 	},
 	created() {
 		const here = this
-		this.$axios.get('/user/get_message_list').then((response) => {
+		this.$axios.get('/super_admin/get_report_list').then((response) => {
 			if (response.status == 200) {
 				const re_data = response.data
-						const message_list = re_data.message_list
+						const message_list = re_data.report_list
 						message_list.forEach(function(element){
-							var message_id = element.message_id
+							var message_id = element.report_id
 							var sender = element.sender
 							var time = element.time
 							var content = element.content
