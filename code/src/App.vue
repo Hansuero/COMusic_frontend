@@ -24,7 +24,7 @@ export default {
 			here.$nextTick(function(){
 				here.isRouterAlive = true
 			})
-		}
+		},
 	}
 }
 </script>

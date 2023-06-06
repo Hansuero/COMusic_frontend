@@ -101,7 +101,7 @@ export default {
 				的user_id依旧是和作为参数的user_id一样的
 				所以你先别试
 			*/
-			//here.$router.push('/user/'+intere_user_id)
+			here.$router.push('./user/'+intere_user_id)
 		}
 	}
 }

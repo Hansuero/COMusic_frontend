@@ -147,7 +147,7 @@ export default {
 		},
 		to_uploaded(){
 			const here = this
-			here.$router.push('./uploaded')
+			here.$router.push('../uploaded')
 		},
 		logout(){
 			const here = this
@@ -158,7 +158,7 @@ export default {
 					const re_data = response.data
 					if(re_data.result == 0){
 						alert(re_data.message)
-						here.$router.push('./login')
+						here.$router.push('../login')
 					}
 					else{
 						alert(re_data.message)

@@ -148,26 +148,14 @@ export default {
             const result_type = here.$data.result_type
             //跳转到歌曲详情页
             if(result_type == here.$data.SEARCH_SONG){
-                const params = {
-                    song_id: result_id
-                }
                 //合并时取消注释即可
-                here.$router.push({
-                    path: './song',
-                    query: params
-                })
+                here.$router.push('./song/'+result_id)
                 
             }
             //跳转到歌单详情页
             else if(result_type == here.$data.SEARCH_SONGLIST){ 
-                const params = {
-                    songlist_id: result_id
-                }
                 //合并时取消注释即可
-                here.$router.push({
-                    path: './songlist',
-                    query: params
-                })
+                here.$router.push('./songlist/'+result_id)
                 
             }
             //跳转到用户详情页
