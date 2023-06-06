@@ -44,7 +44,7 @@ export default {
 					'Content-type': "multipart/form-data"
 				}
 			}).then(function (response) {
-				if (response.status == 200) {
+				if (response.data.result == 0) {
 					ElMessageBox.alert("删除成功", '提示', {
 						confirmButtonText: '确认',
 						confirmButtonClass: 'btnFalses'
