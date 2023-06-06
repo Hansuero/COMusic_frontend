@@ -49,7 +49,7 @@ export default {
 	created() {
 		const here = this
 		this.$axios.get('/super_admin/get_report_list').then((response) => {
-			if (response.data.result == 0 || response.data.result == 3) {
+			if (response.data.result == 0 ) {
 				const re_data = response.data
 						const message_list = re_data.report_list
 						message_list.forEach(function(element){
@@ -64,6 +64,9 @@ export default {
 								content: content
 							})
 						})
+			}
+			else if(response.data.result == 3){
+				
 			}
 			else {
 				ElMessageBox.alert("获取失败了，尝试联系管理员吧", '提示', {
