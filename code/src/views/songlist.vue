@@ -20,17 +20,24 @@
     <div id="top">
       <span>{{ title.name }}</span>
       <el-button color="#7eec52" id="complain"><strong><el-icon size=20px id="icon2"><warning /></el-icon>{{ complain }}</strong></el-button>
-      <el-button color="#7eec52" id="collect" @click="collectSong" v-if="judge.isCollect===1 || judge.isCollect===2"><strong><el-icon size=20px id="icon1"><star /></el-icon>{{ collect.name }}</strong></el-button>
+      <el-button color="#7eec52" id="collect" @click="collectSong" v-if="judge.isCollect"><strong><el-icon size=20px id="icon1"><star /></el-icon>{{ collect.name }}</strong></el-button>
       <el-button color="#00bfff" id="ok" @click="collectSong" v-else><strong><el-icon size=20px id="icon1"><star /></el-icon>{{ collect.name }}</strong></el-button>
     </div>
     <div id="body">
-      <ul type="none" id="songs" v-if="judge.isSong">
+      <ul type="none" id="songs">
         <li v-for="(item, index) in songs.title" ref="songLi" :key="index" :value="item" @click="clickSong(index, nums.num[index])">{{ item }}</li>
       </ul>
-      <ul type="none" id="songs" v-else>
-        <li v-for="(item, index) in favos.title" ref="favoLi" :key="index" :value="item" @click="clickFavo(index, nums.f_num[index])"> {{ item }} </li>
-      </ul>
     </div>
+    <el-drawer title="请选择收藏夹" v-model="forDrawer.drawer" :direction="forDrawer.dir" :before-close="handleClose" destroy-on-close>
+      <div class="hide">
+        <ul type="none" id="favos">
+          <li v-for="(item, index) in favos.title" ref="favoLi" :key="index" :value="item" @click="clickFavo(index, nums.f_num[index])"> {{ item }} </li>
+        </ul>
+      </div>
+      <div>
+        <el-button @click="close" type="text" style="position: relative;left: 48.5%;font-size: larger">确认</el-button>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
@@ -49,6 +56,24 @@ export default {
   name: 'songlist',
   components: { NavNoLeft, Star, Warning },
   setup () {
+    const forDrawer = reactive({
+      drawer: false,
+      dir: 'btt'
+    })
+    function handleClose () {
+      let close = confirm("确认关闭?")
+      if (close) {
+        forDrawer.drawer = false
+      }
+    }
+    function close () {
+      if (favo_id.fid !== -1) {
+        forDrawer.drawer = false
+        judge.isCollect = false
+      } else {
+        alert("请选择收藏夹")
+      }
+    }
     const sid = useRoute().params.id
     const favo_id = reactive({
       fid: -1
@@ -66,13 +91,12 @@ export default {
       num: [],
       f_num: []
     })
-    let collect = reactive({
+    const collect = reactive({
       name: '收藏'
     })
     let complain = reactive('投诉')
     const judge = reactive({
-      isCollect: store.state.isCollect,
-      isSong: store.state.isSong
+      isCollect: store.state.isCollect
     })
     const songs = reactive({
       id: [],
@@ -124,16 +148,16 @@ export default {
         item.style.background = "#7eec52"
       })
       favoLi.value.forEach(item=>{
-        item.style.background = "#7eec52"
+        item.style.background = "#00bfff"
       })
     })
     function goBack () {
       router.back()
     }
     function clickSong (index, num) {
-      if (judge.isCollect === 1){
+      if (judge.isCollect){
         router.push('../song/'+songs.id[index])
-      } else if (judge.isCollect === 3 && num === 1){
+      } else if (!judge.isCollect && num === 1){
         songLi.value.forEach(item=>{
           if (songLi.value.indexOf(item) === index){
             item.style.background = "#00bfff"
@@ -141,7 +165,7 @@ export default {
             isCollected.song_id.push(songs.id[index])
           }
         })
-      } else if (judge.isCollect === 3 && num === 2){
+      } else if (!judge.isCollect && num === 2){
         songLi.value.forEach(item=>{
           if (songLi.value.indexOf(item) === index){
             item.style.background = "#7eec52"
@@ -151,9 +175,8 @@ export default {
         })
       }
     }
-
     function clickFavo (index, num) {
-      if (judge.isCollect === 2) {
+      if (judge.isCollect) {
         if (num === 1) {
           favoLi.value.forEach(item=>{
             if (favoLi.value.indexOf(item) === index) {
@@ -161,7 +184,7 @@ export default {
               favo_id.fid = favos.id[index]
               nums.f_num[index] = 2
             } else {
-              item.style.background = "#7eec22"
+              item.style.background = "#00bfff"
               nums.f_num[favoLi.value.indexOf(item)] = 1
             }
           })
@@ -169,7 +192,7 @@ export default {
         else if (num === 2) {
           favoLi.value.forEach(item=>{
             if (favoLi.value.indexOf(item) === index) {
-              item.style.background = "#7eec22"
+              item.style.background = "#00bfff"
               favo_id.fid = -1
               nums.f_num[index] = 1
             }
@@ -178,24 +201,11 @@ export default {
       }
     }
     function collectSong () {
-      if (judge.isCollect === 1) {
+      if (judge.isCollect) {
         collect.name = '确定'
-        title.name = '请选择收藏夹'
-        judge.isSong = false
-        judge.isCollect = 2
-      } else if (judge.isCollect === 2) {
-        if (favo_id.fid !== -1) {
-          judge.isCollect = 3
-          title.name = '歌曲'
-          judge.isSong = true
-        } else {
-          alert('未选择收藏夹')
-          judge.isCollect = 1
-          title.name = '歌曲'
-          judge.isSong = true
-        }
-      } else if (judge.isCollect === 3) {
-        judge.isCollect = 1
+        forDrawer.drawer = true
+      } else {
+        judge.isCollect = true
         collect.name = '收藏'
         songLi.value.forEach(item=>{
           item.style.background = "#7eec52"
@@ -222,6 +232,9 @@ export default {
       }
     }
     return {
+      forDrawer,
+      handleClose,
+      close,
       intro,
       title,
       goBack,
@@ -367,6 +380,21 @@ nav a {
   text-align: center;
   color: white;
   background: #7eec52;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.hide{
+  overflow: auto;
+}
+.hide #favos li{
+  position: relative;
+  left: 5%;
+  width: 90%;
+  height: 42px;
+  line-height: 42px;
+  text-align: center;
+  color: white;
+  background: #00bfff;
   border-radius: 10px;
   margin-bottom: 20px;
 }
