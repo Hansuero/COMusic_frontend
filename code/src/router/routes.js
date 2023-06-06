@@ -47,7 +47,7 @@ const routes = [{
         component: index
     },{
         name: 'comment',
-        path: '/comment',
+        path: '/comment/:songid',
         component: comment
     },{
         name: 'information',
