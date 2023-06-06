@@ -38,56 +38,60 @@ export default {
 		.get('/music/get_favo_list')
 		.then(function(response_1){
 			if(response_1.status == 200){
-				console.log('get favourite list success')
 				const re_data_1 = response_1.data
-				var favo_list = re_data_1.favo_list
-				here.$data.num_favourite = favo_list.length
-				favo_list.forEach(function(element){
-					var playlist_id = element.favo_id
-					var title = element.favo_title
-					here.$data.favourite_list.push({
-						playlist_id: playlist_id,
-						title: title
+				if(re_data_1.result == 0){
+					console.log('get favourite list success')
+					var favo_list = re_data_1.favo_list
+					here.$data.num_favourite = favo_list.length
+					favo_list.forEach(function(element){
+						var playlist_id = element.favo_id
+						var title = element.favo_title
+						here.$data.favourite_list.push({
+							playlist_id: playlist_id,
+							title: title
+						})
 					})
-				})
-				console.log(here.$data.favourite_list[0])
-				here.$data.cur_favo_id = here.$data.favourite_list[0].playlist_id
-				here.$data.cur_favo_title = here.$data.favourite_list[0].title
-				here.$axios
-				.get('/music/get_songs_in_favo', {
-					params: {
-						favo_id: here.$data.cur_favo_id
-					}
-				})
-				.then(function(response_2){
-					if(response_2.status == 200){
-						const re_data_2 = response_2.data
-						const song_list = re_data_2.song_list
-						here.$data.num_song = song_list.length
-						song_list.forEach(function(element){
-							var song_id = element.song_id
-							var title = element.song_title
-							var artist = element.song_artist
-							here.$data.song_list.push({
-								song_id: song_id,
-								title: title,
-								artist: artist
-							})
-						})
-					}
-					else{
-						const dialog = new ElMessageBox({
-							title: "糟糕，出错啦",
-							message: response_2.message
-						})
-					}
-				})
+					console.log(here.$data.favourite_list[0])
+					here.$data.cur_favo_id = here.$data.favourite_list[0].playlist_id
+					here.$data.cur_favo_title = here.$data.favourite_list[0].title
+					here.$axios
+					.get('/music/get_songs_in_favo', {
+						params: {
+							favo_id: here.$data.cur_favo_id
+						}
+					})
+					.then(function(response_2){
+						if(response_2.status == 200){
+							const re_data_2 = response_2.data
+							if(re_data_2.result == 0){
+								const song_list = re_data_2.song_list
+								here.$data.num_song = song_list.length
+								song_list.forEach(function(element){
+									var song_id = element.song_id
+									var title = element.song_title
+									var artist = element.song_artist
+									here.$data.song_list.push({
+										song_id: song_id,
+										title: title,
+										artist: artist
+									})
+								})
+							}
+							else{
+								alert(re_data_2.message)
+							}
+						}
+						else{
+							alert("error! response status is not 200!")
+						}
+					})
+				}
+				else{
+					alert(re_data_1.message)
+				}
 			}
 			else{
-				const dialog = new ElMessageBox({
-					title: "糟糕，出错啦",
-					message: response_1.message
-				})
+				alert("error! response status is not 200!")
 			}
 		})
 		
@@ -121,25 +125,27 @@ export default {
 			.then(function(response){
 				if(response.status == 200){
 					const re_data = response.data
-					const song_list = re_data.song_list
-					here.$data.num_song = song_list.length
-					here.$data.song_list = []
-					song_list.forEach(function(element){
-						var song_id = element.song_id
-						var title = element.song_title
-						var artist = element.song_artist
-						here.$data.song_list.push({
-							song_id: song_id,
-							title: title,
-							artist: artist
+					if(re_data.result == 0){
+						const song_list = re_data.song_list
+						here.$data.num_song = song_list.length
+						here.$data.song_list = []
+						song_list.forEach(function(element){
+							var song_id = element.song_id
+							var title = element.song_title
+							var artist = element.song_artist
+							here.$data.song_list.push({
+								song_id: song_id,
+								title: title,
+								artist: artist
+							})
 						})
-					})
+					}
+					else{
+						alert(re_data.message)
+					}	
 				}
 				else{
-					const dialog = new ElMessageBox({
-						title: "糟糕，出错啦",
-						message: response.data.message
-					})
+					alert("error! response status is not 200!")
 				}
 			})
 		},
@@ -179,19 +185,23 @@ export default {
 				})
 				.then(function(response){
 					if(response.status == 200){
-						var favo_id = response.data.favo_id
-						var favo_title =response.data.favo_title
-						here.$data.favourite_list.push({
-							playlist_id: favo_id,
-							title: favo_title
-						})
-						here.$data.num_favourite = here.$data.favourite_list.length
+						const re_data = response.data
+						if(re_data.result == 0){
+							alert(re_data.message)
+							var favo_id = re_data.favo_id
+							var favo_title =re_data.favo_title
+							here.$data.favourite_list.push({
+								playlist_id: favo_id,
+								title: favo_title
+							})
+							here.$data.num_favourite = here.$data.favourite_list.length
+						}
+						else{
+							alert(re_data.message)
+						}
 					}
 					else{
-						const dialog = new ElMessageBox({
-							title: "糟糕，出错啦",
-							message: response.data.message
-						})
+						alert("error! response status is not 200!")
 					}
 				})
         	})
@@ -272,7 +282,16 @@ export default {
 			.then(function(response){
 				console.log(response)
 				if(response.status == 200){
-					console.log("share success")
+					const re_data = response.data
+					if(re_data.result == 0){
+						alert(re_data.message)
+					}
+					else{
+						alert(re_data.message)
+					}
+				}
+				else{
+					alert("error! response status is not 200!")
 				}
 			})
 		},

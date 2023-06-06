@@ -43,26 +43,29 @@ export default {
             })
             .then(function(response){
                 if(response.status == 200){
-                    const song_list = response.data.song_list
-                    here.$data.num_result = song_list.length
-                    song_list.forEach(function(element){
-                        var result_photo_url = element.song_cover_photo_url
-                        var result_title = element.song_name
-                        var result_id = element.song_id
-                        var result_subtitle = element.singer
-                        here.$data.result_list.push({
-                            result_id: result_id,
-                            result_photo_url: result_photo_url,
-                            result_title: result_title,
-                            result_subtitle: result_subtitle
+                    const re_data = response.data
+                    if(re_data.result == 0){
+                        const song_list = re_data.song_list
+                        here.$data.num_result = song_list.length
+                        song_list.forEach(function(element){
+                            var result_photo_url = element.song_cover_photo_url
+                            var result_title = element.song_name
+                            var result_id = element.song_id
+                            var result_subtitle = element.singer
+                            here.$data.result_list.push({
+                                result_id: result_id,
+                                result_photo_url: result_photo_url,
+                                result_title: result_title,
+                                result_subtitle: result_subtitle
+                            })
                         })
-                    })
+                    }
+                    else{
+                        alert(re_data.message)
+                    }
                 }
                 else{
-                    const dialog = new ElMessageBox({
-						title: "糟糕，出错啦",
-						message: response.data.message
-					})
+                    alert("error! response status is not 200!")
                 }
             })
         }
@@ -76,26 +79,29 @@ export default {
             })
             .then(function(response){
                 if(response.status == 200){
-                    const songlist_list = response.data.songlist_list
-                    here.$data.num_result = songlist_list.length
-                    songlist_list.forEach(function(element){
-                        var result_id = element.playlist_id
-                        var result_photo_url = element.playlist_cover_photo_url
-                        var result_title = element.playlist_name
-                        var result_subtitle = element.owner_name
-                        here.$data.result_list.push({
-                            result_id: result_id,
-                            result_photo_url: result_photo_url,
-                            result_title: result_title,
-                            result_subtitle: result_subtitle
+                    const re_data = response.data
+                    if(re_data.result == 0){
+                        const songlist_list = re_data.songlist_list
+                        here.$data.num_result = songlist_list.length
+                        songlist_list.forEach(function(element){
+                            var result_id = element.playlist_id
+                            var result_photo_url = element.playlist_cover_photo_url
+                            var result_title = element.playlist_name
+                            var result_subtitle = element.owner_name
+                            here.$data.result_list.push({
+                                result_id: result_id,
+                                result_photo_url: result_photo_url,
+                                result_title: result_title,
+                                result_subtitle: result_subtitle
+                            })
                         })
-                    })
+                    }
+                    else{
+                        alert(re_data.message)
+                    }
                 }
                 else{
-                    const dialog = new ElMessageBox({
-						title: "糟糕，出错啦",
-						message: response.data.message
-					})
+                    alert("error! response status is not 200!")
                 }
             })
         }
@@ -109,26 +115,29 @@ export default {
             })
             .then(function(response){
                 if(response.status == 200){
-                    const user_list = response.data.user_list
-                    here.$data.num_result = user_list.length
-                    user_list.forEach(function(element){
-                        var result_id = element.user_id
-                        var result_photo_url = element.photo_url
-                        var result_title = element.username
-                        var result_subtitle = ""
-                        here.$data.result_list.push({
-                            result_id: result_id,
-                            result_photo_url: result_photo_url,
-                            result_title: result_title,
-                            result_subtitle: result_subtitle
+                    const re_data = response.data
+                    if(re_data.result == 0){
+                        const user_list = re_data.user_list
+                        here.$data.num_result = user_list.length
+                        user_list.forEach(function(element){
+                            var result_id = element.user_id
+                            var result_photo_url = element.photo_url
+                            var result_title = element.username
+                            var result_subtitle = ""
+                            here.$data.result_list.push({
+                                result_id: result_id,
+                                result_photo_url: result_photo_url,
+                                result_title: result_title,
+                                result_subtitle: result_subtitle
+                            })
                         })
-                    })
+                    }
+                    else{
+                        alert(re_data.message)
+                    }
                 }
                 else{
-                    const dialog = new ElMessageBox({
-						title: "糟糕，出错啦",
-						message: response.data.message
-					})
+                    alert("error! response status is not 200!")
                 }
             })
         }

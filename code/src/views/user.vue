@@ -29,15 +29,18 @@ export default {
 			})
 			.then(function(response){
 				if(response.status == 200){
-					cur_user_id = response.data.user_data.user_id
-					cur_username = response.data.user_data.username
-					cur_photo_url = response.data.user_data.photo_url
+					const re_data = response.data
+					if(re_data.result == 0){
+						cur_user_id = response.data.user_data.user_id
+						cur_username = response.data.user_data.username
+						cur_photo_url = response.data.user_data.photo_url
+					}
+					else{
+						alert(re_data.message)
+					}		
 				}
 				else{
-					const dialog = new ElMessageBox({
-						title: "糟糕，出错啦",
-						message: response.data.message
-					})
+					alert("error! response status is not 200!")
 				}
 			})
 		}
@@ -83,14 +86,17 @@ export default {
 				})
 				.then(function(response){
 					if(response.status == 200){
-						console.log('upload_photo post success')
-						delta = 1
+						const re_data = response.data
+						if(re_data.result == 0){
+							alert(re_data.message)
+							delta = 1
+						}
+						else{
+							alert(re_data.message)
+						}
 					}
 					else{
-						const dialog = new ElMessageBox({
-							title: "糟糕，出错啦",
-							message: response.data.message
-						})
+						alert("error! response status is not 200!")
 					}
 				})
 			}
@@ -121,19 +127,47 @@ export default {
 				})
 				.then(function(response){
 					if(response.status == 200){
-						console.log("upload_bio post success")
+						const re_data = response.data
+						if(re_data.result == 0){
+							console.log("upload_bio post success")
+							alert(re_data.message)
+						}
+						else{
+							alert(re_data.message)
+						}
 					}
 					else{
-						const dialog = new ElMessageBox({
-							title: "糟糕，出错啦",
-							message: response.data.message
-						})
+						alert("error! response status is not 200!")
 					}
 				})
 			}
 			else{
 				here.$data.can_modify = true
 			}
+		},
+		to_uploaded(){
+			const here = this
+			here.$router.push('./uploaded')
+		},
+		logout(){
+			const here = this
+			here.$axios
+			.get('/user/logout')
+			.then(function(response){
+				if(response.status == 200){
+					const re_data = response.data
+					if(re_data.result == 0){
+						alert(re_data.message)
+						here.$router.push('./login')
+					}
+					else{
+						alert(re_data.message)
+					}
+				}
+				else{
+					alert("error! response status is not 200!")
+				}
+			})
 		}
 	}
 }
@@ -181,14 +215,24 @@ const input_data = reactive({
 					</el-form-item>
 				</el-form>
 			</div>
-			<div style="margin-left: 50px;">
+			<div style="width: 50px;"></div>
+			<div style="display: flex; justify-content: center; align-items: center;">
 				<el-button v-if="can_modify" color="#7eec52" @click="modify_introduction()">
 					<p class="Chinese_font">保存个人简介</p>
 				</el-button>
 				<el-button v-if="!can_modify" color="#7eec52" @click="modify_introduction()">
 					<p class="Chinese_font">编辑个人简介</p>
 				</el-button>
-			</div>    
+			</div>
+			<div style="width: 50px;"></div>
+			<div style="width: 150px;">
+				<el-button color="#7eec52" @click="to_uploaded">
+					<p class="Chinese_font">查看上传记录</p>
+				</el-button>
+				<el-button style="margin-top: 40px;" color="#7eec52" @click="logout">
+					<p class="Chinese_font">退出登录</p>
+				</el-button>
+			</div> 
 		</div>
 	</div>
 </template>
@@ -202,8 +246,8 @@ const input_data = reactive({
 	flex-wrap: wrap; 
 	left: 185px; 
 	top: 20vh;
-	width: 80%;
 	height: 80vh;
+	width: 80%;
 }
 .profile {
 	height: 180px;

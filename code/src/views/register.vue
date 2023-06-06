@@ -44,37 +44,43 @@ export default {
 			})
 			.then(function(response_1){
 				if(response_1.status == 200){
-					console.log("register post success")
-					here.$axios
-					.get('/user/get_user_info')
-					.then(function(response_2){
-						if(response_2.status == 200){
-							var user_id = response_2.data.user_data.user_id
-							var username = response_2.data.user_data.username
-							var photo_url = response_2.data.user_data.photo_url
-							console.log(user_id)
-							console.log(username)
-							console.log(photo_url)
-							here.$cur_user.user_id = user_id
-							here.$cur_user.username = username
-							here.$cur_user.photo_url = photo_url
-							console.log(here.$cur_user)
-							app.config.globalProperties.$is_login = true
-							here.$router.push('./index')
-						}
-						else{
-							const dialog = new ElMessageBox({
-								title: "糟糕，出错啦",
-								message: response_2.message
-							})
-						}
-					})
+					const re_data_1 = response_1.data
+					if(re_data_1.result == 0){
+						console.log("register post success")
+						here.$axios
+						.get('/user/get_user_info')
+						.then(function(response_2){
+							if(response_2.status == 200){
+								const re_data_2 = response_2.data
+								if(re_data_2.result == 0){
+									var user_id = re_data_2.user_data.user_id
+									var username = re_data_2.user_data.username
+									var photo_url = re_data_2.user_data.photo_url
+									console.log(user_id)
+									console.log(username)
+									console.log(photo_url)
+									here.$cur_user.user_id = user_id
+									here.$cur_user.username = username
+									here.$cur_user.photo_url = photo_url
+									console.log(here.$cur_user)
+									app.config.globalProperties.$is_login = true
+									here.$router.push('./index')
+								}
+								else{
+									alert(re_data_2.message)
+								}				
+							}
+							else{
+								alert("error! response status is not 200!")
+							}
+						})
+					}
+					else{
+						alert(re_data_1.message)
+					}
 				}
 				else{
-					const dialog = new ElMessageBox({
-						title: "糟糕，出错啦",
-						message: response_1.message
-					})
+					alert("error! response status is not 200!")
 				}
 			})
         }

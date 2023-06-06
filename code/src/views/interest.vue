@@ -26,25 +26,27 @@ export default {
 			if(response.status == 200){
 				console.log("get following list success")
 				const re_data = response.data
-				console.log(re_data)
-				var following_list = re_data.following
-				here.$data.num_interest = following_list.length
-				following_list.forEach(function(element){
-					var intere_user_id = element.user_id
-					var intere_user_name = element.username
-					var intere_photo_url = element.photo_url
-					here.$data.interest_list.push({
-						intere_user_id: intere_user_id,
-						intere_user_name: intere_user_name,
-						intere_photo_url: intere_photo_url
+				if(re_data.result == 0){
+					console.log(re_data)
+					var following_list = re_data.following
+					here.$data.num_interest = following_list.length
+					following_list.forEach(function(element){
+						var intere_user_id = element.user_id
+						var intere_user_name = element.username
+						var intere_photo_url = element.photo_url
+						here.$data.interest_list.push({
+							intere_user_id: intere_user_id,
+							intere_user_name: intere_user_name,
+							intere_photo_url: intere_photo_url
+						})
 					})
-				})
+				}
+				else{
+					alert(re_data.message)
+				}
 			}
 			else{
-				const dialog = new ElMessageBox({
-					title: "糟糕，出错啦",
-					message: response.data.message
-				})
+				alert("error! response status is not 200!")
 			}
 		})
 	},
@@ -66,21 +68,24 @@ export default {
 			})
 			.then(function(response){
 				if(response.status == 200){
-					console.log('cancel success')
-					var cancel_index
-					for(var i=0; i<here.$data.num_interest; i++){
-						if(here.$data.interest_list[i].intere_user_name == intere_user_name){
-							cancel_index = i
+					const re_data = response.data
+					if(re_data.result == 0){
+						console.log('cancel success')
+						var cancel_index
+						for(var i=0; i<here.$data.num_interest; i++){
+							if(here.$data.interest_list[i].intere_user_name == intere_user_name){
+								cancel_index = i
 							break
+							}
 						}
+						here.$data.interest_list.splice(cancel_index, 1)
 					}
-					here.$data.interest_list.splice(cancel_index, 1)
+					else{
+						alert(re_data.message)
+					}			
 				}
 				else{
-					const dialog = new ElMessageBox({
-						title: "糟糕，出错啦",
-						message: response.data.message
-					})
+					alert("error! response status is not 200!")
 				}
 			})
 		},
