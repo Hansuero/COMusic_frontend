@@ -64,7 +64,8 @@ import { Star } from '@element-plus/icons'
 import { Warning } from '@element-plus/icons'
 import { ChatLineSquare } from '@element-plus/icons'
 import { Lollipop } from '@element-plus/icons'
-
+import { ElMessage } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 
 export default {
   name: 'song',
@@ -102,10 +103,15 @@ export default {
       dir: 'btt'
     })
     function handleClose () {
-      let close = confirm("确认关闭?")
-      if (close) {
+      ElMessageBox.confirm("取消收藏?", '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消'
+      }).then(()=>{
         forDrawer.drawer = false
-      }
+      })
+        .catch(()=>{
+          forDrawer.drawer = true
+        })
     }
     function close () {
       if (favo_id.fid !== -1) {
@@ -121,13 +127,18 @@ export default {
           function (response) {
             if (response.status === 200) {
               favo_id.fid = -1
-              alert('收藏成功')
+              ElMessage.success({
+                type: 'success',
+                message: '收藏成功'
+              })
               judge.collected = true
             }
           }
         )
       } else {
-        alert("请选择收藏夹")
+        ElMessageBox.alert("请选择收藏夹", "注意", {
+          confirmButtonText: '确认'
+        })
       }
     }
     const songInfo = reactive({
@@ -204,8 +215,10 @@ export default {
       if (!judge.collected){
         forDrawer.drawer = true
       } else {
-        var cancel = confirm("是否取消收藏?")
-        if (cancel) {
+        ElMessageBox.confirm("是否取消收藏?", '提示', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消'
+        }).then(()=>{
           axios.delete('/music/cancel_favo', {
             params: {
               playlist_id: favo_id.fid,
@@ -213,10 +226,15 @@ export default {
             }
           }).then(
             function (response) {
-              judge.collected = false
+              if (response.status === 200){
+                judge.collected = false
+              }
             }
           )
-        }
+        })
+          .catch(()=>{
+            judge.collected = true
+          })
       }
     }
     function clickFavo (index, num) {
@@ -267,10 +285,15 @@ export default {
       )
     }
     function post_complain () {
-      const complaint = prompt("投诉理由为：")
-      if (complaint !== null) {
-        if (complaint === '') {
-          alert('请输入投诉理由')
+      ElMessageBox.prompt("投诉理由为：", '投诉', {
+        confirmButtonText: '狠心投诉',
+        cancelButtonText: '手下留情',
+      }).then(({ value }) => {
+        if (value === '') {
+          ElMessage.info({
+            type: 'info',
+            message: '请输入投诉理由'
+          })
         } else {
           const form_data = new FormData()
           form_data.append('complaint', complaint)
@@ -282,12 +305,21 @@ export default {
           }).then(
             function (response) {
               if (response.status === 200) {
-                alert('投诉成功')
+                ElMessage.success({
+                  type: 'success',
+                  message: '投诉成功'
+                })
               }
             }
           )
         }
-      }
+      })
+        .catch(()=>{
+          ElMessage.info({
+            type: 'info',
+            message: '取消投诉'
+          })
+        })
     }
     return {
       forDrawer,

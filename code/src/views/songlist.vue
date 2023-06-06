@@ -50,7 +50,9 @@ import store from '@/store'
 import axios from 'axios'
 import { Star } from '@element-plus/icons'
 import { Warning } from '@element-plus/icons'
-
+import { ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
+import message from '@element-plus/icons/lib/Message'
 
 export default {
   name: 'songlist',
@@ -61,17 +63,25 @@ export default {
       dir: 'btt'
     })
     function handleClose () {
-      let close = confirm("确认关闭?")
-      if (close) {
+      ElMessageBox.confirm('取消收藏?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(()=>{
         forDrawer.drawer = false
-      }
+      })
+        .catch(()=>{
+          forDrawer.drawer = true
+        })
     }
     function close () {
       if (favo_id.fid !== -1) {
         forDrawer.drawer = false
         judge.isCollect = false
+        collect.name = '确定'
       } else {
-        alert("请选择收藏夹")
+        ElMessageBox.alert("请选择收藏夹", "注意", {
+          confirmButtonText: '确认'
+        })
       }
     }
     const sid = useRoute().params.id
@@ -202,7 +212,6 @@ export default {
     }
     function collectSong () {
       if (judge.isCollect) {
-        collect.name = '确定'
         forDrawer.drawer = true
       } else {
         judge.isCollect = true
@@ -222,20 +231,33 @@ export default {
             function (response) {
               if (response.status === 200) {
                 isCollected.song_id = []
-                alert('收藏成功')
+                favo_id.fid = -1
+                ElMessage.success({
+                  type: 'success',
+                  message: '收藏成功'
+                })
               }
             }
           )
         } else {
-          alert('未收藏歌曲')
+          ElMessage.warning({
+            type: 'warning',
+            message: '未收藏歌曲'
+          })
+          favo_id.fid = -1
         }
       }
     }
     function post_complain () {
-      const complaint = prompt("投诉理由为：")
-      if (complaint !== null) {
-        if (complaint === '') {
-          alert('请输入投诉理由')
+      ElMessageBox.prompt("投诉理由为：", '投诉', {
+        confirmButtonText: '狠心投诉',
+        cancelButtonText: '手下留情',
+      }).then(({ value }) => {
+        if (value === '') {
+          ElMessage.info({
+            type: 'info',
+            message: '请输入投诉理由'
+          })
         } else {
           const form_data = new FormData()
           form_data.append('complaint', complaint)
@@ -247,12 +269,21 @@ export default {
           }).then(
             function (response) {
               if (response.status === 200) {
-                alert('投诉成功')
+                ElMessage.success({
+                  type: 'success',
+                  message: '投诉成功'
+                })
               }
             }
           )
         }
-      }
+      })
+        .catch(()=>{
+          ElMessage.info({
+            type: 'info',
+            message: '取消投诉'
+          })
+        })
     }
     return {
       forDrawer,

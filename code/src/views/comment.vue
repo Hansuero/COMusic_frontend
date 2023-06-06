@@ -48,6 +48,8 @@ import router from '@/router'
 import { useRoute } from 'vue-router'
 import { reactive, onMounted } from 'vue'
 import axios from 'axios'
+import { ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 export default {
   name: 'comment',
@@ -91,12 +93,18 @@ export default {
               ids.id.push(inf.uid)
               cons.con.push(text.content)
               cids.cid.push(cids.cid.length+1)
+              ElMessage.success({
+                type: 'success',
+                message: '创建成功'
+              })
               text.content = ''
             }
           }
         )
       } else {
-        alert('请输入评论内容')
+        ElMessageBox.alert('请输入评论内容', '注意', {
+          confirmButtonText: '确认'
+        })
       }
     }
     function cModify (index) {
@@ -109,15 +117,29 @@ export default {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
-        })
+        }).then(
+          function (response) {
+            if (response.status === 200) {
+              ElMessage.success({
+                type: 'success',
+                message: '修改成功'
+              })
+            }
+          }
+        )
       } else {
-        alert('抱歉，您没有该权限')
+        ElMessage.error({
+          type: 'error',
+          message: '抱歉，您没有该权限'
+        })
       }
     }
     function cDelete (index) {
       if (ids.id[index] === inf.uid) {
-        var isDelete = confirm("确认删除本评论吗?")
-        if (isDelete) {
+        ElMessageBox.confirm("确认删除本评论吗?", '提示', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消'
+        }).then(()=>{
           axios.delete('/comment/delete_comment', {
             params: {comment_id: cids.cid[index]}
           }).then(
@@ -126,14 +148,25 @@ export default {
                 ids.id.splice(index, 1)
                 cons.con.splice(index, 1)
                 cids.cid.splice(index, 1)
+                ElMessage.success({
+                  type: 'success',
+                  message: '删除成功'
+                })
               }
             }
           )
-        } else {
-          alert("取消删除")
-        }
+        })
+          .catch(()=>{
+            ElMessage.info({
+              type: 'info',
+              message: '取消删除'
+            })
+          })
       } else {
-       alert('抱歉，您没有该权限')
+        ElMessage.error({
+          type: 'error',
+          message: '抱歉，您没有该权限'
+        })
       }
     }
     onMounted(()=>{
