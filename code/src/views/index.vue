@@ -57,10 +57,10 @@ export default {
       url: []
     })
     function goToList (index) {
-      router.push('../songList/'+songList_cover.id[index])
+      router.push('/songList/'+songList_cover.id[index])
     }
     function goToSong (index) {
-      router.push('../song/'+song_cover.id[index])
+      router.push('/song/'+song_cover.id[index])
     }
     onMounted(()=>{
       axios.get('/index/get_recommend_playlist', {

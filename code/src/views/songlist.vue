@@ -19,7 +19,7 @@
   <div class="list">
     <div id="top">
       <span>{{ title.name }}</span>
-      <el-button color="#7eec52" id="complain"><strong><el-icon size=20px id="icon2"><warning /></el-icon>{{ complain }}</strong></el-button>
+      <el-button @click="post_complain" color="#7eec52" id="complain"><strong><el-icon size=20px id="icon2"><warning /></el-icon>{{ complain }}</strong></el-button>
       <el-button color="#7eec52" id="collect" @click="collectSong" v-if="judge.isCollect"><strong><el-icon size=20px id="icon1"><star /></el-icon>{{ collect.name }}</strong></el-button>
       <el-button color="#00bfff" id="ok" @click="collectSong" v-else><strong><el-icon size=20px id="icon1"><star /></el-icon>{{ collect.name }}</strong></el-button>
     </div>
@@ -156,7 +156,7 @@ export default {
     }
     function clickSong (index, num) {
       if (judge.isCollect){
-        router.push('../song/'+songs.id[index])
+        router.push('/song/'+songs.id[index])
       } else if (!judge.isCollect && num === 1){
         songLi.value.forEach(item=>{
           if (songLi.value.indexOf(item) === index){
@@ -231,6 +231,29 @@ export default {
         }
       }
     }
+    function post_complain () {
+      const complaint = prompt("投诉理由为：")
+      if (complaint !== null) {
+        if (complaint === '') {
+          alert('请输入投诉理由')
+        } else {
+          const form_data = new FormData()
+          form_data.append('complaint', complaint)
+          form_data.append('playlist_id', sid)
+          axios.post('/super_admin/complain_playlist', form_data, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then(
+            function (response) {
+              if (response.status === 200) {
+                alert('投诉成功')
+              }
+            }
+          )
+        }
+      }
+    }
     return {
       forDrawer,
       handleClose,
@@ -248,7 +271,8 @@ export default {
       favos,
       songLi,
       favoLi,
-      nums
+      nums,
+      post_complain
     }
   }
 }

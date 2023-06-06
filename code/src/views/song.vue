@@ -21,14 +21,15 @@
     </div>
     <div id="control">
       <el-icon :size="35" id="minus"><minus /></el-icon>
-      <el-icon :size="45" id="pause" v-if="isPlay.judge" @click="button_pause"><video-pause /></el-icon>
-      <el-icon :size="45" id="continue" v-else @click="button_continue"><video-play /></el-icon>
-      <audio ref="audio" loop="loop" src="{{ songInfo.song_url }}" style="display: none"></audio>
+      <el-icon :size="45" id="pause" v-if="this.$data.iplay" @click="myPause"><video-pause /></el-icon>
+      <el-icon :size="45" id="continue" v-else @click="myPlay"><video-play /></el-icon>
       <el-icon :size="35" id="plus"><plus /></el-icon>
     </div>-->
-    <audio @play="button_continue" @pause="button_pause" style="position: relative;float: left;left: 15%;top: 12px" ref="audio" loop="loop" src="{{ songInfo.song_url }}" controls></audio>
+    <audio type="audio/mpeg" style="float: left;position: relative;top: 12px;left: 15%;" ref="audio" loop="loop" preload="auto" controls>
+      <source src="{{ songInfo.song_url }}">
+    </audio>
     <div id="buttons">
-      <el-button color="#7eec52" id="complain"><strong><el-icon size=23px id="icon4"><warning /></el-icon>{{ buttons.complain }}</strong></el-button>
+      <el-button @click="post_complain" color="#7eec52" id="complain"><strong><el-icon size=23px id="icon4"><warning /></el-icon>{{ buttons.complain }}</strong></el-button>
       <el-button v-if="!judge.collected" @click="collect" color="#7eec52" id="collect"><strong><el-icon size=23px id="icon3"><star /></el-icon>{{ buttons.collect }}</strong></el-button>
       <el-button v-else @click="collect" color="#7eec52" id="collect"><strong style="color: lightcoral"><el-icon size=23px id="icon3"><star /></el-icon>{{ buttons.collect }}</strong></el-button>
       <el-button @click="goToComment" color="#7eec52" id="comment"><strong><el-icon size=23px id="icon2"><chat-line-square /></el-icon>{{ buttons.comment }}</strong></el-button>
@@ -52,7 +53,7 @@ import NavNoLeft from '@/components/NavNoLeft.vue'
 import router from '@/router'
 import { useRoute } from 'vue-router'
 import store from '@/store'
-import { reactive, onMounted, ref } from 'vue'
+import { reactive, onMounted, ref} from 'vue'
 import axios from 'axios'
 import { ElDrawer } from 'element-plus'
 import { Minus } from '@element-plus/icons'
@@ -79,7 +80,22 @@ export default {
     Lollipop,
     ElDrawer
   },
-
+  data() {
+    var isplay = store.state.play
+    return {
+      iplay: isplay
+    }
+  },
+  methods: {
+    myPlay() {
+      this.$data.iplay = true
+      this.$refs.audio.play()
+    },
+    myPause() {
+      this.$data.iplay = false
+      this.$refs.audio.pause()
+    }
+  },
   setup () {
     const forDrawer = reactive({
       drawer: false,
@@ -190,7 +206,16 @@ export default {
       } else {
         var cancel = confirm("是否取消收藏?")
         if (cancel) {
-          judge.collected = false
+          axios.delete('/music/cancel_favo', {
+            params: {
+              playlist_id: favo_id.fid,
+              song_id: songInfo.song_id
+            }
+          }).then(
+            function (response) {
+              judge.collected = false
+            }
+          )
         }
       }
     }
@@ -218,7 +243,7 @@ export default {
       }
     }
     function goToComment () {
-      router.push('../comment/' + songInfo.song_id)
+      router.push('/comment/' + songInfo.song_id)
     }
     function valToTime (val) {
       return val
@@ -241,6 +266,29 @@ export default {
         }
       )
     }
+    function post_complain () {
+      const complaint = prompt("投诉理由为：")
+      if (complaint !== null) {
+        if (complaint === '') {
+          alert('请输入投诉理由')
+        } else {
+          const form_data = new FormData()
+          form_data.append('complaint', complaint)
+          form_data.append('song_id', songInfo.song_id)
+          axios.post('/super_admin/complain_song', form_data, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then(
+            function (response) {
+              if (response.status === 200) {
+                alert('投诉成功')
+              }
+            }
+          )
+        }
+      }
+    }
     return {
       forDrawer,
       handleClose,
@@ -260,7 +308,8 @@ export default {
       button_pause,
       button_continue,
       buttons,
-      lyric
+      lyric,
+      post_complain
     }
   }
 }
