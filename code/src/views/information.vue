@@ -49,7 +49,7 @@ export default {
 	created() {
 		const here = this
 		this.$axios.get('/super_admin/get_report_list').then((response) => {
-			if (response.status == 200) {
+			if (response.data.result == 0 || response.data.result == 3) {
 				const re_data = response.data
 						const message_list = re_data.report_list
 						message_list.forEach(function(element){

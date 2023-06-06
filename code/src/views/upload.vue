@@ -162,7 +162,7 @@ export default {
 				}
 			})
 			.then(function (response) {
-			if (response.status == 200) {
+			if (response.data.result == 0) {
 				this.$router.push('/uploaded')
 				ElMessageBox.alert("上传成功", '提示', {
 					confirmButtonText: '确认',
