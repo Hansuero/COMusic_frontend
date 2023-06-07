@@ -51,7 +51,7 @@ export default {
 	},
 	created() {
 		const here = this
-		this.$axios.get('/api/music/get_max').then((response) =>{
+		this.$axios.get('/music/get_max').then((response) =>{
 			if (response.data.result == 0) {
 				here.$data.max_num = response.data.max
 			}
