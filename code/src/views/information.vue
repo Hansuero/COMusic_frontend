@@ -69,7 +69,7 @@ export default {
 				
 			}
 			else {
-				ElMessageBox.alert("获取失败了，尝试联系管理员吧", '提示', {
+				ElMessageBox.alert("获取失败了,"+response.data.message, '提示', {
 					confirmButtonText: '确认',
 					confirmButtonClass: 'btnFalses'
 				})

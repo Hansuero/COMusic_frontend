@@ -67,7 +67,7 @@ export default {
 						})
 			}
 			else {
-				ElMessageBox.alert("获取失败了，尝试联系管理员吧", '提示', {
+				ElMessageBox.alert("获取失败了,"+response.data.message, '提示', {
 					confirmButtonText: '确认',
 					confirmButtonClass: 'btnFalses'
 				})
@@ -89,11 +89,11 @@ export default {
 				}
 			})
 			.then(function (response) {
-			if (response.status == 200) {
+			if (response.data.result == 0) {
 				console.log(this.max_num)
 			}
 			else{
-				ElMessageBox.alert("更改失败了，尝试联系管理员吧", '提示', {
+				ElMessageBox.alert("更改失败了,"+response.data.message, '提示', {
 					confirmButtonText: '确认',
 					confirmButtonClass: 'btnFalses'
 				})

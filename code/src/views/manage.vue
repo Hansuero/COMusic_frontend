@@ -50,7 +50,7 @@ export default {
 					})
 				}
 				else{
-					ElMessageBox.alert("删除失败了", '提示', {
+					ElMessageBox.alert("删除失败了,"+response.data.message, '提示', {
 					confirmButtonText: '确认',
 					confirmButtonClass: 'btnFalses'
 				})
@@ -75,7 +75,7 @@ export default {
 					})
 				}
 				else{
-					ElMessageBox.alert("取消失败了", '提示', {
+					ElMessageBox.alert("取消失败了,"+response.data.message, '提示', {
 					confirmButtonText: '确认',
 					confirmButtonClass: 'btnFalses'
 				})
