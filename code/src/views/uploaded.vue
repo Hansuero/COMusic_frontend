@@ -69,21 +69,26 @@ export default {
 	methods: {
 		DeleteSong(song_id) {
 			const here = this
-		this.$axios.get('/music/delete_song').then((response) => {
-			console.log(response)
-			if (response.data.result == 0) {
-				ElMessageBox.alert("删除成功", '提示', {
+			let form_data = new FormData()
+			form_data.append('song_id', this.$data.song_id)
+			this.$axios.delete('/music/delete_song', form_data, {
+				headers: {
+					'Content-type': "multipart/form-data"
+				}
+			}).then(function (response) {
+				if (response.data.result == 0) {
+					ElMessageBox.alert("删除成功", '提示', {
+						confirmButtonText: '确认',
+						confirmButtonClass: 'btnFalses'
+					})
+				}
+				else{
+					ElMessageBox.alert("删除失败了", '提示', {
 					confirmButtonText: '确认',
 					confirmButtonClass: 'btnFalses'
 				})
-			}
-			else {
-				ElMessageBox.alert("删除失败了，尝试联系管理员吧", '提示', {
-					confirmButtonText: '确认',
-					confirmButtonClass: 'btnFalses'
-				})
-			}
-		})
+				}
+			})
 		},
 		to_song(song_id) {
 			console.log(song_id)
