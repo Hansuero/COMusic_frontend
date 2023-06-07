@@ -17,37 +17,69 @@ export default {
 		md，我要开始骂人了，那个sb把这个data设置成了一个函数的
 	*/
 	data() {
+		return {
+			who_see: 0,
+			USER_SELF: 1,
+			USER_OTHER: 2,
+			profile_type: '.png',
+			photo_url: '',
+			user_id: 0,
+			username: '',
+			introduction: '快来编辑你的个人简介啊嘿嘿嘿！',
+			can_modify: false
+		}
+	},
+	created() {
 		const here = this
+
 		var s_cur_id = useRoute().params.id
 		var cur_id = parseInt(s_cur_id)
 		var this_user_id
 		var this_username
 		var this_photo_url
-		var who_see = 1
 		console.log(here.$cur_user.user_id)
 		console.log(cur_id)
 		if(here.$cur_user.user_id != cur_id){
-			who_see = 2
+			here.$data.who_see = here.$data.USER_OTHER
 			console.log("this is get_other_info")
-			const form_data = new FormData()
-			form_data.append('id', cur_id)
 			here.$axios
 			.get('/user/get_other_info', {
 				params: {
     				id: cur_id
   				}
 			})
-			.then(function(response){
-				console.log(response)
-				if(response.status == 200){
-					const re_data = response.data
-					if(re_data.result == 0){
-						this_user_id = response.data.user_data.user_id
-						this_username = response.data.user_data.username
-						this_photo_url = response.data.user_data.photo_url
+			.then(function(response_1){
+				console.log(response_1)
+				if(response_1.status == 200){
+					const re_data_1 = response_1.data
+					if(re_data_1.result == 0){
+						here.$data.user_id = re_data_1.user_data.user_id
+						here.$data.username = re_data_1.user_data.username
+						here.$data.photo_url = re_data_1.user_data.photo_url
+
+						here.$axios
+						.get('/user/get_other_intro', {
+            			    params: {
+			    				id: cur_id
+  							}
+			            })
+						.then(function(response_2){
+							if(response_2.status == 200){
+								const re_data_2 = response_2.data
+								if(re_data_2.result == 0){
+									here.$data.introduction = re_data_2.intro
+								}
+								else{
+									alert(re_data_2.message)
+								}
+							}
+							else{
+								alert("error! response status is not 200!")
+							}
+						})
 					}
 					else{
-						alert(re_data.message)
+						alert(re_data_1.message)
 					}		
 				}
 				else{
@@ -56,51 +88,13 @@ export default {
 			})
 		}
 		else{
-			this_user_id = here.$cur_user.user_id
-			this_photo_url = here.$cur_user.photo_url
-			this_username = here.$cur_user.username
-		}
-		return {
-			who_see: who_see,
-			USER_SELF: 1,
-			USER_OTHER: 2,
-			profile_type: '.png',
-			photo_url: this_photo_url,
-			user_id: this_user_id,
-			username: this_username,
-			introduction: '快来编辑你的个人简介啊嘿嘿嘿！',
-			can_modify: false
-		}
-	},
-	created() {
-		const here = this
-		//当前来看的人就是在看自己
-		if(here.$data.who_see == here.$data.USER_SELF){
+			here.$data.who_see = here.$data.USER_SELF
+			here.$data.user_id = here.$cur_user.user_id
+			here.$data.photo_url = here.$cur_user.photo_url
+			here.$data.username = here.$cur_user.username
+
 			here.$axios
 			.get('/user/get_intro')
-			.then(function(response){
-				if(response.status == 200){
-					const re_data = response.data
-					if(re_data.result == 0){
-						here.$data.introduction = re_data.intro
-					}
-					else{
-						alert(re_data.message)
-					}
-				}
-				else{
-					alert("error! response status is not 200!")
-				}
-			})
-		}
-		//在查看其他人的个人主页
-		else if(here.$data.who_see == here.$data.USER_OTHER){
-			here.$axios
-			.get('/user/get_other_intro', {
-                params: {
-    				id: here.$data.user_id
-  				}
-            })
 			.then(function(response){
 				if(response.status == 200){
 					const re_data = response.data
