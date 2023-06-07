@@ -189,8 +189,8 @@ nav a {
   display: inline-block;
 }
 .songList .list1 img{
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
 }
 .song{
   position: relative;
@@ -207,7 +207,7 @@ nav a {
   display: inline-block;
 }
 .song .song1 img{
-  width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 100px;
 }
 </style>
