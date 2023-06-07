@@ -5,7 +5,6 @@ import 'element-plus/dist/index.css'
 import router from './router/index'
 import axios from 'axios'
 import default_url from './assets/default_profile.png'
-import get_user_info from './mixin/get_user_info'
 
 const app = createApp(App)
 var is_login = false
