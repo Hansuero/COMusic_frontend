@@ -42,7 +42,7 @@ export default {
 	},
 	created() {
 		const here = this
-		this.$axios.get('/music/get_record_list').then((response) => {
+		this.$axios.get('/music/get_uploaded_list').then((response) => {
 			console.log(response)
 			if (response.data.result == 0) {
 				const re_data = response.data
@@ -68,7 +68,7 @@ export default {
 	},
 	methods: {
 		DeleteSong(song_id) {
-			const here = this
+			console.log(song_id)
 			let form_data = new FormData()
 			form_data.append('song_id', song_id)
 			this.$axios.delete('/music/delete_song', form_data, {
