@@ -8,6 +8,21 @@ import { ElMessageBox, ElMessage } from "element-plus";
 import { reactive } from "vue";
 import { ref } from "vue";
 
+const tagList = [
+	{ id: 1, name: '流行' },
+	{ id: 2, name: '摇滚' },
+	{ id: 3, name: '民谣' },
+	{ id: 4, name: '电子' },
+	{ id: 5, name: '舞曲' },
+	{ id: 6, name: '说唱' },
+	{ id: 7, name: '爵士' },
+	{ id: 8, name: '乡村' },
+	{ id: 9, name: '古典' },
+	{ id: 10, name: '轻音乐' },
+	{ id: 11, name: '金属' },
+	{ id: 12, name: '古风' },
+];
+
 export default {
 	name: 'favourite',
 	/*
@@ -25,11 +40,12 @@ export default {
 			cur_favo_title: '',
 			num_song: 0,
 			song_list: [],
-			is_share_visible: ref(false),
+			is_share_visible: ref(true),
 			share_tips: '',
 			share_cover_file: '',
 			share_cover_url: '',
-			ready_share: false
+			ready_share: false,
+			selectedTag: ''
 		}
 	},
 	created() {
@@ -102,7 +118,7 @@ export default {
 	},
 	methods: {
 		get_input_data(){
-			let t_playlist_tag = document.getElementById('i_playlist_tag').value
+			let t_playlist_tag = this.$data.selectTag
 			return{
 				playlist_tag: t_playlist_tag
 			}
@@ -243,7 +259,9 @@ export default {
 		},
 		confirm_share(){
 			const here = this
-			const playlist_tag = here.get_input_data().playlist_tag
+			const playlist_tag = here.$data.selectedTag.name
+			console.log(playlist_tag)
+			
 			if(playlist_tag == ''){
 				ElMessageBox.alert('未完成相关设置，不得分享', '提示', {
     				// if you want to disable its autofocus
@@ -358,7 +376,10 @@ export default {
 					alert("error! response status is not 200!")
 				}
 			})
-		}
+		},
+		selectTag(value) {
+			this.selectTag = value;
+		},
 	}
 }
 </script>
@@ -399,7 +420,15 @@ const input_data = reactive({
 						<div class="upload_cover_container" style="margin-left: 20px;">
 							<el-form v-model="input_data" :rules="rules" ref="a_input_data">
 								<el-form-item props="input_playlist_tag">
-									<el-input id="i_playlist_tag" type="text" v-model="input_data.input_playlist_tag" placeholder="请输入歌单标签" />
+									<!--
+									<el-input id="i_playlist_tag" type="text" 
+									v-model="input_data.input_playlist_tag" placeholder="请输入歌单标签" />
+									-->
+									<el-select id="i_tag" v-model="selectedTag" placeholder="请选择标签" style="width: 100%;" 
+									filterable @change="selectTag" value-key="id">
+										<el-option v-for="item in tagList" id="i_playlist_tag"
+										:key="item.id" :label="item.name" :value="item" />
+									</el-select>
 								</el-form-item>
 							</el-form>
 						</div>
