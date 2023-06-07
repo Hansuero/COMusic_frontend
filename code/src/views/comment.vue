@@ -109,24 +109,42 @@ export default {
     }
     function cModify (index) {
       if (ids.id[index] === inf.uid) {
-        cons.con[index] = prompt("新的评论内容为：")
-        var form_data = new FormData()
-        form_data.append('comment_id', cids.cid[index])
-        form_data.append('content', cons.con[index])
-        axios.post('/comment/change_comment', form_data, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+        ElMessageBox.prompt("新的评论内容为：", '请修改评论',{
+          confirmButtonText: '提交',
+          cancelButtonText: '取消'
+        }).then(({value})=>{
+          if (value === '' || value === null) {
+            ElMessage.warning({
+              type: 'warning',
+              message: '未作出修改'
+            })
+          } else {
+            cons.con[index] = value
+            var form_data = new FormData()
+            form_data.append('comment_id', cids.cid[index])
+            form_data.append('content', cons.con[index])
+            axios.post('/comment/change_comment', form_data, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then(
+              function (response) {
+                if (response.status === 200) {
+                  ElMessage.success({
+                    type: 'success',
+                    message: '修改成功'
+                  })
+                }
+              }
+            )
           }
-        }).then(
-          function (response) {
-            if (response.status === 200) {
-              ElMessage.success({
-                type: 'success',
-                message: '修改成功'
-              })
-            }
-          }
-        )
+        })
+          .catch(()=>{
+            ElMessage.info({
+              type: 'info',
+              message: '取消修改'
+            })
+          })
       } else {
         ElMessage.error({
           type: 'error',
