@@ -37,7 +37,8 @@ export default {
 			username: this.$cur_user.username,
 			photo_url: this.$cur_user.photo_url,
 			user_id: this.$cur_user.user_id,
-			song_list: []
+			song_list: [],
+			mid_id: ''
 		}
 	},
 	created() {
@@ -69,6 +70,8 @@ export default {
 	methods: {
 		DeleteSong(id) {
 			console.log(id)
+			const here = this
+			here.$data.mid_id = id
 			this.$axios.delete('/music/delete_song', {
 				params: {
 					song_id: id
@@ -79,6 +82,12 @@ export default {
 						confirmButtonText: '确认',
 						confirmButtonClass: 'btnFalses'
 					})
+					for (var i = 0; i < here.$data.song_list.length; i++) {
+              if(here.$data.song_list[i].song_id == here.$data.mid_id){
+								here.$data.song_list.splice(i, 1)
+								break
+							}
+            }
 				}
 				else{
 					ElMessageBox.alert("删除失败了,"+response.data.message, '提示', {

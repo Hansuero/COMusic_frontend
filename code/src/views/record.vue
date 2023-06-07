@@ -51,6 +51,17 @@ export default {
 	},
 	created() {
 		const here = this
+		this.$axios.get('/api/music/get_max').then((response) =>{
+			if (response.data.result == 0) {
+				here.$data.max_num = response.data.max
+			}
+			else{
+				ElMessageBox.alert("获取最大数量失败了,"+response.data.message, '提示', {
+					confirmButtonText: '确认',
+					confirmButtonClass: 'btnFalses'
+				})
+			}
+		})
 		this.$axios.get('/music/get_record_list').then((response) => {
 			if (response.data.result == 0) {
 				const re_data = response.data
@@ -67,7 +78,7 @@ export default {
 						})
 			}
 			else {
-				ElMessageBox.alert("获取失败了,"+response.data.message, '提示', {
+				ElMessageBox.alert("获取最近播放失败了,"+response.data.message, '提示', {
 					confirmButtonText: '确认',
 					confirmButtonClass: 'btnFalses'
 				})
