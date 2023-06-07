@@ -19,6 +19,7 @@ export default {
 		var cur_username
 		var cur_photo_url
 		if(here.$cur_user.user_id != cur_id){
+			console.log("this is get_other_info")
 			const form_data = new FormData()
 			form_data.append('id', cur_id)
 			here.$axios
