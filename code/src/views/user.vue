@@ -18,11 +18,14 @@ export default {
 	*/
 	data() {
 		const here = this
-		var cur_id = useRoute().params.id
+		var s_cur_id = useRoute().params.id
+		var cur_id = parseInt(s_cur_id)
 		var this_user_id
 		var this_username
 		var this_photo_url
 		var who_see = 1
+		console.log(here.$cur_user.user_id)
+		console.log(cur_id)
 		if(here.$cur_user.user_id != cur_id){
 			who_see = 2
 			console.log("this is get_other_info")
@@ -35,6 +38,7 @@ export default {
   				}
 			})
 			.then(function(response){
+				console.log(response)
 				if(response.status == 200){
 					const re_data = response.data
 					if(re_data.result == 0){

@@ -295,6 +295,7 @@ export default {
 			here.$data.share_cover_file = ''
 			here.$data.ready_share = false
 		},
+		//删除收藏夹
 		remove_favo(){
 			const here = this
 			const favo_id = here.$data.cur_favo_id
@@ -305,9 +306,17 @@ export default {
 				}
 			})
 			.then(function(response){
+				console.log(response)
 				if(response.status == 200){
 					const re_data = response.data
 					if(re_data.result == 0){
+						var t_index = 0
+						here.$data.favourite_list.forEach(function(element, index){
+							if(element.playlist_id == favo_id){
+								t_index = index
+							}
+						})
+						here.$data.favourite_list.splice(t_index, 1)
 						alert(re_data.message)
 					}
 					else{
@@ -332,6 +341,13 @@ export default {
 				if(response.status == 200){
 					const re_data = response.data
 					if(re_data.result == 0){
+						var t_index = 0
+						here.$data.song_list.forEach(function(element, index){
+							if(element.song_id == song_id){
+								t_index = index
+							}
+						})
+						here.$data.song_list.splice(t_index, 1)
 						alert(re_data.message)
 					}
 					else{
