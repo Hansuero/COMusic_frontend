@@ -10,7 +10,7 @@
     <p id="singer">{{songInfo.singer}}</p>
   </div>
   <div class="body">
-    <img id="img" alt="img" src="{{ songInfo.song_cover }}">
+    <img id="img" alt="img" :src="songInfo.song_cover">
     <div id="lyric">
       <textarea id="content" v-model="lyric.content" style="resize: none" cols="53" rows="80"></textarea>
     </div>
@@ -25,8 +25,8 @@
       <el-icon :size="45" id="continue" v-else @click="myPlay"><video-play /></el-icon>
       <el-icon :size="35" id="plus"><plus /></el-icon>
     </div>-->
-    <audio type="audio/mpeg" style="float: left;position: relative;top: 12px;left: 15%;" ref="audio" loop="loop" preload="auto" controls>
-      <source src="{{ songInfo.song_url }}">
+    <audio type="audio/mpeg" style="float: left;position: relative;top: 12px;left: 15%;" ref="audio" loop="loop" preload="auto" @play="button_continue" @pause="button_pause" controls>
+      <source :src='songInfo.song_url'>
     </audio>
     <div id="buttons">
       <el-button @click="post_complain" color="#7eec52" id="complain"><strong><el-icon size=23px id="icon4"><warning /></el-icon>{{ buttons.complain }}</strong></el-button>
@@ -98,6 +98,7 @@ export default {
     }
   },
   setup () {
+    const test = require('../assets/1_song.mp3')
     const forDrawer = reactive({
       drawer: false,
       dir: 'btt'
@@ -267,7 +268,6 @@ export default {
       return val
     }
     function button_pause () {
-      isPlay.judge = false
     }
     function button_continue () {
       var form_data = new FormData()
@@ -276,13 +276,7 @@ export default {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
-      }).then(
-        function (response) {
-          if (response.status === 200) {
-            isPlay.judge = true
-          }
-        }
-      )
+      })
     }
     function post_complain () {
       ElMessageBox.prompt("投诉理由为：", '投诉', {
@@ -341,7 +335,8 @@ export default {
       button_continue,
       buttons,
       lyric,
-      post_complain
+      post_complain,
+      test
     }
   }
 }
