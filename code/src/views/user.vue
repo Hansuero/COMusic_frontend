@@ -261,6 +261,9 @@ export default {
 					alert("error! response status is not 200!")
 				}
 			})
+		},
+		goBack(){
+			this.$router.back()
 		}
 	}
 }
@@ -286,11 +289,14 @@ const input_data = reactive({
 	/>
 	<NaviNoLeft
 	v-if="who_see == USER_OTHER"
-	ref="navigation_bar"
+	ref="navigation_bar_no_left"
 	:profile_url="photo_url"
 	/>
 	<!--存放主体内容的div-->
 	<div class="outer_box">
+		<div v-if="who_see == USER_OTHER" class="back">
+    		<el-button type="text" id="backButton" @click="goBack">返回</el-button>
+  		</div>
 		<div style="width: 100%; height: 40%; display: flex; justify-content: center; align-items: center;">
 			<el-button class="profile">
 				<img :src="photo_url" class="profile" @click="upload_profile"/>
@@ -348,6 +354,16 @@ const input_data = reactive({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.back{
+	height: 2%;
+}
+.back #backButton{
+	font-size: 18px;
+	text-decoration: underline;
+	color: black;
+	position: relative;
+	left: 2%;
+}
 .outer_box {
 	justify-content: center;
 	position: absolute; 

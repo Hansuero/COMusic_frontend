@@ -58,12 +58,10 @@ export default {
 		//取消关注相关方法
 		cancel_interest(intere_user_name){
 			const here = this
-			const form_data = new FormData()
-			form_data.append('following_username', intere_user_name)
 			here.$axios
-			.delete('/user/unfollow_user', form_data, {
-				headers: {
-    				'Content-Type': 'multipart/form-data'
+			.delete('/user/unfollow_user', {
+				params: {
+    				following_username: intere_user_name
   				}
 			})
 			.then(function(response){
