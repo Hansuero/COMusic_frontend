@@ -299,9 +299,9 @@ export default {
 			const here = this
 			const favo_id = here.$data.cur_favo_id
 			here.$axios
-			.delete('', {
+			.delete('/music/delete_list', {
 				params: {
-
+					playlist_id: favo_id
 				}
 			})
 			.then(function(response){
