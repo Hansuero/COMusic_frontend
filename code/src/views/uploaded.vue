@@ -71,13 +71,7 @@ export default {
 	methods: {
 		to_song(song_id) {
 			console.log(song_id)
-			const params = {
-				song_id: song_id
-			}
-			this.$router.push({
-				path: './song',
-				query: params
-			})
+			this.$router.push('/song/' + song_id)
 		}
 	},
 }
