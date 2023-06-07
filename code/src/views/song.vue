@@ -98,7 +98,7 @@ export default {
     }
   },
   setup () {
-    const test = require('../assets/1_song.mp3')
+    const test = '../assets/1_song.mp3'
     const forDrawer = reactive({
       drawer: false,
       dir: 'btt'
