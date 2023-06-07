@@ -130,6 +130,7 @@ export default {
   				}
             })
             .then(function(response){
+                console.log(response)
                 if(response.status == 200){
                     const re_data = response.data
                     if(re_data.result == 0){
