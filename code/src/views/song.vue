@@ -107,7 +107,7 @@ export default {
       if (favo_id.fid !== -1) {
         forDrawer.drawer = false
         const form_data = new FormData()
-        form_data.append('songs_id', songInfo.song_id)
+        form_data.append('song_id', songInfo.song_id)
         form_data.append('playlist_id', favo_id.fid)
         axios.post('/music/add_song_to_favo', form_data,{
           headers: {
