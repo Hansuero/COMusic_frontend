@@ -6,8 +6,8 @@
   <div class="songList">
     <div class="divList">
       <span style="text-decoration: underline;font-size: 20px">推荐歌单</span>
-      <span class="div" v-for="(item, index) in div.tag" :key="index" @click="getRecList(index)">&nbsp;{{ item
-      }}&nbsp;</span>
+      <span class="div" v-for="(item, index) in div.tag" :key="index" @click="getRecList(index)">&emsp;{{ item
+      }}&emsp;</span>
     </div>
     <div class="covers">
       <div class="list1" v-for="(item, index) in songList_cover.url" :key="index" @click="goToList(index)">
@@ -18,8 +18,8 @@
   <div class="song">
     <div class="divList">
       <span style="text-decoration: underline;font-size: 20px">推荐歌曲</span>
-      <span class="div" v-for="(item, index) in div.tag" :key="index" @click="getRecSong(index)">&nbsp;{{ item
-      }}&nbsp;</span>
+      <span class="div" v-for="(item, index) in div.tag" :key="index" @click="getRecSong(index)">&emsp;{{ item
+      }}&emsp;</span>
     </div>
     <div class="covers">
       <div class="song1" v-for="(item, index) in song_cover.url" :key="index" @click="goToSong(index)">
@@ -198,7 +198,7 @@ nav a {
 
 .div {
   position: relative;
-  left: 10%;
+  left: 16.5%;
 }
 
 .div:hover {
