@@ -230,7 +230,7 @@ export default {
 			
 			cover_read.onload = () => {
 				const binary_cover = cover_read.result
-				here.$data.share_cover_file = binary_cover
+				here.$data.share_cover_file = cover
 			}
 			const cover_read_2 =  new FileReader()
 			cover_read_2.readAsDataURL(cover)
@@ -244,7 +244,7 @@ export default {
 		confirm_share(){
 			const here = this
 			const playlist_tag = here.get_input_data().playlist_tag
-			if((here.$data.ready_share == false) || (playlist_tag == '')){
+			if(playlist_tag == ''){
 				ElMessageBox.alert('未完成相关设置，不得分享', '提示', {
     				// if you want to disable its autofocus
     				// autofocus: false,
