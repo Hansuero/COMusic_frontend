@@ -294,6 +294,54 @@ export default {
 			here.$data.is_share_visible = ref(false)
 			here.$data.share_cover_file = ''
 			here.$data.ready_share = false
+		},
+		remove_favo(){
+			const here = this
+			const favo_id = here.$data.cur_favo_id
+			here.$axios
+			.delete('', {
+				params: {
+
+				}
+			})
+			.then(function(response){
+				if(response.status == 200){
+					const re_data = response.data
+					if(re_data.result == 0){
+						alert(re_data.message)
+					}
+					else{
+						alert(re_data.message)
+					}
+				}
+				else{
+					alert("error! response status is not 200!")
+				}
+			})
+		},
+		remove_song_from_favo(song_id){
+			const here = this
+			here.$axios
+			.delete('/music/cancel_favo', {
+				params: {
+					playlist_id: here.$data.cur_favo_id,
+					song_id: song_id
+				}
+			})
+			.then(function(response){
+				if(response.status == 200){
+					const re_data = response.data
+					if(re_data.result == 0){
+						alert(re_data.message)
+					}
+					else{
+						alert(re_data.message)
+					}
+				}
+				else{
+					alert("error! response status is not 200!")
+				}
+			})
 		}
 	}
 }
@@ -314,10 +362,15 @@ const input_data = reactive({
 	<div class="outer_box">
 		<div style="display: flex; align-items: center; width: 100%; height: 20%; padding-right: 0px;">
 			<img :src="photo_url" class="left_profile" style="margin-left: 20px;"/>
-			<div class="rectangle_container" style="width: 20%; margin-left: 30px;">
+			<div class="rectangle_container" style="width: 120%; margin-left: 30px;">
 				<p class="theme_font">{{ username }}</p>
 			</div>
-			<div style="margin-left: 520px;">
+			<div style="margin-left: 250px;">
+				<el-button style="width: 120%; border-radius: 20px; border-bottom: 2px solid grey;" color="#40E0D0" @click="remove_favo">
+					<p class="theme_font" style="color: black;">删除当前收藏夹</p>
+				</el-button>
+			</div>
+			<div style="margin-left: 130px;">
 				<el-button style="width: 120%; border-radius: 20px; border-bottom: 2px solid grey;" color="#40E0D0" @click="share_favo">
 					<p class="theme_font" style="color: black;">分享当前收藏夹</p>
 				</el-button>
@@ -378,6 +431,9 @@ const input_data = reactive({
 						<div v-for="(song,index) in song_list" class="box_song_list">
 							<p class="theme_font" style="width: 200px; margin-left: 50px; color: black;" @click="to_song(song.song_id)">{{ song.title }}</p>
 							<p class="theme_font" style="color: black;">{{ song.artist }}</p>
+							<el-button style="width: 100%; border-radius: 20px; border-bottom: 2px solid grey;" color="#FFDEAD" @click="remove_song_from_favo(song.song_id)">
+								<p class="theme_font" style="color: black;">取消收餐</p>
+							</el-button>
 						</div>
 					</el-scrollbar>
 				</div>	
