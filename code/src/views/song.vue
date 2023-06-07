@@ -30,10 +30,10 @@
     </audio>
     <div id="buttons">
       <el-button @click="post_complain" color="#7eec52" id="complain"><strong><el-icon size=23px id="icon4"><warning /></el-icon>{{ buttons.complain }}</strong></el-button>
-      <el-button v-if="!judge.collected" @click="collect" color="#7eec52" id="collect"><strong><el-icon size=23px id="icon3"><star /></el-icon>{{ buttons.collect }}</strong></el-button>
-      <el-button v-else @click="collect" color="#7eec52" id="collect"><strong style="color: lightcoral"><el-icon size=23px id="icon3"><star /></el-icon>{{ buttons.collect }}</strong></el-button>
+      <el-button @click="collect" color="#7eec52" id="collect"><strong><el-icon size=23px id="icon3"><star /></el-icon>{{ buttons.collect }}</strong></el-button>
       <el-button @click="goToComment" color="#7eec52" id="comment"><strong><el-icon size=23px id="icon2"><chat-line-square /></el-icon>{{ buttons.comment }}</strong></el-button>
-      <el-button @click="test" color="#7eec52" id="like"><strong><el-icon size=23px id="icon1"><lollipop /></el-icon>{{ buttons.like }}</strong></el-button>
+      <el-button v-if="!judge.liked" @click="like" color="#7eec52" id="like"><strong><el-icon size=23px id="icon1"><lollipop /></el-icon>{{ buttons.like }}</strong></el-button>
+      <el-button v-else @click="like" color="#7eec52" id="like"><strong style="color: lightcoral"><el-icon size=23px id="icon1"><lollipop /></el-icon>{{ buttons.like }}</strong></el-button>
     </div>
     <el-drawer title="请选择收藏夹" v-model="forDrawer.drawer" :direction="forDrawer.dir" :before-close="handleClose" destroy-on-close>
       <div class="hide">
@@ -103,6 +103,13 @@ export default {
           forDrawer.drawer = true
         })
     }
+    const songInfo = reactive({
+      song_url: '',
+      song_id: useRoute().params.id,
+      songName: '',
+      singer: '',
+      song_cover: ''
+    })
     function close () {
       if (favo_id.fid !== -1) {
         forDrawer.drawer = false
@@ -117,12 +124,10 @@ export default {
           function (response) {
             if (response.status === 200) {
               if (response.data.result === 0){
-                favo_id.fid = -1
                 ElMessage.success({
                   type: 'success',
                   message: '收藏成功'
                 })
-                judge.collected = true
               }
               else {
                 alert(response.data.message)
@@ -136,13 +141,6 @@ export default {
         })
       }
     }
-    const songInfo = reactive({
-      song_url: '',
-      song_id: useRoute().params.id,
-      songName: '',
-      singer: '',
-      song_cover: ''
-    })
     const favo_id = reactive({
       fid: -1
     })
@@ -170,7 +168,7 @@ export default {
             songInfo.singer = response.data.singer
             lyric.content = response.data.lyric
             songInfo.song_cover = response.data.song_cover_url
-            judge.collected = response.data.is_favo
+            judge.liked = response.data.is_like
           }
         }
       )
@@ -191,9 +189,6 @@ export default {
         item.style.background = "#00bfff"
       })
     })
-    const time = reactive({
-      timeValue: 0
-    })
     const isPlay = reactive({
       judge: store.state.play
     })
@@ -207,32 +202,44 @@ export default {
       router.back()
     }
     const judge = reactive({
-      collected: false
+      liked: false
     })
     function collect () {
-      if (!judge.collected){
-        forDrawer.drawer = true
-      } else {
-        ElMessageBox.confirm("是否取消收藏?", '提示', {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消'
-        }).then(()=>{
-          axios.delete('/music/cancel_favo', {
-            params: {
-              playlist_id: favo_id.fid,
-              song_id: songInfo.song_id
-            }
-          }).then(
-            function (response) {
-              if (response.status === 200){
-                judge.collected = false
+      forDrawer.drawer = true
+    }
+    function like () {
+      if (!judge.liked) {
+        const form_data = new FormData()
+        form_data.append('song_id', songInfo.song_id)
+        axios.post('/music/add_i_like', form_data, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then(
+          function (response) {
+            if (response.status === 200) {
+              if (response.data.result === 0){
+                judge.liked = true
+              } else {
+                alert(response.data.message)
               }
             }
-          )
-        })
-          .catch(()=>{
-            judge.collected = true
-          })
+          }
+        )
+      } else {
+        axios.delete('/music/cancel_i_like', {
+          params: {song_id: songInfo.song_id}
+        }).then(
+          function (response) {
+            if (response.status === 200) {
+              if (response.data.result === 0){
+                judge.liked = false
+              } else {
+                alert(response.data.message)
+              }
+            }
+          }
+        )
       }
     }
     function clickFavo (index, num) {
@@ -261,9 +268,9 @@ export default {
     function goToComment () {
       router.push('/comment/' + songInfo.song_id)
     }
-    function valToTime (val) {
+    /*function valToTime (val) {
       return val
-    }
+    }*/
     function button_pause () {
     }
     function button_continue () {
@@ -323,11 +330,11 @@ export default {
       favoLi,
       judge,
       collect,
+      like,
       clickFavo,
       goToComment,
       songInfo,
-      time,
-      valToTime,
+      //valToTime,
       isPlay,
       button_pause,
       button_continue,
