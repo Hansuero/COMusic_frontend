@@ -12,7 +12,7 @@
   <div class="body">
     <img id="img" alt="img" :src="songInfo.song_cover">
     <div id="lyric">
-      <textarea id="content" v-model="lyric.content" style="resize: none" cols="53" rows="80"></textarea>
+      <textarea :disabled="true" :placeholder="lyric.content" id="content" v-model="lyric.content" style="resize: none" cols="53" rows="80"></textarea>
     </div>
   </div>
   <div class="play">
