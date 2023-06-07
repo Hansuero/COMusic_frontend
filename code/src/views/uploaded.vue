@@ -67,13 +67,11 @@ export default {
 		})
 	},
 	methods: {
-		DeleteSong(song_id) {
-			console.log(song_id)
-			let form_data = new FormData()
-			form_data.append('song_id', song_id)
-			this.$axios.delete('/music/delete_song', form_data, {
-				headers: {
-					'Content-type': "multipart/form-data"
+		DeleteSong(id) {
+			console.log(id)
+			this.$axios.delete('/music/delete_song', {
+				params: {
+					song_id: id
 				}
 			}).then(function (response) {
 				if (response.data.result == 0) {

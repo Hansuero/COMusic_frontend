@@ -37,11 +37,10 @@ export default {
 			if (typeof this.$data.song_id == "undefined" || this.$data.song_id == null || this.$data.song_id == "") {
 				return;
 			}
-			let form_data = new FormData()
-			form_data.append('song_id', this.$data.song_id)
-			this.$axios.delete('/music/delete_song', form_data, {
-				headers: {
-					'Content-type': "multipart/form-data"
+			const id = this.$data.song_id
+			this.$axios.delete('/music/delete_song', {
+				params: {
+					song_id: id
 				}
 			}).then(function (response) {
 				if (response.data.result == 0) {
@@ -69,7 +68,7 @@ export default {
 					'Content-type': "multipart/form-data"
 				}
 			}).then(function (response) {
-				if (response.status == 200) {
+				if (response.data.result == 0) {
 					ElMessageBox.alert("取消分享成功", '提示', {
 						confirmButtonText: '确认',
 						confirmButtonClass: 'btnFalses'
