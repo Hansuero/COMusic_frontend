@@ -4,6 +4,7 @@
 
 <script>
 import NavigationBar from '../components/NavigationBar.vue';
+import NavNoLeft from "../components/NavNoLeft.vue";
 import { useRoute } from "vue-router";
 import { ElMessageBox } from "element-plus";
 import default_url from '../assets/default_profile.png'
@@ -18,9 +19,9 @@ export default {
 	data() {
 		const here = this
 		var cur_id = useRoute().params.id
-		var cur_user_id
-		var cur_username
-		var cur_photo_url
+		var this_user_id
+		var this_username
+		var this_photo_url
 		var who_see = 1
 		if(here.$cur_user.user_id != cur_id){
 			who_see = 2
@@ -37,9 +38,9 @@ export default {
 				if(response.status == 200){
 					const re_data = response.data
 					if(re_data.result == 0){
-						cur_user_id = response.data.user_data.user_id
-						cur_username = response.data.user_data.username
-						cur_photo_url = response.data.user_data.photo_url
+						this_user_id = response.data.user_data.user_id
+						this_username = response.data.user_data.username
+						this_photo_url = response.data.user_data.photo_url
 					}
 					else{
 						alert(re_data.message)
@@ -51,18 +52,18 @@ export default {
 			})
 		}
 		else{
-			cur_user_id = here.$cur_user.user_id
-			cur_photo_url = here.$cur_user.photo_url
-			cur_username = here.$cur_user.username
+			this_user_id = here.$cur_user.user_id
+			this_photo_url = here.$cur_user.photo_url
+			this_username = here.$cur_user.username
 		}
 		return {
 			who_see: who_see,
 			USER_SELF: 1,
 			USER_OTHER: 2,
 			profile_type: '.png',
-			photo_url: cur_photo_url,
-			user_id: cur_user_id,
-			username: cur_username,
+			photo_url: this_photo_url,
+			user_id: this_user_id,
+			username: this_username,
 			introduction: '快来编辑你的个人简介啊嘿嘿嘿！',
 			can_modify: false
 		}
@@ -114,7 +115,8 @@ export default {
 	},
 	components: {
 		NavigationBar,
-		ElMessageBox
+		ElMessageBox,
+		NavNoLeft
 	},
 	methods: {
 		upload_profile(){
