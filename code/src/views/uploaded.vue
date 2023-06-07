@@ -11,14 +11,10 @@
 		<div style="display: flex; width: 100%; height: 80%;">
 			<div style="display: flex; width: 65%; margin-left: 50px;">
 				<div style="display: flex; align-items: center; height: 100%; width: 100%;">
-					<el-scrollbar style="display: flex; width: 100%" max-height="100%">
-						<div v-for="(song, index) in song_list?.slice(0, max_num)" :key="index" class="box_song_list">
-							<div style="width: 80%; margin-left: 50px;">
-								<p class="theme_font" style="color: black;" @click="to_song(song.song_id)">{{ song.title }}</p>
-							</div>
-							<div style="margin-left: 400px;">
-								<p class="theme_font" style="color: black;">{{ song.artist }}</p>
-							</div>
+					<el-scrollbar style="display: flex; width: 650px" max-height="100%">
+						<div v-for="(song,index) in song_list" class="box_song_list">
+							<p class="theme_font" style="width: 200px; margin-left: 50px; color: black;" @click="to_song(song.song_id)">{{ song.title }}</p>
+							<p class="theme_font" style="color: black;">{{ song.artist }}</p>
 						</div>
 					</el-scrollbar>
 				</div>

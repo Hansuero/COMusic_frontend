@@ -11,7 +11,7 @@
 				<p class="theme_font">最近播放最大数量</p>
 			</div>
 			<el-input id="i_num" type="number" v-model="max_num" aria-placeholder="{{ max_num }}"
-				style="width:auto;margin-left:10px" @change="changeMax" />
+				style="width:auto;margin-left:10px" @change="changeMax" :min="1" :max="999"/>
 		</div>
 		<div style="display: flex; width: 100%; height: 80%;">
 			<div style="display: flex; width: 65%; margin-left: 50px;">
