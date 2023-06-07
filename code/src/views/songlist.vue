@@ -255,14 +255,14 @@ export default {
         confirmButtonText: '狠心投诉',
         cancelButtonText: '手下留情',
       }).then(({ value }) => {
-        if (value === '') {
+        if (value === '' || value === null) {
           ElMessage.info({
             type: 'info',
             message: '请输入投诉理由'
           })
         } else {
           const form_data = new FormData()
-          form_data.append('complaint', complaint)
+          form_data.append('complaint', value)
           form_data.append('playlist_id', sid)
           axios.post('/super_admin/complain_playlist', form_data, {
             headers: {

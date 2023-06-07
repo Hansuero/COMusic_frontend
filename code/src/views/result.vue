@@ -18,27 +18,43 @@ export default {
         'search_input'
     ],
     data() {
+        const input = this.$props.search_input
         return{
             SEARCH_SONG: 1,
 			SEARCH_SONGLIST: 2,
 			SEARCH_USER: 3,
             result_type: -1,
             num_result: 0,
-            result_list: []
+            result_list: [],
+            input: input
         }
     },
     created() {
         console.log("here is create")
         const here = this
-        //var type = here.$props.search_type //这个是实际使用的
-        var type = here.$data.SEARCH_SONG //这个仅供前端开发测试使用
+        var input
+        if(here.$props.search_input === undefined){
+            input = localStorage.getItem('displayValue')
+        }
+        else{
+            input = here.$props.search_input
+        }
+        var type = here.$props.search_type //这个是实际使用的
+        if(here.$props.search_type === undefined){
+            type = localStorage.getItem('search_type')
+        }
+        else{
+            type = here.$props.search_type
+        }
         here.$data.result_type = type
+        console.log(input)
+        console.log(type)
         //搜索的是歌曲
         if(type == here.$data.SEARCH_SONG){
             here.$axios
             .get('/index/search_song', {
                 params: {
-    				song_name: here.$props.search_input
+    				song_name: input
   				}
             })
             .then(function(response){
@@ -74,7 +90,7 @@ export default {
             here.$axios
             .get('/index/search_playlist', {
                 params: {
-    				songlist_name: here.$props.search_input
+    				songlist_name: input
   				}
             })
             .then(function(response){
@@ -110,10 +126,11 @@ export default {
             here.$axios
             .get('/index/search_user', {
                 params: {
-    				username: here.$props.search_input
+    				username: input
   				}
             })
             .then(function(response){
+                console.log(response)
                 if(response.status == 200){
                     const re_data = response.data
                     if(re_data.result == 0){
@@ -180,7 +197,9 @@ const inputData = reactive({
     <!--引入导航栏组件（不包含左侧）-->
     <NavNoLeft></NavNoLeft>
     <div class="outer_box">
-        <SearchBox :delta="0"></SearchBox>
+        <SearchBox 
+        :delta="0"
+        :input="input" />
         <el-scrollbar style="height: 60vh; width: 120vh; display: flex; flex-wrap: wrap; justify-content: center">
             <div v-for="(result, index) in result_list" style="width: 120vh; display: flex; align-items: center;">
                 <div @click="to_detail_page(result.result_id)" class="result_item_box">
