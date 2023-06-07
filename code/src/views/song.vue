@@ -98,7 +98,7 @@ export default {
     }
   },
   setup () {
-    const test = '../assets/1_song.mp3'
+    const test = require('../assets/1_song.mp3')
     const forDrawer = reactive({
       drawer: false,
       dir: 'btt'
@@ -283,14 +283,14 @@ export default {
         confirmButtonText: '狠心投诉',
         cancelButtonText: '手下留情',
       }).then(({ value }) => {
-        if (value === '') {
+        if (value === '' || value === null) {
           ElMessage.info({
             type: 'info',
             message: '请输入投诉理由'
           })
         } else {
           const form_data = new FormData()
-          form_data.append('complaint', complaint)
+          form_data.append('complaint', value)
           form_data.append('song_id', songInfo.song_id)
           axios.post('/super_admin/complain_song', form_data, {
             headers: {
