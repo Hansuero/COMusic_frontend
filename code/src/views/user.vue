@@ -7,6 +7,8 @@ import NavigationBar from '../components/NavigationBar.vue';
 import { useRoute } from "vue-router";
 import { ElMessageBox } from "element-plus";
 
+var app = null
+
 export default {
 	name: 'user',
 	/*
@@ -159,6 +161,13 @@ export default {
 					const re_data = response.data
 					if(re_data.result == 0){
 						alert(re_data.message)
+						app.config.globalProperties.$is_login = false
+						var visitor = {
+    						user_id: 0,
+    						username: 'visitor',
+    						photo_url: default_url
+						}
+						app.config.globalProperties.$cur_user = visitor
 						here.$router.push('../login')
 					}
 					else{
@@ -176,6 +185,9 @@ export default {
 
 <script setup>
 import { reactive } from "vue";
+import { getCurrentInstance } from "vue";
+
+app = getCurrentInstance().appContext.app
 
 const input_data = reactive({
 	input_introduction: '',
