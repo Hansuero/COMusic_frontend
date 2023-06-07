@@ -5,6 +5,7 @@
 import { reactive } from "vue";
 import { ElMessageBox } from "element-plus";
 import { getCurrentInstance } from 'vue';
+import test_profile_url from '../assets/profile.png'
 
 var app = null
 
@@ -33,10 +34,23 @@ export default {
 		},
 		//在这里处理登录事件
 		login(){
+			const here = this
 			console.log("I want to login!\n");
 			var input = this.get_input_data()
+
+			/*
+				这里是一个跳过登录，直接进入主页面的快捷通道
+				仅供本地开发测试使用
+				无法预测在云端会发生什么情况
+			*/
+			if(input.username == 55555 && input.password == 55555){
+				here.$router.push('./user/55555')
+				here.$cur_user.user_id = 55555
+				here.$cur_user.username = "Keine"
+				here.$cur_user.photo_url = test_profile_url
+			}
+
 			//POST登录请求
-			const here = this
 			const form_data = new FormData()
 			form_data.append('username', input.username)
 			form_data.append('password', input.password)

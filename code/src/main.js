@@ -25,6 +25,7 @@ app.config.globalProperties.$is_login = is_login
 axios.get('/user/get_user_info')
 .then(function(response){
     if(response.status == 200){
+        console.log(response)
         const re_data = response.data
         //已经登录的用户
         if(re_data.result == 0){
