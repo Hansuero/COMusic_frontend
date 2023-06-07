@@ -92,10 +92,20 @@ export default {
 		},
 		//跳转到管理页面
 		to_manage(){
+			const here = this
 			let res = this.whether_login()
 			if(res){
-				console.log("go to manage page\n");
-				this.$router.push('/manage')
+				var is_admin = false
+				if(here.$cur_user.username == 'admin'){
+					is_admin = true
+				}
+				if(is_admin == true){
+					console.log("go to manage page\n");
+					this.$router.push('/manage')
+				}
+				else{
+					alert("无管理员权限")
+				}
 			}
 			else{
 				this.$data.visible = true
