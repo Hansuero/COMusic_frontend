@@ -70,7 +70,7 @@ export default {
 		DeleteSong(song_id) {
 			const here = this
 			let form_data = new FormData()
-			form_data.append('song_id', this.$data.song_id)
+			form_data.append('song_id', song_id)
 			this.$axios.delete('/music/delete_song', form_data, {
 				headers: {
 					'Content-type': "multipart/form-data"
