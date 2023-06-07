@@ -21,7 +21,19 @@ app.config.globalProperties.$axios = axios
 app.config.globalProperties.$cur_user = cur_user
 app.config.globalProperties.$is_login = is_login
 
-
+/*
+window.addEventListener('beforeunload', (event) => {
+    console.log(app.config.globalProperties.$cur_user)
+    console.log(app.config.globalProperties.$is_login)
+    localStorage.setItem('buff_cur_user', app.config.globalProperties.$cur_user)
+    localStorage.setItem('buff_is_login', app.config.globalProperties.$is_login)
+    console.log('beforeunload event triggered');
+    console.log(localStorage.getItem('buff_cur_user'))
+    console.log(localStorage.getItem('buff_is_login'))
+    event.preventDefault()
+    event.returnValue = '';
+});
+*/
 
 app.use(router)
 app.use(ElementPlus)

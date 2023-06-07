@@ -44,10 +44,14 @@ export default {
 				无法预测在云端会发生什么情况
 			*/
 			if(input.username == 55555 && input.password == 55555){
-				here.$router.push('./user/55555')
 				here.$cur_user.user_id = 55555
 				here.$cur_user.username = "Keine"
 				here.$cur_user.photo_url = test_profile_url
+				here.$is_login = true
+				console.log(here.$is_login)
+				console.log(here.$is_login)
+				here.$router.push('./user/55555')
+				return
 			}
 
 			//POST登录请求
