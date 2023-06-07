@@ -7,7 +7,7 @@
   </div>
   <div class="info">
     <div id="ListImg">
-      <img alt="img" src="../assets/logo.png">
+      <img alt="img" :src="intro.cover_url">
     </div>
     <div id="ListInf">
       <p>歌单名称: {{intro.listName}}</p><br>
@@ -92,7 +92,8 @@ export default {
       listName: '',
       authorName: '',
       tag: '',
-      introduction: ''
+      introduction: '',
+      cover_url: ''
     })
     const title = reactive({
       name: '歌曲'
@@ -127,6 +128,7 @@ export default {
       }).then(
         function (response) {
           if (response.status === 200){
+            intro.cover_url = response.data.playlist_cover_url
             intro.listName = response.data.playlist_name
             intro.authorName = response.data.playlist_creator
             intro.tag = response.data.playlist_tag

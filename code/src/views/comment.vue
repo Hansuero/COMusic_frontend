@@ -7,7 +7,7 @@
   </div>
   <div class="commentInput">
     <div id="imgInfo">
-      <img id="cover" src="{{ inf.cover_url }}" alt="img">
+      <img id="cover" :src="inf.cover_url" alt="img">
       <div id="inf">
         <p>{{ inf.song }}</p>
         <p>{{ inf.singer }}</p>
@@ -256,13 +256,14 @@ nav a {
   left: 10%;
 }
 .commentInput #imgInfo #cover{
-  width: 45%;
-  height: 100%;
+  width: 50%;
+  height: 98%;
   float: left;
   position: relative;
+  border: 1px solid #7eec52;
 }
 .commentInput #imgInfo #inf{
-  width: 50%;
+  width: 45%;
   height: 70%;
   float: left;
   padding: 15% 0 15%;

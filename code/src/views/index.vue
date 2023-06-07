@@ -10,7 +10,7 @@
     </div>
     <div class="covers">
       <div class="list1" v-for="(item, index) in songList_cover.url" :key="index" @click="goToList(index)">
-        <img alt="img" src="{{ item }}">
+        <img alt="img" :src="item">
       </div>
     </div>
   </div>
@@ -21,7 +21,7 @@
     </div>
     <div class="covers">
       <div class="song1" v-for="(item, index) in song_cover.url" :key="index" @click="goToSong(index)">
-        <img alt="img" src="{{ item }}">
+        <img alt="img" :src="item">
       </div>
     </div>
   </div>
@@ -48,9 +48,11 @@ export default {
       tag_name: ['流行', '摇滚', '民谣', '电子', '舞曲', '说唱', '爵士',
         '乡村', '古典', '轻音乐', '金属', '古风']
     })
+    const test = '../../static/logo.png'
     const songList_cover = reactive({
       id: [],
-      url: []
+      url: [],
+      test_url: [test]
     })
     const song_cover = reactive({
       id: [],
