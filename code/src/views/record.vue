@@ -80,9 +80,10 @@ export default {
 			this.$router.push('/song/' + song_id)
 		},
 		changeMax() {
+			console.log(max_num)
 			const form_data = new FormData()
 			form_data.append('max', this.max_num)
-			this.$axios.post('https://mock.apifox.cn/m1/2749792-0-default/api/music/post_max', form_data, {
+			this.$axios.post('/music/post_max', form_data, {
 				headers: {
 					'Content-type': "multipart/form-data"
 				}

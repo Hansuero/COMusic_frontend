@@ -14,7 +14,8 @@
 					<el-scrollbar style="display: flex; width: 650px" max-height="100%">
 						<div v-for="(song,index) in song_list" class="box_song_list">
 							<p class="theme_font" style="width: 200px; margin-left: 50px; color: black;" @click="to_song(song.song_id)">{{ song.title }}</p>
-							<p class="theme_font" style="color: black;">{{ song.artist }}</p>
+							<p class="theme_font" style="color: black;margin-right:10px">{{ song.artist }}</p>
+							<button style="background-color:#7eec52 ;color:white; border-radius: 10px; margin-left: auto; border-color:#7eec52" @click="DeleteSong(song.song_id)">删除</button>
 						</div>
 					</el-scrollbar>
 				</div>
@@ -41,7 +42,8 @@ export default {
 	},
 	created() {
 		const here = this
-		this.$axios.get('/music/get_uploaded_list').then((response) => {
+		this.$axios.get('/music/get_record_list').then((response) => {
+			console.log(response)
 			if (response.data.result == 0) {
 				const re_data = response.data
 						const song_list = re_data.song_list
@@ -65,6 +67,24 @@ export default {
 		})
 	},
 	methods: {
+		DeleteSong(song_id) {
+			const here = this
+		this.$axios.get('/music/delete_song').then((response) => {
+			console.log(response)
+			if (response.data.result == 0) {
+				ElMessageBox.alert("删除成功", '提示', {
+					confirmButtonText: '确认',
+					confirmButtonClass: 'btnFalses'
+				})
+			}
+			else {
+				ElMessageBox.alert("删除失败了，尝试联系管理员吧", '提示', {
+					confirmButtonText: '确认',
+					confirmButtonClass: 'btnFalses'
+				})
+			}
+		})
+		},
 		to_song(song_id) {
 			console.log(song_id)
 			this.$router.push('/song/' + song_id)

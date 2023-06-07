@@ -25,7 +25,7 @@
       <el-icon :size="45" id="continue" v-else @click="myPlay"><video-play /></el-icon>
       <el-icon :size="35" id="plus"><plus /></el-icon>
     </div>-->
-    <audio type="audio/mpeg" style="float: left;position: relative;top: 12px;left: 15%;" ref="audio" loop="loop" preload="auto" @play="button_continue" @pause="button_pause" controls>
+    <audio type="audio/mpeg" style="float: left;position: relative;top: 12px;left: 15%;" ref="audio" @play="button_continue" @pause="button_pause" controls>
       <source :src='songInfo.song_url'>
     </audio>
     <div id="buttons">
@@ -33,7 +33,7 @@
       <el-button v-if="!judge.collected" @click="collect" color="#7eec52" id="collect"><strong><el-icon size=23px id="icon3"><star /></el-icon>{{ buttons.collect }}</strong></el-button>
       <el-button v-else @click="collect" color="#7eec52" id="collect"><strong style="color: lightcoral"><el-icon size=23px id="icon3"><star /></el-icon>{{ buttons.collect }}</strong></el-button>
       <el-button @click="goToComment" color="#7eec52" id="comment"><strong><el-icon size=23px id="icon2"><chat-line-square /></el-icon>{{ buttons.comment }}</strong></el-button>
-      <el-button color="#7eec52" id="like"><strong><el-icon size=23px id="icon1"><lollipop /></el-icon>{{ buttons.like }}</strong></el-button>
+      <el-button @click="test" color="#7eec52" id="like"><strong><el-icon size=23px id="icon1"><lollipop /></el-icon>{{ buttons.like }}</strong></el-button>
     </div>
     <el-drawer title="请选择收藏夹" v-model="forDrawer.drawer" :direction="forDrawer.dir" :before-close="handleClose" destroy-on-close>
       <div class="hide">
@@ -82,23 +82,12 @@ export default {
     ElDrawer
   },
   data() {
-    var isplay = store.state.play
     return {
-      iplay: isplay
     }
   },
   methods: {
-    myPlay() {
-      this.$data.iplay = true
-      this.$refs.audio.play()
-    },
-    myPause() {
-      this.$data.iplay = false
-      this.$refs.audio.pause()
-    }
   },
   setup () {
-    const test = '../assets/1_song.mp3'
     const forDrawer = reactive({
       drawer: false,
       dir: 'btt'
@@ -118,7 +107,7 @@ export default {
       if (favo_id.fid !== -1) {
         forDrawer.drawer = false
         const form_data = new FormData()
-        form_data.append('songs_id', songInfo.song_id)
+        form_data.append('song_id', songInfo.song_id)
         form_data.append('playlist_id', favo_id.fid)
         axios.post('/music/add_song_to_favo', form_data,{
           headers: {
@@ -127,12 +116,17 @@ export default {
         }).then(
           function (response) {
             if (response.status === 200) {
-              favo_id.fid = -1
-              ElMessage.success({
-                type: 'success',
-                message: '收藏成功'
-              })
-              judge.collected = true
+              if (response.data.result === 0){
+                favo_id.fid = -1
+                ElMessage.success({
+                  type: 'success',
+                  message: '收藏成功'
+                })
+                judge.collected = true
+              }
+              else {
+                alert(response.data.message)
+              }
             }
           }
         )
@@ -163,6 +157,7 @@ export default {
       f_num: []
     })
     const favoLi = ref([])
+    const audio = ref(null)
     onMounted(()=>{
       axios.get('/music/get_song', {
         params: {song_id: songInfo.song_id}
@@ -170,10 +165,12 @@ export default {
         function (response) {
           if (response.status === 200) {
             songInfo.song_url = response.data.song_url
+            audio.value.src = songInfo.song_url
             songInfo.songName = response.data.song_name
             songInfo.singer = response.data.singer
             lyric.content = response.data.lyric
             songInfo.song_cover = response.data.song_cover_url
+            judge.collected = response.data.is_favo
           }
         }
       )
@@ -283,14 +280,14 @@ export default {
         confirmButtonText: '狠心投诉',
         cancelButtonText: '手下留情',
       }).then(({ value }) => {
-        if (value === '') {
+        if (value === '' || value === null) {
           ElMessage.info({
             type: 'info',
             message: '请输入投诉理由'
           })
         } else {
           const form_data = new FormData()
-          form_data.append('complaint', complaint)
+          form_data.append('complaint', value)
           form_data.append('song_id', songInfo.song_id)
           axios.post('/super_admin/complain_song', form_data, {
             headers: {
@@ -316,6 +313,7 @@ export default {
         })
     }
     return {
+      audio,
       forDrawer,
       handleClose,
       close,
@@ -335,8 +333,7 @@ export default {
       button_continue,
       buttons,
       lyric,
-      post_complain,
-      test
+      post_complain
     }
   }
 }
