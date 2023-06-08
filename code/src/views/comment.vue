@@ -62,7 +62,7 @@ export default {
     }
     const inf = reactive({
       sid: useRoute().params.songid,
-      is_login: instance.$is_login
+      is_login: instance.$is_login,
       uid: 0,
       uname: '',
       song: '',
