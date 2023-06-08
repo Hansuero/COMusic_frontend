@@ -292,11 +292,11 @@ const input_data = reactive({
 		ref="navigation_bar"
 		:profile_url="photo_url"
 		></NavigationBar>
-		<NaviNoLeft
+		<NavNoLeft
 		v-else-if="who_see == USER_OTHER"
 		ref="navigation_bar_no_left"
 		:profile_url="photo_url"
-		></NaviNoLeft>
+		></NavNoLeft>
 	</div>
 	<!--存放主体内容的div-->
 	<div class="outer_box">
