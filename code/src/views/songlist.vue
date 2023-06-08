@@ -148,10 +148,10 @@ export default {
           if (response.status === 200) {
             favos.id = []
             favos.title = []
-            for (var i = 0; i < response.data.favo_list.length; i++) {
-              favos.id.push(response.data.favo_list[i].favo_id)
-              favos.title.push(response.data.favo_list[i].favo_title)
-              nums.f_num[i] = 1
+            for (var i = 1; i < response.data.favo_list.length; i++) {
+              favos.id.push(response.data.favo_list[i-1].favo_id)
+              favos.title.push(response.data.favo_list[i-1].favo_title)
+              nums.f_num[i-1] = 1
             }
           }
         }
