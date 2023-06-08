@@ -79,7 +79,7 @@ export default {
       cid: []
     })
     function create () {
-      if (inf.uid === 0) {
+      if (inf.uid == 0) {
         ElMessageBox.confirm("请先登录", "提示", {
           confirmButtonText: '去登录',
           cancelButtonText: '就不登'

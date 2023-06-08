@@ -80,7 +80,7 @@ export default {
 					}
 					else{
 						alert(re_data_1.message)
-					}		
+					}
 				}
 				else{
 					alert("error! response status is not 200!")
@@ -287,7 +287,7 @@ const input_data = reactive({
 <template>
 	<!--引入导航栏组件-->
 	<div>
-		<NavigationBar 
+		<NavigationBar
 		v-if="who_see == USER_SELF"
 		ref="navigation_bar"
 		:profile_url="photo_url"
@@ -353,7 +353,7 @@ const input_data = reactive({
 						<p class="Chinese_font">关注我啦</p>
 					</el-button>
 				</div>
-			</div> 
+			</div>
 		</div>
 	</div>
 </template>
@@ -372,10 +372,10 @@ const input_data = reactive({
 }
 .outer_box {
 	justify-content: center;
-	position: absolute; 
-	display: flex; 
-	flex-wrap: wrap; 
-	left: 185px; 
+	position: absolute;
+	display: flex;
+	flex-wrap: wrap;
+	left: 185px;
 	top: 20vh;
 	height: 80vh;
 	width: 80%;
