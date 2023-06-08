@@ -288,7 +288,7 @@ const input_data = reactive({
 	:profile_url="photo_url"
 	/>
 	<NaviNoLeft
-	v-if="who_see == USER_OTHER"
+	v-else
 	ref="navigation_bar_no_left"
 	:profile_url="photo_url"
 	/>

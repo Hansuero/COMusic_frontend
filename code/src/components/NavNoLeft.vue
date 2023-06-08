@@ -26,7 +26,7 @@ import { ref } from 'vue';
 import { getCurrentInstance } from 'vue';
 
 export default {
-	name: 'NavigationBar',
+	name: 'NavNoLeft',
 	props:[
 		'profile_url'
 	],
