@@ -9,7 +9,7 @@ export default {
 	name: 'App',
 	provide() {
 		return{
-			reload: this.reload
+			reload: this.reload,
 		}
 	},
 	data() {
@@ -26,31 +26,17 @@ export default {
 			})
 		},
 	},
-	/*
-	mounted() {
-		var here = this
-
-		window.addEventListener('beforeunload', function(event){
-    		console.log(here.$cur_user)
-    		console.log(here.$is_login)
-    		localStorage.setItem('buff_cur_user', here.$cur_user)
-    		localStorage.setItem('buff_is_login', here.$is_login)
-    		console.log('beforeunload event triggered');
-    		console.log(localStorage.getItem('buff_cur_user'))
-    		console.log(localStorage.getItem('buff_is_login'))
-    		event.preventDefault()
-    		event.returnValue = '';
-		});
-
-		// 在这里执行您希望在页面刷新结束后触发的操作
-    	console.log('Page refreshed');
-		var buff_is_login = localStorage.getItem('buff_is_login')
-		var buff_cur_user = localStorage.getItem('buff_cur_user')
-		this.$is_login = buff_is_login
-		this.$cur_user = buff_cur_user
-		console.log(this.$is_login)
-		console.log(this.$cur_user)
-  	}
-	*/
 }
 </script>
+
+<style>
+html, body, #app {
+	height: 100%;
+}
+
+#app {
+	background-image: url(./assets/background.png);
+  	background-size: cover;
+  	background-repeat: no-repeat;
+}
+</style>
