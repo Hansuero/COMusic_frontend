@@ -149,8 +149,8 @@ export default {
             favos.id = []
             favos.title = []
             for (var i = 1; i < response.data.favo_list.length; i++) {
-              favos.id.push(response.data.favo_list[i-1].favo_id)
-              favos.title.push(response.data.favo_list[i-1].favo_title)
+              favos.id.push(response.data.favo_list[i].favo_id)
+              favos.title.push(response.data.favo_list[i].favo_title)
               nums.f_num[i-1] = 1
             }
           }
