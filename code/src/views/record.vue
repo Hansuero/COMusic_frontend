@@ -91,7 +91,6 @@ export default {
 			this.$router.push('/song/' + song_id)
 		},
 		changeMax() {
-			console.log(max_num)
 			const form_data = new FormData()
 			form_data.append('max', this.max_num)
 			this.$axios.post('/music/post_max', form_data, {
