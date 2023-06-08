@@ -52,7 +52,8 @@ import { Star } from '@element-plus/icons'
 import { Warning } from '@element-plus/icons'
 import { ElMessageBox } from 'element-plus'
 import { ElMessage } from 'element-plus'
-import message from '@element-plus/icons/lib/Message'
+import {getCurrentInstance} from "vue";
+const { instance } = getCurrentInstance()
 
 export default {
   name: 'songlist',
@@ -85,7 +86,8 @@ export default {
       }
     }
     const useInfo = reactive({
-      uid: ''
+      uid: '',
+      is_login: instance.$is_login
     })
     const sid = useRoute().params.id
     const favo_id = reactive({
@@ -227,7 +229,7 @@ export default {
       }
     }
     function collectSong () {
-      if (useInfo.uid === 0) {
+      if (!useInfo.is_login) {
         ElMessageBox.confirm("请先登录", "提示", {
           confirmButtonText: '去登录',
           cancelButtonText: '就不登'
@@ -280,7 +282,7 @@ export default {
       }
     }
     function post_complain () {
-      if (useInfo.uid === 0) {
+      if (!useInfo.is_login) {
         ElMessageBox.confirm("还没登录就投诉？没道理的", "提示", {
           confirmButtonText: '去登录',
           cancelButtonText: '就不登'

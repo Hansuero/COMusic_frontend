@@ -51,6 +51,7 @@
 <script>
 import NavNoLeft from '@/components/NavNoLeft.vue'
 import router from '@/router'
+import {getCurrentInstance} from "vue";
 import { useRoute } from 'vue-router'
 import store from '@/store'
 import { reactive, onMounted, ref} from 'vue'
@@ -66,6 +67,7 @@ import { ChatLineSquare } from '@element-plus/icons'
 import { Lollipop } from '@element-plus/icons'
 import { ElMessage } from 'element-plus'
 import { ElMessageBox } from 'element-plus'
+const { instance } = getCurrentInstance()
 
 export default {
   name: 'song',
@@ -110,8 +112,10 @@ export default {
       singer: '',
       song_cover: ''
     })
+
     const useInfo = reactive({
-      uid: ''
+      uid: '',
+      is_login: instance.$is_login
     })
     function close () {
       if (favo_id.fid !== -1) {
@@ -219,7 +223,7 @@ export default {
       liked: false
     })
     function collect () {
-      if (useInfo.uid === 0){
+      if (!useInfo.is_login){
         ElMessageBox.confirm("请先登录", "提示", {
           confirmButtonText: '去登录',
           cancelButtonText: '就不登'
@@ -237,7 +241,7 @@ export default {
       }
     }
     function like () {
-      if (useInfo.uid === 0) {
+      if (!useInfo.is_login) {
         ElMessageBox.confirm("请先登录", "提示", {
           confirmButtonText: '去登录',
           cancelButtonText: '就不登'
@@ -318,7 +322,7 @@ export default {
     function button_pause () {
     }
     function button_continue () {
-      if (useInfo.uid !== 0) {
+      if (!useInfo.is_login) {
         var form_data = new FormData()
         form_data.append('song_id', songInfo.song_id)
         axios.post('/music/add_to_recent', form_data, {
@@ -329,7 +333,7 @@ export default {
       }
     }
     function post_complain () {
-      if (useInfo.uid === 0) {
+      if (!useInfo.is_login) {
         ElMessageBox.confirm("还没登录就投诉？没道理的", "提示", {
           confirmButtonText: '去登录',
           cancelButtonText: '就不登'

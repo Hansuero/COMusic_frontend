@@ -50,6 +50,8 @@ import { reactive, onMounted } from 'vue'
 import axios from 'axios'
 import { ElMessageBox } from 'element-plus'
 import { ElMessage } from 'element-plus'
+import {getCurrentInstance} from "vue";
+const { instance } = getCurrentInstance()
 
 export default {
   name: 'comment',
@@ -60,6 +62,7 @@ export default {
     }
     const inf = reactive({
       sid: useRoute().params.songid,
+      is_login: instance.$is_login
       uid: 0,
       uname: '',
       song: '',
@@ -79,7 +82,7 @@ export default {
       cid: []
     })
     function create () {
-      if (inf.uid === 0) {
+      if (!inf.is_login) {
         ElMessageBox.confirm("请先登录", "提示", {
           confirmButtonText: '去登录',
           cancelButtonText: '就不登'
