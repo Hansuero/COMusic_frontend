@@ -441,7 +441,7 @@ const input_data = reactive({
 					<p class="theme_font" style="color: black;">分享当前收藏夹</p>
 				</el-button>
 				<el-button v-if="have_shared == true" style="width: 120%; border-radius: 20px; border-bottom: 2px solid grey;" color="#40E0D0" @click="unshare_favo">
-					<p class="theme_font" style="color: black;">取消分享当前收藏夹</p>
+					<p class="theme_font" style="color: black;">取消当前分享</p>
 				</el-button>
 				<el-dialog v-model="is_share_visible" title="分享" id="share_dialog">
 					<p class="theme_font" style="color: black;">{{ share_tips }}</p>
