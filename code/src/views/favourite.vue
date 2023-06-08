@@ -7,6 +7,7 @@ import NavigationBar from '../components/NavigationBar.vue';
 import { ElMessageBox, ElMessage } from "element-plus";
 import { reactive } from "vue";
 import { ref } from "vue";
+import { treeEmits } from "element-plus/es/components/tree-v2/src/virtual-tree";
 
 const tagList = [
 	{ id: 1, name: '流行' },
@@ -45,7 +46,8 @@ export default {
 			share_cover_file: '',
 			share_cover_url: '',
 			ready_share: false,
-			selectedTag: ''
+			selectedTag: '',
+			have_shared: false
 		}
 	},
 	created() {
@@ -296,6 +298,7 @@ export default {
 				if(response.status == 200){
 					const re_data = response.data
 					if(re_data.result == 0){
+						here.$data.have_shared = true
 						alert(re_data.message)
 					}
 					else{
@@ -380,6 +383,32 @@ export default {
 		selectTag(value) {
 			this.selectTag = value;
 		},
+		unshare_favo(){
+			const here = this
+			const form_data = new FormData()
+			form_data.append('songlist_id', here.$data.cur_favo_id)
+			here.$axios
+			.post('/music/unshare_songlist', form_data, {
+				headers: {
+    				'Content-Type': 'multipart/form-data'
+  				}
+			})
+			.then(function(response){
+				if(response.status == 200){
+					const re_data = response.data
+					if(re_data.result == 0){
+						here.$data.have_shared = false
+						alert(re_data.message)
+					}
+					else{
+						alert(re_data.message)
+					}
+				}
+				else{
+					alert("error! response status is not 200!")
+				}
+			})
+		}
 	}
 }
 </script>
@@ -408,8 +437,11 @@ const input_data = reactive({
 				</el-button>
 			</div>
 			<div style="margin-left: 130px;">
-				<el-button style="width: 120%; border-radius: 20px; border-bottom: 2px solid grey;" color="#40E0D0" @click="share_favo">
+				<el-button v-if="have_shared == false" style="width: 120%; border-radius: 20px; border-bottom: 2px solid grey;" color="#40E0D0" @click="share_favo">
 					<p class="theme_font" style="color: black;">分享当前收藏夹</p>
+				</el-button>
+				<el-button v-if="have_shared == true" style="width: 120%; border-radius: 20px; border-bottom: 2px solid grey;" color="#40E0D0" @click="unshare_favo">
+					<p class="theme_font" style="color: black;">取消分享当前收藏夹</p>
 				</el-button>
 				<el-dialog v-model="is_share_visible" title="分享" id="share_dialog">
 					<p class="theme_font" style="color: black;">{{ share_tips }}</p>
