@@ -134,7 +134,7 @@ export default {
             intro.listName = response.data.playlist_name
             intro.authorName = response.data.playlist_creator
             intro.tag = response.data.playlist_tag
-            intro.introduction = response.data.playlist_intro
+            intro.introduction = '这是'+intro.authorName+'分享的歌单'
             songs.id = []
             songs.title = []
             for (var i = 0; i < response.data.playlist_songs.length; i++) {
