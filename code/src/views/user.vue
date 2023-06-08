@@ -239,6 +239,10 @@ export default {
 		},
 		follow_other(){
 			const here = this
+			if(here.$is_login == false){
+				alert("尚未登录，不能关注其他用户")
+				return
+			}
 			const form_data = new FormData()
 			form_data.append('following_username', here.$data.username)
 			here.$axios
@@ -282,16 +286,18 @@ const input_data = reactive({
 
 <template>
 	<!--引入导航栏组件-->
-	<NavigationBar 
-	v-if="who_see == USER_SELF"
-	ref="navigation_bar"
-	:profile_url="photo_url"
-	/>
-	<NaviNoLeft
-	v-else
-	ref="navigation_bar_no_left"
-	:profile_url="photo_url"
-	/>
+	<div>
+		<NavigationBar 
+		v-if="who_see == USER_SELF"
+		ref="navigation_bar"
+		:profile_url="photo_url"
+		></NavigationBar>
+		<NaviNoLeft
+		v-else-if="who_see == USER_OTHER"
+		ref="navigation_bar_no_left"
+		:profile_url="photo_url"
+		></NaviNoLeft>
+	</div>
 	<!--存放主体内容的div-->
 	<div class="outer_box">
 		<div v-if="who_see == USER_OTHER" class="back">
