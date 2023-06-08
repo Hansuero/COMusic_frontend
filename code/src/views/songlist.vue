@@ -84,6 +84,9 @@ export default {
         })
       }
     }
+    const useInfo = reactive({
+      uid: ''
+    })
     const sid = useRoute().params.id
     const favo_id = reactive({
       fid: -1
@@ -156,6 +159,17 @@ export default {
           }
         }
       )
+      axios.get('/user/get_user_info').then(
+        function (response) {
+          if (response.status === 200) {
+            if (response.data.result === 0){
+              useInfo.uid = response.data.user_data.user_id
+            } else {
+              alert(response.data.message)
+            }
+          }
+        }
+      )
       songLi.value.forEach(item=>{
         item.style.background = "#7eec52"
       })
@@ -213,79 +227,109 @@ export default {
       }
     }
     function collectSong () {
-      if (judge.isCollect) {
-        forDrawer.drawer = true
-      } else {
-        judge.isCollect = true
-        collect.name = '收藏'
-        songLi.value.forEach(item=>{
-          item.style.background = "#7eec52"
+      if (useInfo.uid === 0) {
+        ElMessageBox.confirm("请先登录", "提示", {
+          confirmButtonText: '去登录',
+          cancelButtonText: '就不登'
+        }).then(()=>{
+          router.push('/login')
         })
-        if (isCollected.song_id.length > 0){
-          const form_data = new FormData()
-          form_data.append('songs_id', isCollected.song_id)
-          form_data.append('playlist_id', favo_id.fid)
-          axios.post('/music/add_songs_to_favo', form_data,{
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }).then(
-            function (response) {
-              if (response.status === 200) {
-                isCollected.song_id = []
-                favo_id.fid = -1
-                ElMessage.success({
-                  type: 'success',
-                  message: '收藏成功'
-                })
-              }
-            }
-          )
-        } else {
-          ElMessage.warning({
-            type: 'warning',
-            message: '未收藏歌曲'
+          .catch(()=>{
+            ElMessage.info({
+              type: 'info',
+              message: '没有权限'
+            })
           })
-          favo_id.fid = -1
+      } else {
+        if (judge.isCollect) {
+          forDrawer.drawer = true
+        } else {
+          judge.isCollect = true
+          collect.name = '收藏'
+          songLi.value.forEach(item=>{
+            item.style.background = "#7eec52"
+          })
+          if (isCollected.song_id.length > 0){
+            const form_data = new FormData()
+            form_data.append('songs_id', isCollected.song_id)
+            form_data.append('playlist_id', favo_id.fid)
+            axios.post('/music/add_songs_to_favo', form_data,{
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then(
+              function (response) {
+                if (response.status === 200) {
+                  isCollected.song_id = []
+                  favo_id.fid = -1
+                  ElMessage.success({
+                    type: 'success',
+                    message: '收藏成功'
+                  })
+                }
+              }
+            )
+          } else {
+            ElMessage.warning({
+              type: 'warning',
+              message: '未收藏歌曲'
+            })
+            favo_id.fid = -1
+          }
         }
       }
     }
     function post_complain () {
-      ElMessageBox.prompt("投诉理由为：", '投诉', {
-        confirmButtonText: '狠心投诉',
-        cancelButtonText: '手下留情',
-      }).then(({ value }) => {
-        if (value === '' || value === null) {
-          ElMessage.info({
-            type: 'info',
-            message: '请输入投诉理由'
-          })
-        } else {
-          const form_data = new FormData()
-          form_data.append('complaint', value)
-          form_data.append('playlist_id', sid)
-          axios.post('/super_admin/complain_playlist', form_data, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }).then(
-            function (response) {
-              if (response.status === 200) {
-                ElMessage.success({
-                  type: 'success',
-                  message: '投诉成功'
-                })
-              }
-            }
-          )
-        }
-      })
-        .catch(()=>{
-          ElMessage.info({
-            type: 'info',
-            message: '取消投诉'
-          })
+      if (useInfo.uid === 0) {
+        ElMessageBox.confirm("还没登录就投诉？没道理的", "提示", {
+          confirmButtonText: '去登录',
+          cancelButtonText: '就不登'
+        }).then(()=>{
+          router.push('/login')
         })
+          .catch(()=>{
+            ElMessage.info({
+              type: 'info',
+              message: '投诉失败'
+            })
+          })
+      } else {
+        ElMessageBox.prompt("投诉理由为：", '投诉', {
+          confirmButtonText: '狠心投诉',
+          cancelButtonText: '手下留情',
+        }).then(({ value }) => {
+          if (value === '' || value === null) {
+            ElMessage.info({
+              type: 'info',
+              message: '请输入投诉理由'
+            })
+          } else {
+            const form_data = new FormData()
+            form_data.append('complaint', value)
+            form_data.append('playlist_id', sid)
+            axios.post('/super_admin/complain_playlist', form_data, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then(
+              function (response) {
+                if (response.status === 200) {
+                  ElMessage.success({
+                    type: 'success',
+                    message: '投诉成功'
+                  })
+                }
+              }
+            )
+          }
+        })
+          .catch(()=>{
+            ElMessage.info({
+              type: 'info',
+              message: '取消投诉'
+            })
+          })
+      }
     }
     return {
       forDrawer,

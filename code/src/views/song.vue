@@ -110,6 +110,9 @@ export default {
       singer: '',
       song_cover: ''
     })
+    const useInfo = reactive({
+      uid: ''
+    })
     function close () {
       if (favo_id.fid !== -1) {
         forDrawer.drawer = false
@@ -185,6 +188,17 @@ export default {
           }
         }
       )
+      axios.get('/user/get_user_info').then(
+        function (response) {
+          if (response.status === 200) {
+            if (response.data.result === 0){
+              useInfo.uid = response.data.user_data.user_id
+            } else {
+              alert(response.data.message)
+            }
+          }
+        }
+      )
       favoLi.value.forEach(item=>{
         item.style.background = "#00bfff"
       })
@@ -205,41 +219,71 @@ export default {
       liked: false
     })
     function collect () {
-      forDrawer.drawer = true
+      if (useInfo.uid === 0){
+        ElMessageBox.confirm("请先登录", "提示", {
+          confirmButtonText: '去登录',
+          cancelButtonText: '就不登'
+        }).then(()=>{
+          router.push('/login')
+        })
+          .catch(()=>{
+            ElMessage.info({
+              type: 'info',
+              message: '没有权限'
+            })
+          })
+      } else {
+        forDrawer.drawer = true
+      }
     }
     function like () {
-      if (!judge.liked) {
-        const form_data = new FormData()
-        form_data.append('song_id', songInfo.song_id)
-        axios.post('/music/add_i_like', form_data, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }).then(
-          function (response) {
-            if (response.status === 200) {
-              if (response.data.result === 0){
-                judge.liked = true
-              } else {
-                alert(response.data.message)
-              }
-            }
-          }
-        )
+      if (useInfo.uid === 0) {
+        ElMessageBox.confirm("请先登录", "提示", {
+          confirmButtonText: '去登录',
+          cancelButtonText: '就不登'
+        }).then(()=>{
+          router.push('/login')
+        })
+          .catch(()=>{
+            ElMessage.info({
+              type: 'info',
+              message: '没有权限'
+            })
+          })
       } else {
-        axios.delete('/music/cancel_i_like', {
-          params: {song_id: songInfo.song_id}
-        }).then(
-          function (response) {
-            if (response.status === 200) {
-              if (response.data.result === 0){
-                judge.liked = false
-              } else {
-                alert(response.data.message)
+        if (!judge.liked) {
+          const form_data = new FormData()
+          form_data.append('song_id', songInfo.song_id)
+          axios.post('/music/add_i_like', form_data, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then(
+            function (response) {
+              if (response.status === 200) {
+                if (response.data.result === 0){
+                  judge.liked = true
+                } else {
+                  alert(response.data.message)
+                }
               }
             }
-          }
-        )
+          )
+        } else {
+          axios.delete('/music/cancel_i_like', {
+            params: {song_id: songInfo.song_id}
+          }).then(
+            function (response) {
+              if (response.status === 200) {
+                if (response.data.result === 0){
+                  judge.liked = false
+                } else {
+                  alert(response.data.message)
+                }
+              }
+            }
+          )
+        }
       }
     }
     function clickFavo (index, num) {
@@ -274,50 +318,67 @@ export default {
     function button_pause () {
     }
     function button_continue () {
-      var form_data = new FormData()
-      form_data.append('song_id', songInfo.song_id)
-      axios.post('/music/add_to_recent', form_data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
+      if (useInfo.uid !== 0) {
+        var form_data = new FormData()
+        form_data.append('song_id', songInfo.song_id)
+        axios.post('/music/add_to_recent', form_data, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
+      }
     }
     function post_complain () {
-      ElMessageBox.prompt("投诉理由为：", '投诉', {
-        confirmButtonText: '狠心投诉',
-        cancelButtonText: '手下留情',
-      }).then(({ value }) => {
-        if (value === '' || value === null) {
-          ElMessage.info({
-            type: 'info',
-            message: '请输入投诉理由'
-          })
-        } else {
-          const form_data = new FormData()
-          form_data.append('complaint', value)
-          form_data.append('song_id', songInfo.song_id)
-          axios.post('/super_admin/complain_song', form_data, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          }).then(
-            function (response) {
-              if (response.status === 200) {
-                ElMessage.success({
-                  type: 'success',
-                  message: '投诉成功'
-                })
-              }
-            }
-          )
-        }
-      })
-        .catch(()=>{
-          ElMessage.info({
-            type: 'info',
-            message: '取消投诉'
-          })
+      if (useInfo.uid === 0) {
+        ElMessageBox.confirm("还没登录就投诉？没道理的", "提示", {
+          confirmButtonText: '去登录',
+          cancelButtonText: '就不登'
+        }).then(()=>{
+          router.push('/login')
         })
+          .catch(()=>{
+            ElMessage.info({
+              type: 'info',
+              message: '投诉失败'
+            })
+          })
+      } else {
+        ElMessageBox.prompt("投诉理由为：", '投诉', {
+          confirmButtonText: '狠心投诉',
+          cancelButtonText: '手下留情',
+        }).then(({ value }) => {
+          if (value === '' || value === null) {
+            ElMessage.info({
+              type: 'info',
+              message: '请输入投诉理由'
+            })
+          } else {
+            const form_data = new FormData()
+            form_data.append('complaint', value)
+            form_data.append('song_id', songInfo.song_id)
+            axios.post('/super_admin/complain_song', form_data, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then(
+              function (response) {
+                if (response.status === 200) {
+                  ElMessage.success({
+                    type: 'success',
+                    message: '投诉成功'
+                  })
+                }
+              }
+            )
+          }
+        })
+          .catch(()=>{
+            ElMessage.info({
+              type: 'info',
+              message: '取消投诉'
+            })
+          })
+      }
     }
     return {
       audio,

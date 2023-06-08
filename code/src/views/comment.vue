@@ -79,32 +79,47 @@ export default {
       cid: []
     })
     function create () {
-      if (text.content !== ''){
-        const form_data = new FormData()
-        form_data.append('song_id', inf.sid)
-        form_data.append('content', text.content)
-        axios.post('/comment/create_comment', form_data, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }).then(
-          function (response) {
-            if (response.status === 200) {
-              ids.id.push(inf.uid)
-              cons.con.push(text.content)
-              cids.cid.push(cids.cid.length+1)
-              ElMessage.success({
-                type: 'success',
-                message: '创建成功'
-              })
-              text.content = ''
-            }
-          }
-        )
-      } else {
-        ElMessageBox.alert('请输入评论内容', '注意', {
-          confirmButtonText: '确认'
+      if (inf.uid === 0) {
+        ElMessageBox.confirm("请先登录", "提示", {
+          confirmButtonText: '去登录',
+          cancelButtonText: '就不登'
+        }).then(()=>{
+          router.push('/login')
         })
+          .catch(()=>{
+            ElMessage.info({
+              type: 'info',
+              message: '没有权限'
+            })
+          })
+      } else {
+        if (text.content !== ''){
+          const form_data = new FormData()
+          form_data.append('song_id', inf.sid)
+          form_data.append('content', text.content)
+          axios.post('/comment/create_comment', form_data, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then(
+            function (response) {
+              if (response.status === 200) {
+                ids.id.push(inf.uid)
+                cons.con.push(text.content)
+                cids.cid.push(cids.cid.length+1)
+                ElMessage.success({
+                  type: 'success',
+                  message: '创建成功'
+                })
+                text.content = ''
+              }
+            }
+          )
+        } else {
+          ElMessageBox.alert('请输入评论内容', '注意', {
+            confirmButtonText: '确认'
+          })
+        }
       }
     }
     function cModify (index) {
