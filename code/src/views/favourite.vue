@@ -41,7 +41,7 @@ export default {
 			cur_favo_title: '',
 			num_song: 0,
 			song_list: [],
-			is_share_visible: ref(true),
+			is_share_visible: ref(false),
 			share_tips: '',
 			share_cover_file: '',
 			share_cover_url: '',
@@ -93,6 +93,26 @@ export default {
 										title: title,
 										artist: artist
 									})
+								})
+								here.$axios
+								.get('/music/get_is_shared', {
+									params: {
+										playlist_id: here.$data.cur_favo_id
+									}
+								})
+								.then(function(response_3){
+									if(response_3.status == 200){
+										const re_data_3 = response_3.data
+										if(re_data_3.result == 0){
+											here.$data.have_shared = re_data_3.is_shared
+										}
+										else{
+											alert(re_data_3.message)
+										}
+									}
+									else{
+										alert("error! response status is not 200!")
+									}
 								})
 							}
 							else{
@@ -156,6 +176,26 @@ export default {
 								title: title,
 								artist: artist
 							})
+						})
+						here.$axios
+						.get('/music/get_is_shared', {
+							params: {
+								playlist_id: here.$data.cur_favo_id
+							}
+						})
+						.then(function(response_2){
+							if(response_2.status == 200){
+								const re_data_2 = response_2.data
+								if(re_data_2.result == 0){
+									here.$data.have_shared = re_data_2.is_shared
+								}
+								else{
+									alert(re_data_2.message)
+								}
+							}
+							else{
+								alert("error! response status is not 200!")
+							}
 						})
 					}
 					else{
@@ -508,7 +548,7 @@ const input_data = reactive({
 						<div v-for="(song,index) in song_list" class="box_song_list">
 							<p class="theme_font" style="width: 200px; margin-left: 50px; color: black;" @click="to_song(song.song_id)">{{ song.title }}</p>
 							<p class="theme_font" style="color: black;">{{ song.artist }}</p>
-							<el-button style="width: 100%; border-radius: 20px; border-bottom: 2px solid grey;" color="#FFDEAD" @click="remove_song_from_favo(song.song_id)">
+							<el-button style="width: 100px; border-radius: 20px; border-bottom: 2px solid grey;" color="#FFDEAD" @click="remove_song_from_favo(song.song_id)">
 								<p class="theme_font" style="color: black;">取消收餐</p>
 							</el-button>
 						</div>
