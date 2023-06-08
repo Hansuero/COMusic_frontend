@@ -26,12 +26,13 @@ export default {
 			user_id: 0,
 			username: '',
 			introduction: '快来编辑你的个人简介啊嘿嘿嘿！',
-			can_modify: false
+			can_modify: false,
+			up_photo_url: '',
 		}
 	},
 	created() {
 		const here = this
-
+		here.$data.up_photo_url = here.$cur_user.photo_url
 		var s_cur_id = useRoute().params.id
 		var cur_id = parseInt(s_cur_id)
 		var this_user_id
@@ -295,7 +296,7 @@ const input_data = reactive({
 		<NavNoLeft
 		v-else-if="who_see == USER_OTHER"
 		ref="navigation_bar_no_left"
-		:profile_url="photo_url"
+		:profile_url="up_photo_url"
 		></NavNoLeft>
 	</div>
 	<!--存放主体内容的div-->
