@@ -320,7 +320,7 @@ export default {
     function button_pause () {
     }
     function button_continue () {
-      if (useInfo.uid == 0) {
+      if (useInfo.uid != 0) {
         var form_data = new FormData()
         form_data.append('song_id', songInfo.song_id)
         axios.post('/music/add_to_recent', form_data, {
