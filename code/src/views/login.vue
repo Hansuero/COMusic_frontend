@@ -14,6 +14,9 @@ export default {
 	components: {
 		ElMessageBox
 	},
+	data(){
+		hide_test: ''
+	},
 	methods: {
 		//获取输入的数据，返回一个包含了id和password属性的对象
 		get_input_data(){
@@ -30,6 +33,7 @@ export default {
 			console.log(input.username)
 			console.log(input.password)
 			console.log("I need to register first!\n");
+			this.$data.hide_test = "跳转注册页面"
 			this.$router.push('./register')
 		},
 		//在这里处理登录事件
@@ -74,6 +78,7 @@ export default {
 						.then(function (response_2){
 							if(response_2.status == 200){
 								const re_data_2 = response_2.data
+								here.$data.hide_test = re_data_2.message
 								if(re_data_2.result == 0){
 									var username = re_data_2.user_data.username
 									var user_id = re_data_2.user_data.user_id
@@ -111,6 +116,7 @@ export default {
 		as_visitor(){
 			const here = this
 			console.log("I am a visitor!\n")
+			here.$data.hide_test = "游客模式访问"
 			here.$router.push('./index')
 		}
 	}
@@ -181,6 +187,7 @@ const input_data = reactive({
 			</div>
 		</div>
 	</div>
+	<div v-if="1 == 0" id="hide">{{ hide_test }}</div>
 </template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
